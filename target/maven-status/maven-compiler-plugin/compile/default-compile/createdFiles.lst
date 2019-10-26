@@ -1,5 +1,6 @@
+com\mycompany\rplproject\Home\HomeController.class
+com\mycompany\rplproject\LoginNSignUp\SignUpFXMLController.class
+com\mycompany\rplproject\db\DBUtil.class
 com\mycompany\rplproject\FXMLController.class
-LoginNSignUp\LoginController.class
-LoginNSignUp\SignUpFXMLController.class
 com\mycompany\rplproject\MainApp.class
-Home\HomeController.class
+com\mycompany\rplproject\LoginNSignUp\LoginController.class
