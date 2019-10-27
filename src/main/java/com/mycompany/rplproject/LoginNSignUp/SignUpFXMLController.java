@@ -11,6 +11,7 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,12 +23,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javax.swing.JOptionPane;
 
 
 
 public class SignUpFXMLController implements Initializable {
    @FXML
-   private TextField newEmailInput;
+   private TextField newEmailInput = new TextField();
    @FXML
    private PasswordField newPasswordInput;
    @FXML
@@ -37,6 +39,35 @@ public class SignUpFXMLController implements Initializable {
    @FXML
    private Button signUpConfirm;
    
+   public static boolean passwordLength(String password){
+       if(password.length()>7){
+           return true;
+       }
+       return false;
+   }
+   
+   public static boolean checkPassword(String password){
+       boolean checkNum = false;
+       boolean checkUp = false;
+       boolean checkLow =false;
+       char tempt;
+       for(int i=0; i<password.length();i++){
+           tempt = password.charAt(i);
+           if(Character.isDigit(tempt)){
+               checkNum = true;
+           }
+           else if(Character.isUpperCase(tempt)){
+               checkUp = true;
+           }
+           else if(Character.isLowerCase(tempt)){
+               checkLow = true;
+           }
+           if(checkNum==true&&checkUp==true&&checkLow ==true){
+               return true;
+            }
+       }
+       return false;
+   }
    @FXML
      public void signUpConfirmation(ActionEvent event) throws IOException, SQLException, ClassNotFoundException{
         String insertStmt = "Insert into Account values('"+newEmailInput.getText()+"','"+newPasswordInput.getText()+"')";
@@ -44,16 +75,28 @@ public class SignUpFXMLController implements Initializable {
         String selectStmt = "Select email from Account";
         if(newEmailInput.getText().isEmpty() || newPasswordInput.getText().isEmpty() || rePasswordInput.getText().isEmpty()){
             //alert masukin semua field
-            System.out.println("masukan semua field");
+            JOptionPane.showMessageDialog(null,"Pastikan semua data terisi");
+        }
+        else if(!(Pattern.matches("^[a-zA-Z0-9]+[@]{1}+[a-zA-Z0-9]+[.]{1}+[a-zA-Z0-9]+[.]{1}+[a-zA-Z0-9]+[.]{1}+[a-zA-Z0-9]+$",newEmailInput.getText()))){
+            JOptionPane.showMessageDialog(null,"Format Email Salah");    
+        }
+        else if(!newPasswordInput.getText().toString().equalsIgnoreCase(rePasswordInput.getText().toString())){
+            JOptionPane.showMessageDialog(null,"Konfirmasi Password Salah");
+        }
+        else if(passwordLength(newPasswordInput.getText().toString())==false && passwordLength(rePasswordInput.getText().toString())==false){
+            JOptionPane.showMessageDialog(null,"Password min 8 digit");
+        }
+        else if(checkPassword(newPasswordInput.getText().toString())==false && checkPassword(rePasswordInput.getText().toString())==false){
+            JOptionPane.showMessageDialog(null,"Password harus mengandung huruf besar ,kecil dan angka");
         }
         else{
             ResultSet rs = DBUtil.getInstance().dbExecuteQuery(selectStmt);
             //check email sudah terdaftar/belum (BELUM DITEST)
             while(rs.next()){
                 String email = rs.getString("EMAIL");
-                if(newEmailInput.getText().equals(email)){
+                if(newEmailInput.getText().toString().equalsIgnoreCase(email)){
                     //alert email sudah terdaftar
-                    newEmailInput.getText().replaceAll("(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])", null);
+                    JOptionPane.showMessageDialog(null,"Email sudah terdaftar");
                 }
             }
             //check password memenuhi syarat
@@ -70,11 +113,7 @@ public class SignUpFXMLController implements Initializable {
                 Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                 app_stage.setScene(signUp);
                 app_stage.show();
-            }else{
-                //alert password tidak sesuai
-                System.out.println("password tidak sesuai");
             }
-            
         }
         
         

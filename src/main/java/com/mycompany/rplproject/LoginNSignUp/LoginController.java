@@ -22,6 +22,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javax.swing.JOptionPane;
 
 /**
  * FXML Controller class
@@ -72,10 +73,10 @@ public class LoginController implements Initializable {
                     app_stage.close();
                     app_stage.setScene(signIn);
                     app_stage.show();
-                }else{
-                    
-                    System.out.println("gagal");
                 }
+            }
+            else{
+                JOptionPane.showMessageDialog(null,"Email atau Password salah !");
             }
         } catch (SQLException e) {
             System.out.println("Sedang mencari mahasiswa dengan nim " + emailInput.getText() + ", error terjadi: " + e);
