@@ -23,6 +23,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javax.swing.JOptionPane;
+import javafx.scene.input.MouseEvent;
 
 /**
  * FXML Controller class
@@ -58,13 +59,13 @@ public class LoginController implements Initializable {
         String selectStmt;
         String inpemail = emailInput.getText();
         String inppass = passwordInput.getText();
-        selectStmt = "SELECT * FROM Account WHERE Email ='"+inpemail+"' and Password='"+inppass+"'";
+        selectStmt = "SELECT * FROM Account WHERE email ='"+inpemail+"' and password='"+inppass+"'";
         try {
             System.out.println(selectStmt);
             ResultSet rs = DBUtil.getInstance().dbExecuteQuery(selectStmt);
             if(rs.next()){
-                email = rs.getString("EMAIL");
-                password = rs.getString("PASSWORD");
+                email = rs.getString("email");
+                password = rs.getString("password");
                 System.out.println(email+" - "+password);
                 if(email.equals(inpemail) && password.equals(inppass)){
                     Parent signInPage = FXMLLoader.load(getClass().getResource("/fxml/Home.fxml"));
@@ -95,6 +96,18 @@ public class LoginController implements Initializable {
         
     }
     
+    double x, y;
+
+    @FXML
+    void dragged(MouseEvent event){
+        
+    }
+    
+
+    @FXML
+    void pressed(MouseEvent event){
+        
+    }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
