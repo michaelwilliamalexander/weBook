@@ -5,6 +5,7 @@
  */
 package com.mycompany.rplproject.LoginNSignUp;
 
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import com.mycompany.rplproject.db.DBUtil;
 import java.io.IOException;
 import java.net.URL;
@@ -24,6 +25,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javax.swing.JOptionPane;
+import javafx.scene.input.MouseEvent;
 
 
 
@@ -129,7 +131,17 @@ public class SignUpFXMLController implements Initializable {
         app_stage.show();
         
     }
-   
+   @FXML
+    void close(MouseEvent event){
+        Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        stage.close();
+    }
+
+    @FXML
+    void minimize(MouseEvent event){
+        Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        stage.setIconified(true);
+    }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
