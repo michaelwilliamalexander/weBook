@@ -98,6 +98,7 @@ public class LoginController implements Initializable {
     
     double x, y;
 
+
     @FXML
     void dragged(MouseEvent event){
         
