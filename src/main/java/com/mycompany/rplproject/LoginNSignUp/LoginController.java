@@ -5,6 +5,7 @@
  */
 package com.mycompany.rplproject.LoginNSignUp;
 
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import com.mycompany.rplproject.db.DBUtil;
 import java.io.IOException;
 import java.net.URL;
@@ -95,19 +96,17 @@ public class LoginController implements Initializable {
         app_stage.show();
         
     }
-    
-    double x, y;
-
 
     @FXML
-    void dragged(MouseEvent event){
-        
+    void close(MouseEvent event){
+        Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        stage.close();
     }
-    
 
     @FXML
-    void pressed(MouseEvent event){
-        
+    void minimize(MouseEvent event){
+        Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        stage.setIconified(true);
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {

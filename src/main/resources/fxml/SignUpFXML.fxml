@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -17,11 +14,25 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="300.0" prefWidth="400.0" style="-fx-background-color: #1E90FF;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.rplproject.LoginNSignUp.SignUpFXMLController">
+<AnchorPane id="AnchorPane" prefHeight="300.0" prefWidth="500.0" style="-fx-background-color: #57606f;" styleClass="Styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.rplproject.LoginNSignUp.SignUpFXMLController">
    <children>
+      <HBox alignment="TOP_RIGHT" prefHeight="31.0" prefWidth="500.0" style="-fx-background-color: #dfe4ea;">
+         <children>
+            <FontAwesomeIcon fill="#0ce430" iconName="MINUS">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+            </FontAwesomeIcon>
+            <FontAwesomeIcon fill="#d70909" iconName="CLOSE" text="">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+            </FontAwesomeIcon>
+         </children>
+      </HBox>
       <StackPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #F0FFFF;" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="30.0">
          <children>
-            <VBox alignment="TOP_CENTER">
+            <VBox alignment="TOP_CENTER" prefHeight="221.0" prefWidth="440.0" style="-fx-background-color: #57606f;">
                <children>
                   <Label fx:id="signup" alignment="CENTER" text="Sign Up" textAlignment="CENTER">
                      <padding>
@@ -43,47 +54,59 @@
                            <padding>
                               <Insets left="5.0" />
                            </padding>
+                           <GridPane.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </GridPane.margin>
                         </Label>
                         <Label text="Password" GridPane.rowIndex="1">
                            <padding>
                               <Insets left="5.0" />
                            </padding>
                            <GridPane.margin>
-                              <Insets />
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </GridPane.margin>
                         </Label>
-                        <Label text="Re Password" GridPane.rowIndex="2">
+                        <Label text="Re-Password" GridPane.rowIndex="2">
                            <padding>
                               <Insets left="5.0" />
                            </padding>
+                           <GridPane.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </GridPane.margin>
                         </Label>
                         <PasswordField fx:id="newPasswordInput" prefWidth="157.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <GridPane.margin>
-                              <Insets right="5.0" />
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </GridPane.margin>
+                           <padding>
+                              <Insets top="5.0" />
+                           </padding>
                         </PasswordField>
                         <PasswordField fx:id="rePasswordInput" GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <GridPane.margin>
-                              <Insets right="5.0" />
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </GridPane.margin>
+                           <padding>
+                              <Insets top="5.0" />
+                           </padding>
                         </PasswordField>
                         <TextField fx:id="newEmailInput" prefHeight="25.0" prefWidth="151.0" GridPane.columnIndex="1">
                            <GridPane.margin>
-                              <Insets right="5.0" />
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </GridPane.margin>
+                           <padding>
+                              <Insets top="5.0" />
+                           </padding>
                         </TextField>
                      </children>
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
                   </GridPane>
-                  <HBox alignment="TOP_CENTER">
+                  <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="340.0">
                      <children>
-                        <Button fx:id="backLogin" mnemonicParsing="false" onAction="#backLogin" text="Back">
-                           <HBox.margin>
-                              <Insets left="50.0" />
-                           </HBox.margin></Button>
-                        <Button fx:id="signUpConfirm" mnemonicParsing="false" onAction="#signUpConfirmation" text="Confirm">
+                        <Button fx:id="backLogin" alignment="CENTER" mnemonicParsing="false" onAction="#backLogin" prefHeight="31.0" prefWidth="51.0" text="Back" />
+                        <Button fx:id="signUpConfirm" mnemonicParsing="false" onAction="#signUpConfirmation" prefHeight="31.0" prefWidth="84.0" text="Sign Up">
                            <HBox.margin>
                               <Insets left="100.0" />
                            </HBox.margin>
