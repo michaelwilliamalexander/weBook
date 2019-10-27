@@ -4,45 +4,46 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SplitMenuButton?>
-<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="Styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.rplproject.Home.HomeController">
+<AnchorPane id="AnchorPane" onMouseDragged="#dragged" onMousePressed="#move" prefHeight="400.0" prefWidth="700.0" styleClass="Styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.rplproject.Home.HomeController">
    <children>
-      <SplitPane dividerPositions="0.2959866220735786" layoutY="43.0" prefHeight="358.0" prefWidth="600.0">
-        <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-background-color: grey;">
+      <HBox alignment="TOP_RIGHT" prefHeight="16.0" prefWidth="700.0" style="-fx-background-color: #57606f;">
+         <children>
+            <FontAwesomeIcon fill="#0ce430" iconName="MINUS" onMouseClicked="#minimize" text="">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin></FontAwesomeIcon>
+            <FontAwesomeIcon fill="#d70909" iconName="CLOSE" onMouseClicked="#close" text="">
+               <HBox.margin>
+                  <Insets left="5.0" right="10.0" top="5.0" />
+               </HBox.margin></FontAwesomeIcon>
+         </children></HBox>
+      <HBox alignment="CENTER_RIGHT" layoutY="21.0" prefHeight="37.0" prefWidth="700.0" style="-fx-background-color: #57606f;">
+         <children>
+            <SplitMenuButton fx:id="sortBy" mnemonicParsing="false" text="Sort By">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Action 1" />
+                <MenuItem mnemonicParsing="false" text="Action 2" />
+              </items>
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+            </SplitMenuButton>
+         </children>
+      </HBox>
+      <HBox layoutY="58.0" prefHeight="342.0" prefWidth="700.0">
+         <children>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="226.0" prefWidth="400.0" style="-fx-background-color: grey;">
                <children>
-                  <Text fx:id="settings" layoutX="60.0" layoutY="85.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Settings" />
-                  <Text fx:id="logout" layoutX="63.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Logout" />
+                  <Text fx:id="settings" layoutX="60.0" layoutY="85.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Settings" AnchorPane.leftAnchor="55.0" AnchorPane.rightAnchor="55.0" />
+                  <Text fx:id="logOut" layoutX="63.0" layoutY="119.0" onMouseClicked="#logOut" strokeType="OUTSIDE" strokeWidth="0.0" text="Logout" AnchorPane.leftAnchor="55.0" />
                   <Text layoutX="37.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tambah Folder" />
                </children>
             </AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="332.0" prefWidth="417.0">
-               <children>
-                  <SplitMenuButton fx:id="sortBy" layoutX="316.0" layoutY="2.0" mnemonicParsing="false" text="Sort By">
-                    <items>
-                      <MenuItem mnemonicParsing="false" text="Action 1" />
-                      <MenuItem mnemonicParsing="false" text="Action 2" />
-                    </items>
-                  </SplitMenuButton>
-               </children></AnchorPane>
-        </items>
-      </SplitPane>
-      <HBox alignment="BOTTOM_RIGHT" prefHeight="39.0" prefWidth="600.0" style="-fx-background-color: #dfe4ea;">
-         <children>
-            <FontAwesomeIcon fill="#0ce430" iconName="MINUS" onMouseClicked="#minimize">
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </HBox.margin>
-            </FontAwesomeIcon>
-            <FontAwesomeIcon fill="#d30b0b" iconName="CLOSE" onMouseClicked="#close" text="">
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </HBox.margin>
-            </FontAwesomeIcon>
+            <AnchorPane prefHeight="342.0" prefWidth="784.0" style="-fx-background-color: #dfe4ea;" />
          </children>
       </HBox>
    </children>

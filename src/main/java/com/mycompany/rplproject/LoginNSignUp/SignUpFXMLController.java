@@ -142,6 +142,20 @@ public class SignUpFXMLController implements Initializable {
         Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
         stage.setIconified(true);
     }
+    
+    double x,y;
+      @FXML
+    void dragged(MouseEvent event){
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage.setX(event.getScreenX() - x);
+        stage.setY(event.getScreenY() - y);
+    }
+    
+    @FXML
+    public void move(MouseEvent event){
+        x = event.getSceneX();
+        y = event.getSceneY();
+    }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO

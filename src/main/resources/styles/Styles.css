@@ -1,6 +1,3 @@
-.button {
-    -fx-font-weight: bold;
-}
 
 FontAwesomeIcon:hover{
     -fx-cursor: hand;

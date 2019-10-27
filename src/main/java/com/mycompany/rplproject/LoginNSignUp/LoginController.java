@@ -96,15 +96,27 @@ public class LoginController implements Initializable {
         app_stage.show();
         
     }
-
+    double x,y;
     @FXML
-    void close(MouseEvent event){
+    void dragged(MouseEvent event){
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage.setX(event.getScreenX() - x);
+        stage.setY(event.getScreenY() - y);
+    }
+    
+    @FXML
+    public void move(MouseEvent event){
+        x = event.getSceneX();
+        y = event.getSceneY();
+    }
+    @FXML
+    public void close(MouseEvent event){
         Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
         stage.close();
     }
 
     @FXML
-    void minimize(MouseEvent event){
+    public void minimize(MouseEvent event){
         Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
         stage.setIconified(true);
     }

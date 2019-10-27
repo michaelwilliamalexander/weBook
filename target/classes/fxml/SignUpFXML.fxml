@@ -14,32 +14,35 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="300.0" prefWidth="500.0" style="-fx-background-color: #57606f;" styleClass="Styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.rplproject.LoginNSignUp.SignUpFXMLController">
+<AnchorPane id="AnchorPane" onMouseDragged="#dragged" onMousePressed="#move" prefHeight="400.0" prefWidth="700.0" style="-fx-background-color: #57606f;" styleClass="Styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.rplproject.LoginNSignUp.SignUpFXMLController">
    <children>
-      <HBox alignment="TOP_RIGHT" prefHeight="31.0" prefWidth="500.0" style="-fx-background-color: #dfe4ea;">
+      <HBox alignment="TOP_RIGHT" prefHeight="31.0" prefWidth="700.0" style="-fx-background-color: #57606f;">
          <children>
-            <FontAwesomeIcon fill="#0ce430" iconName="MINUS">
+            <FontAwesomeIcon fill="#0ce430" iconName="MINUS" onMouseClicked="#minimize">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>
             </FontAwesomeIcon>
-            <FontAwesomeIcon fill="#d70909" iconName="CLOSE" text="">
+            <FontAwesomeIcon fill="#d70909" iconName="CLOSE" onMouseClicked="#close" text="">
                <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                  <Insets bottom="5.0" left="5.0" right="10.0" top="5.0" />
                </HBox.margin>
             </FontAwesomeIcon>
          </children>
       </HBox>
-      <StackPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #F0FFFF;" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="30.0">
+      <StackPane prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="70.0">
          <children>
-            <VBox alignment="TOP_CENTER" prefHeight="221.0" prefWidth="440.0" style="-fx-background-color: #57606f;">
+            <VBox alignment="TOP_CENTER" prefHeight="221.0" prefWidth="440.0" style="-fx-background-color: #F0FFFF;">
                <children>
                   <Label fx:id="signup" alignment="CENTER" text="Sign Up" textAlignment="CENTER">
                      <padding>
                         <Insets bottom="10.0" />
                      </padding>
+                     <VBox.margin>
+                        <Insets bottom="15.0" top="10.0" />
+                     </VBox.margin>
                   </Label>
-                  <GridPane>
+                  <GridPane alignment="TOP_CENTER" prefHeight="97.0" prefWidth="382.0" style="-fx-background-color: #F0FFFF;">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="132.0" minWidth="10.0" prefWidth="78.0" />
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="201.0" minWidth="10.0" prefWidth="162.0" />
@@ -81,6 +84,9 @@
                            <padding>
                               <Insets top="5.0" />
                            </padding>
+                           <opaqueInsets>
+                              <Insets left="5.0" />
+                           </opaqueInsets>
                         </PasswordField>
                         <PasswordField fx:id="rePasswordInput" GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <GridPane.margin>
@@ -89,6 +95,9 @@
                            <padding>
                               <Insets top="5.0" />
                            </padding>
+                           <opaqueInsets>
+                              <Insets left="5.0" />
+                           </opaqueInsets>
                         </PasswordField>
                         <TextField fx:id="newEmailInput" prefHeight="25.0" prefWidth="151.0" GridPane.columnIndex="1">
                            <GridPane.margin>
@@ -97,18 +106,21 @@
                            <padding>
                               <Insets top="5.0" />
                            </padding>
+                           <opaqueInsets>
+                              <Insets left="5.0" />
+                           </opaqueInsets>
                         </TextField>
                      </children>
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
                   </GridPane>
-                  <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="340.0">
+                  <HBox alignment="TOP_RIGHT" prefHeight="60.0" prefWidth="340.0" style="-fx-background-color: #F0FFFF;">
                      <children>
                         <Button fx:id="backLogin" alignment="CENTER" mnemonicParsing="false" onAction="#backLogin" prefHeight="31.0" prefWidth="51.0" text="Back" />
-                        <Button fx:id="signUpConfirm" mnemonicParsing="false" onAction="#signUpConfirmation" prefHeight="31.0" prefWidth="84.0" text="Sign Up">
+                        <Button fx:id="signUpConfirm" mnemonicParsing="false" onAction="#signUpConfirmation" prefHeight="31.0" prefWidth="60.0" text="Sign Up">
                            <HBox.margin>
-                              <Insets left="100.0" />
+                              <Insets left="80.0" right="35.0" />
                            </HBox.margin>
                         </Button>
                      </children>
