@@ -46,6 +46,9 @@ public class HomeController implements Initializable {
     private Text settings;
     
     @FXML
+    private Button tambahFolder;
+    
+    @FXML
     private ComboBox<String> ComboName;
 
     @FXML
@@ -87,7 +90,18 @@ public class HomeController implements Initializable {
         app_stage.show();
     }
     
-    
+    @FXML
+    public void tambahFolder(MouseEvent event) throws IOException{
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/fxml/NewFolder.fxml"));
+        Parent tambahFolderPage = loader.load();
+        NewFolderController controller = loader.getController();
+        controller.data(data);
+        Scene tambahFolder = new Scene(tambahFolderPage);
+        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        app_stage.setScene(tambahFolder);
+        app_stage.show();
+    }
     @FXML
     public void setting(MouseEvent event) throws IOException{
         FXMLLoader loader = new FXMLLoader();
@@ -111,9 +125,11 @@ public class HomeController implements Initializable {
     public void fillCombo(){
         ComboName.setItems(list);
     }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        this.fillCombo();
         String sqlQuery = "SELECT * FROM Folder where parent_folder is NULL;";
         //VBox vbox = new VBox();
         //vbox.setPrefWidth(100); digunakan meenyamakan panjang button

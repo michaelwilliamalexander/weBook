@@ -111,7 +111,7 @@ public class SignUpFXMLController implements Initializable {
             //check email sudah terdaftar/belum (BELUM DITEST)
             while(rs.next()){
                 String email = rs.getString("EMAIL");
-                if(newEmailInput.getText().toString().equalsIgnoreCase(email)){
+                if(newEmailInput.getText().equals(email)){
                     //alert email sudah terdaftar
                     JOptionPane.showMessageDialog(null,"Email sudah terdaftar");
                 }

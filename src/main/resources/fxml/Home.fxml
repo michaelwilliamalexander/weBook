@@ -3,9 +3,8 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -48,15 +47,10 @@
          </children></HBox>
       <HBox alignment="CENTER_RIGHT" layoutX="158.0" layoutY="21.0" prefHeight="37.0" prefWidth="542.0" style="-fx-background-color: #57606f;">
          <children>
-            <SplitMenuButton fx:id="sortBy" mnemonicParsing="false" text="Sort By" textAlignment="CENTER">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Tag" />
-                <MenuItem mnemonicParsing="false" text="Folder" />
-              </items>
+            <ComboBox fx:id="ComboName" prefHeight="25.0" prefWidth="94.0" promptText="Sort By">
                <HBox.margin>
                   <Insets right="10.0" />
-               </HBox.margin>
-            </SplitMenuButton>
+               </HBox.margin></ComboBox>
          </children>
       </HBox>
       <HBox layoutY="58.0" prefHeight="342.0" prefWidth="700.0">
@@ -86,7 +80,7 @@
             </VBox>
             <AnchorPane prefHeight="342.0" prefWidth="784.0" style="-fx-background-color: #dfe4ea;">
                <children>
-                  <Button fx:id="tambahFolder" layoutX="268.0" layoutY="297.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="249.0" text="Tambah Folder" />
+                  <Button fx:id="tambahFolder" layoutX="268.0" layoutY="297.0" mnemonicParsing="false" onMouseClicked="#tambahFolder" prefHeight="31.0" prefWidth="249.0" text="Tambah Folder" />
                   <Line endX="-115.0" endY="279.0" layoutX="115.0" layoutY="63.0" startX="-115.0" startY="-63.0" />
                   <Button layoutX="21.0" layoutY="297.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="226.0" text="Tambah URL" />
                   <ScrollPane prefHeight="291.0" prefWidth="542.0">
