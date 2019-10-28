@@ -30,11 +30,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.scene.control.ComboBox;
 
 public class HomeController implements Initializable {
     private List<String> listOfSomething = null;
     private ListView<Button> listview;
     private ObservableList<Button> folders = FXCollections.observableArrayList();
+    private ObservableList<String> list = FXCollections.observableArrayList("Tag","Folder");
     private String data;
     
     @FXML
@@ -42,6 +44,9 @@ public class HomeController implements Initializable {
     
     @FXML
     private Text settings;
+    
+    @FXML
+    private ComboBox<String> ComboName;
 
     @FXML
     private Text logOut;
@@ -102,19 +107,27 @@ public class HomeController implements Initializable {
         data = s;
         namaAkun.setText(s);
     }
+
+    public void fillCombo(){
+        ComboName.setItems(list);
+    }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         String sqlQuery = "SELECT * FROM Folder where parent_folder is NULL;";
-        List<Button> buttonlist = new ArrayList<>(); //our Collection to hold newly created Buttons
+        //VBox vbox = new VBox();
+        //vbox.setPrefWidth(100); digunakan meenyamakan panjang button
+        List<Text> textlist = new ArrayList<>(); //our Collection to hold newly created Buttons
         try {
             ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sqlQuery);
             while (rs.next()) { //iterate over every row returned
                 String folderName = rs.getString("nama_folder"); //extract button text, adapt the String to the columnname that you are interested in
-                buttonlist.add(new Button(folderName));
+                textlist.add(new Text(folderName));
             }
             contentBox.getChildren().clear();
-            contentBox.getChildren().addAll(buttonlist);
+            contentBox.getChildren().addAll(textlist);
+            //vbox.getChildren().addAll(buttonlist); //tadi buat nmenyamakan panjang button
+            
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException ex) {
