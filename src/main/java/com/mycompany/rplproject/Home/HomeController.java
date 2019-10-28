@@ -6,20 +6,35 @@
 package com.mycompany.rplproject.Home;
 
 import com.mycompany.rplproject.Home.SettingController;
+import com.mycompany.rplproject.db.DBUtil;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class HomeController implements Initializable {
+    private List<String> listOfSomething = null;
+    private ListView<Button> listview;
+    private ObservableList<Button> folders = FXCollections.observableArrayList();
     private String data;
     
     @FXML
@@ -31,6 +46,8 @@ public class HomeController implements Initializable {
     @FXML
     private Text logOut;
     double x,y;
+    @FXML
+    private VBox contentBox;
     @FXML
     void dragged(MouseEvent event){
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -88,6 +105,22 @@ public class HomeController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        String sqlQuery = "SELECT * FROM Folder where parent_folder is NULL;";
+        List<Button> buttonlist = new ArrayList<>(); //our Collection to hold newly created Buttons
+        try {
+            ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sqlQuery);
+            while (rs.next()) { //iterate over every row returned
+                String folderName = rs.getString("nama_folder"); //extract button text, adapt the String to the columnname that you are interested in
+                buttonlist.add(new Button(folderName));
+            }
+            contentBox.getChildren().clear();
+            contentBox.getChildren().addAll(buttonlist);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }    
     
 }
