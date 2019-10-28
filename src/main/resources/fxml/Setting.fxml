@@ -43,10 +43,6 @@
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </Text>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Tambah Folder">
-                     <VBox.margin>
-                        <Insets bottom="10.0" top="10.0" />
-                     </VBox.margin></Text>
                   <Text fx:id="settings" strokeType="OUTSIDE" strokeWidth="0.0" text="Settings">
                      <VBox.margin>
                         <Insets bottom="10.0" top="10.0" />
@@ -87,7 +83,9 @@
                         <Line endX="540.0" stroke="#00000048" />
                      </children>
                   </VBox>
+                  <Line endX="-125.0" endY="270.0" layoutX="125.0" layoutY="73.0" startX="-125.0" startY="-73.0" />
                </children></AnchorPane>
+            <Line endX="-115.0" endY="279.0" startX="-115.0" startY="-63.0" />
          </children>
       </HBox>
    </children>
