@@ -1,6 +1,7 @@
 com\mycompany\rplproject\Home\InsertNewPasswordController.class
 com\mycompany\rplproject\Home\NewFolderController.class
 com\mycompany\rplproject\Home\SettingController.class
+com\mycompany\rplproject\Home\NewURLController.class
 com\mycompany\rplproject\MainApp.class
 com\mycompany\rplproject\Home\HomeController.class
 com\mycompany\rplproject\LoginNSignUp\SignUpFXMLController.class

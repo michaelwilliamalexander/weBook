@@ -82,7 +82,7 @@
                <children>
                   <Button fx:id="tambahFolder" layoutX="268.0" layoutY="297.0" mnemonicParsing="false" onMouseClicked="#tambahFolder" prefHeight="31.0" prefWidth="249.0" text="Tambah Folder" />
                   <Line endX="-115.0" endY="279.0" layoutX="115.0" layoutY="63.0" startX="-115.0" startY="-63.0" />
-                  <Button layoutX="21.0" layoutY="297.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="226.0" text="Tambah URL" />
+                  <Button fx:id="tambahURL" layoutX="21.0" layoutY="297.0" mnemonicParsing="false" onMouseClicked="#tambahURL" prefHeight="31.0" prefWidth="226.0" text="Tambah URL" />
                   <ScrollPane prefHeight="291.0" prefWidth="542.0">
                      <content>
                         <VBox fx:id="contentBox" prefHeight="200.0" prefWidth="147.0" />

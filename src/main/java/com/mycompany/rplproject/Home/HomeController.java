@@ -43,6 +43,9 @@ public class HomeController implements Initializable {
     private Text namaAkun;
     
     @FXML
+    private Button tambahURL;
+    
+    @FXML
     private Text settings;
     
     @FXML
@@ -114,6 +117,19 @@ public class HomeController implements Initializable {
         app_stage.setX(event.getScreenX() - x);
         app_stage.setY(event.getScreenY() - y);
         app_stage.setScene(setting);
+        app_stage.show();
+    }
+    
+    @FXML
+    void tambahURL(MouseEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/fxml/NewURL.fxml"));
+        Parent tambahURLPage = loader.load();
+        NewURLController controller = loader.getController();
+        controller.data(data);
+        Scene tambahURL = new Scene(tambahURLPage);
+        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        app_stage.setScene(tambahURL);
         app_stage.show();
     }
     //ambil data email
