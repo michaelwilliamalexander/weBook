@@ -32,7 +32,7 @@ import javax.swing.JOptionPane;
  *
  * @author Michael William
  */
-public class ChangePasswordController implements Initializable {
+public class InsertNewPasswordController implements Initializable {
     private double x,y;
     private String data;
     private String email = null, password = null;
@@ -114,7 +114,22 @@ public class ChangePasswordController implements Initializable {
         String pass = inPas.getText();
         String passConf = inPasConf.getText();
         stmt = "Update Account set password = '"+pass+"' where email = '"+data+"'";
-        if(passConf.equalsIgnoreCase(pass)){
+        if(!inPas.getText().equalsIgnoreCase(inPasConf.getText())){
+            JOptionPane.showMessageDialog(null,"Konfirmasi Password Salah");
+            inPasConf.clear();
+            inPas.clear();
+        }
+        else if(passwordLength(inPas.getText())==false && passwordLength(inPasConf.getText())==false){
+            JOptionPane.showMessageDialog(null,"Password min 8 digit");
+            inPasConf.clear();
+            inPas.clear();
+        }
+        else if(checkPassword(inPas.getText())==false && checkPassword(inPasConf.getText())==false){
+            JOptionPane.showMessageDialog(null,"Password harus mengandung huruf besar ,kecil dan angka");
+            inPasConf.clear();
+            inPas.clear();
+        }
+        else if(passConf.equals(pass)){
             try {
                 DBUtil.getInstance().dbExecuteUpdate(stmt);
                 FXMLLoader loader = new FXMLLoader();
@@ -132,11 +147,38 @@ public class ChangePasswordController implements Initializable {
         }else{
             JOptionPane.showMessageDialog(null,"Password dan Confirmation Password not match");
         }
-          
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }    
+    public static boolean checkPassword(String password){
+       boolean checkNum = false;
+       boolean checkUp = false;
+       boolean checkLow =false;
+       char tempt;
+       for(int i=0; i<password.length();i++){
+           tempt = password.charAt(i);
+           if(Character.isDigit(tempt)){
+               checkNum = true;
+           }
+           else if(Character.isUpperCase(tempt)){
+               checkUp = true;
+           }
+           else if(Character.isLowerCase(tempt)){
+               checkLow = true;
+           }
+           if(checkNum==true&&checkUp==true&&checkLow ==true){
+               return true;
+            }
+       }
+       return false;
+   }
     
+    public static boolean passwordLength(String password){
+       if(password.length()>7){
+           return true;
+       }
+       return false;
+   }
 }

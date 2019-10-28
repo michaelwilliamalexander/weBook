@@ -115,7 +115,6 @@ public class HomeController implements Initializable {
             }
             contentBox.getChildren().clear();
             contentBox.getChildren().addAll(buttonlist);
-
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException ex) {

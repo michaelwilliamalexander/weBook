@@ -8,7 +8,7 @@ package com.mycompany.rplproject.Home;
 import com.mycompany.rplproject.db.DBUtil;
 import com.mycompany.rplproject.Home.HomeController;
 import com.mycompany.rplproject.Home.SettingController;
-import com.mycompany.rplproject.Home.ChangePasswordController;
+import com.mycompany.rplproject.Home.InsertNewPasswordController;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
@@ -121,7 +121,7 @@ public class GantiPasswordController implements Initializable {
                     loader.setLocation(getClass().getResource("/fxml/ChangePassword.fxml"));
                     Parent anotherChangePasswordPage = loader.load();
                     Scene anotherChangePassword = new Scene(anotherChangePasswordPage);
-                    ChangePasswordController controller = loader.getController();
+                    InsertNewPasswordController controller = loader.getController();
                     controller.data(data);
                     Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                     app_stage.setScene(anotherChangePassword);
