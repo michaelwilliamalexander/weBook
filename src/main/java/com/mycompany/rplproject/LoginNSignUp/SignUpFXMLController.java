@@ -78,18 +78,33 @@ public class SignUpFXMLController implements Initializable {
         if(newEmailInput.getText().isEmpty() || newPasswordInput.getText().isEmpty() || rePasswordInput.getText().isEmpty()){
             //alert masukin semua field
             JOptionPane.showMessageDialog(null,"Pastikan semua data terisi");
+            newPasswordInput.clear();
+            rePasswordInput.clear();
+            newEmailInput.clear();
         }
         else if(!(Pattern.matches("^[a-zA-Z0-9]+[@]{1}+[a-zA-Z0-9]+[.]{1}+[a-zA-Z0-9]+[.]{1}+[a-zA-Z0-9]+[.]{1}+[a-zA-Z0-9]+$",newEmailInput.getText()))){
-            JOptionPane.showMessageDialog(null,"Format Email Salah");    
+            JOptionPane.showMessageDialog(null,"Format Email Salah");
+            newPasswordInput.clear();
+            rePasswordInput.clear();
+            newEmailInput.clear();
         }
         else if(!newPasswordInput.getText().toString().equalsIgnoreCase(rePasswordInput.getText().toString())){
             JOptionPane.showMessageDialog(null,"Konfirmasi Password Salah");
+            newPasswordInput.clear();
+            rePasswordInput.clear();
+            newEmailInput.clear();
         }
         else if(passwordLength(newPasswordInput.getText().toString())==false && passwordLength(rePasswordInput.getText().toString())==false){
             JOptionPane.showMessageDialog(null,"Password min 8 digit");
+            newPasswordInput.clear();
+            rePasswordInput.clear();
+            newEmailInput.clear();
         }
         else if(checkPassword(newPasswordInput.getText().toString())==false && checkPassword(rePasswordInput.getText().toString())==false){
             JOptionPane.showMessageDialog(null,"Password harus mengandung huruf besar ,kecil dan angka");
+            newPasswordInput.clear();
+            rePasswordInput.clear();
+            newEmailInput.clear();
         }
         else{
             ResultSet rs = DBUtil.getInstance().dbExecuteQuery(selectStmt);

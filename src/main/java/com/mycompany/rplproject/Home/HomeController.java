@@ -5,6 +5,7 @@
  */
 package com.mycompany.rplproject.Home;
 
+import com.mycompany.rplproject.Home.SettingController;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -19,6 +20,11 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class HomeController implements Initializable {
+    private String data;
+    
+    @FXML
+    private Text namaAkun;
+    
     @FXML
     private Text settings;
 
@@ -57,6 +63,27 @@ public class HomeController implements Initializable {
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(signOut);
         app_stage.show();
+    }
+    
+    
+    @FXML
+    public void setting(MouseEvent event) throws IOException{
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/fxml/Setting.fxml"));
+        Parent settingPage = loader.load();
+        SettingController controller = loader.getController();
+        controller.data(data);
+        Scene setting = new Scene(settingPage);
+        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        app_stage.setX(event.getScreenX() - x);
+        app_stage.setY(event.getScreenY() - y);
+        app_stage.setScene(setting);
+        app_stage.show();
+    }
+    //ambil data email
+    public void data(String s){
+        data = s;
+        namaAkun.setText(s);
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {

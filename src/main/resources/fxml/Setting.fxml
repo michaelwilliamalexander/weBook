@@ -2,29 +2,20 @@
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" onMouseDragged="#dragged" onMousePressed="#move" prefHeight="400.0" prefWidth="700.0" styleClass="Styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.rplproject.Home.HomeController">
+<AnchorPane id="AnchorPane" onMouseDragged="#dragged" onMousePressed="#move" prefHeight="400.0" prefWidth="700.0" styleClass="Styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.rplproject.Home.SettingController">
    <children>
       <VBox alignment="BOTTOM_CENTER" prefHeight="59.0" prefWidth="158.0" style="-fx-background-color: #57606f;">
          <children>
-            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome Back">
-               <font>
-                  <Font name="Consolas Bold" size="14.0" />
-               </font>
-               <VBox.margin>
-                  <Insets bottom="5.0" />
-               </VBox.margin>
-            </Text>
             <Text fx:id="namaAkun" fill="#ebf700" strokeType="OUTSIDE" strokeWidth="0.0" text="Akun">
                <VBox.margin>
-                  <Insets bottom="5.0" top="5.0" />
+                  <Insets bottom="5.0" />
                </VBox.margin>
                <font>
                   <Font size="14.0" />
@@ -32,7 +23,7 @@
             </Text>
          </children>
       </VBox>
-      <HBox alignment="TOP_RIGHT" layoutX="158.0" prefHeight="22.0" prefWidth="542.0" style="-fx-background-color: #57606f;">
+      <HBox alignment="TOP_RIGHT" layoutX="158.0" prefHeight="59.0" prefWidth="542.0" style="-fx-background-color: #57606f;">
          <children>
             <FontAwesomeIcon fill="#0ce430" iconName="MINUS" onMouseClicked="#minimize" text="">
                <HBox.margin>
@@ -43,24 +34,11 @@
                   <Insets left="5.0" right="10.0" top="5.0" />
                </HBox.margin></FontAwesomeIcon>
          </children></HBox>
-      <HBox alignment="CENTER_RIGHT" layoutX="158.0" layoutY="21.0" prefHeight="37.0" prefWidth="542.0" style="-fx-background-color: #57606f;">
-         <children>
-            <SplitMenuButton fx:id="sortBy" mnemonicParsing="false" text="Sort By">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Action 1" />
-                <MenuItem mnemonicParsing="false" text="Action 2" />
-              </items>
-               <HBox.margin>
-                  <Insets right="10.0" />
-               </HBox.margin>
-            </SplitMenuButton>
-         </children>
-      </HBox>
       <HBox layoutY="58.0" prefHeight="342.0" prefWidth="700.0">
          <children>
             <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="400.0" style="-fx-background-color: grey;">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Home">
+                  <Text onMouseClicked="#backHome" strokeType="OUTSIDE" strokeWidth="0.0" text="Home">
                      <VBox.margin>
                         <Insets bottom="10.0" />
                      </VBox.margin>
@@ -69,7 +47,7 @@
                      <VBox.margin>
                         <Insets bottom="10.0" top="10.0" />
                      </VBox.margin></Text>
-                  <Text fx:id="settings" onMouseClicked="#setting" strokeType="OUTSIDE" strokeWidth="0.0" text="Settings">
+                  <Text fx:id="settings" strokeType="OUTSIDE" strokeWidth="0.0" text="Settings">
                      <VBox.margin>
                         <Insets bottom="10.0" top="10.0" />
                      </VBox.margin></Text>
@@ -85,7 +63,31 @@
                   <Insets bottom="30.0" top="30.0" />
                </padding>
             </VBox>
-            <AnchorPane prefHeight="342.0" prefWidth="784.0" style="-fx-background-color: #dfe4ea;" />
+            <AnchorPane prefHeight="342.0" prefWidth="784.0" style="-fx-background-color: #dfe4ea;">
+               <children>
+                  <VBox prefHeight="257.0" prefWidth="542.0">
+                     <children>
+                        <Text onMouseClicked="#changeConfirmaation" strokeType="OUTSIDE" strokeWidth="0.0" text="Ganti Password">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="16.0" top="10.0" />
+                           </VBox.margin>
+                        </Text>
+                        <Line endX="540.0" stroke="#00000048" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Backup Data">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="16.0" top="10.0" />
+                           </VBox.margin>
+                        </Text>
+                        <Line endX="540.0" stroke="#00000048" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Restore Data">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="16.0" top="10.0" />
+                           </VBox.margin>
+                        </Text>
+                        <Line endX="540.0" stroke="#00000048" />
+                     </children>
+                  </VBox>
+               </children></AnchorPane>
          </children>
       </HBox>
    </children>

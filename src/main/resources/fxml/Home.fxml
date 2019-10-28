@@ -6,11 +6,33 @@
 <?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <AnchorPane id="AnchorPane" onMouseDragged="#dragged" onMousePressed="#move" prefHeight="400.0" prefWidth="700.0" styleClass="Styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.rplproject.Home.HomeController">
    <children>
-      <HBox alignment="TOP_RIGHT" prefHeight="16.0" prefWidth="700.0" style="-fx-background-color: #57606f;">
+      <VBox alignment="BOTTOM_CENTER" prefHeight="59.0" prefWidth="158.0" style="-fx-background-color: #57606f;">
+         <children>
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome Back">
+               <font>
+                  <Font name="Consolas Bold" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
+            </Text>
+            <Text fx:id="namaAkun" fill="#ebf700" strokeType="OUTSIDE" strokeWidth="0.0" text="Akun">
+               <VBox.margin>
+                  <Insets bottom="5.0" top="5.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+         </children>
+      </VBox>
+      <HBox alignment="TOP_RIGHT" layoutX="158.0" prefHeight="22.0" prefWidth="542.0" style="-fx-background-color: #57606f;">
          <children>
             <FontAwesomeIcon fill="#0ce430" iconName="MINUS" onMouseClicked="#minimize" text="">
                <HBox.margin>
@@ -21,7 +43,7 @@
                   <Insets left="5.0" right="10.0" top="5.0" />
                </HBox.margin></FontAwesomeIcon>
          </children></HBox>
-      <HBox alignment="CENTER_RIGHT" layoutY="21.0" prefHeight="37.0" prefWidth="700.0" style="-fx-background-color: #57606f;">
+      <HBox alignment="CENTER_RIGHT" layoutX="158.0" layoutY="21.0" prefHeight="37.0" prefWidth="542.0" style="-fx-background-color: #57606f;">
          <children>
             <SplitMenuButton fx:id="sortBy" mnemonicParsing="false" text="Sort By">
               <items>
@@ -36,13 +58,33 @@
       </HBox>
       <HBox layoutY="58.0" prefHeight="342.0" prefWidth="700.0">
          <children>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="226.0" prefWidth="400.0" style="-fx-background-color: grey;">
+            <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="400.0" style="-fx-background-color: grey;">
                <children>
-                  <Text fx:id="settings" layoutX="60.0" layoutY="85.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Settings" AnchorPane.leftAnchor="55.0" AnchorPane.rightAnchor="55.0" />
-                  <Text fx:id="logOut" layoutX="63.0" layoutY="119.0" onMouseClicked="#logOut" strokeType="OUTSIDE" strokeWidth="0.0" text="Logout" AnchorPane.leftAnchor="55.0" />
-                  <Text layoutX="37.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tambah Folder" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Home">
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin>
+                  </Text>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Tambah Folder">
+                     <VBox.margin>
+                        <Insets bottom="10.0" top="10.0" />
+                     </VBox.margin></Text>
+                  <Text fx:id="settings" onMouseClicked="#setting" strokeType="OUTSIDE" strokeWidth="0.0" text="Settings">
+                     <VBox.margin>
+                        <Insets bottom="10.0" top="10.0" />
+                     </VBox.margin></Text>
+                  <Text fx:id="logOut" onMouseClicked="#logOut" strokeType="OUTSIDE" strokeWidth="0.0" text="Logout">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin></Text>
                </children>
-            </AnchorPane>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <padding>
+                  <Insets bottom="30.0" top="30.0" />
+               </padding>
+            </VBox>
             <AnchorPane prefHeight="342.0" prefWidth="784.0" style="-fx-background-color: #dfe4ea;" />
          </children>
       </HBox>

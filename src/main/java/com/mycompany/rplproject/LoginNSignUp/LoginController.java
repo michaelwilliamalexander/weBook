@@ -5,6 +5,8 @@
  */
 package com.mycompany.rplproject.LoginNSignUp;
 
+
+import com.mycompany.rplproject.Home.HomeController;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import com.mycompany.rplproject.db.DBUtil;
 import java.io.IOException;
@@ -69,8 +71,12 @@ public class LoginController implements Initializable {
                 password = rs.getString("password");
                 System.out.println(email+" - "+password);
                 if(email.equals(inpemail) && password.equals(inppass)){
-                    Parent signInPage = FXMLLoader.load(getClass().getResource("/fxml/Home.fxml"));
+                    FXMLLoader loader = new FXMLLoader();
+                    loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
+                    Parent signInPage = loader.load();
                     Scene signIn = new Scene(signInPage);
+                    HomeController controller = loader.getController();
+                    controller.data(email);
                     Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                     app_stage.close();
                     app_stage.setScene(signIn);
@@ -79,6 +85,9 @@ public class LoginController implements Initializable {
             }
             else{
                 JOptionPane.showMessageDialog(null,"Email atau Password salah !");
+                emailInput.clear();
+                passwordInput.clear();
+                
             }
         } catch (SQLException e) {
             System.out.println("Sedang mencari mahasiswa dengan nim " + emailInput.getText() + ", error terjadi: " + e);
