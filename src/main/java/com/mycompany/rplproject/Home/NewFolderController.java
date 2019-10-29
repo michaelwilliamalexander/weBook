@@ -18,6 +18,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -47,14 +48,20 @@ public class NewFolderController implements Initializable {
     
     public void tambahFolder (MouseEvent event) throws IOException, SQLException, ClassNotFoundException{
         String stmt = "Select * From Folder where nama_folder = '"+inFolder.getText()+"'";
-        String insertStmt = "Insert into Folder (nama_folder) values('"+inFolder.getText()+"')";
+        String insertStmt = "Insert into Folder (nama_folder,email) values('"+inFolder.getText()+"','"+data+"')";
         ResultSet rs = DBUtil.getInstance().dbExecuteQuery(stmt);
         String tempt = null;
         while(rs.next()){
             tempt= rs.getString("nama_folder");
             System.out.println(tempt);
         }
-         if(!inFolder.getText().equals(tempt)){
+        if(inFolder.getText().isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Error");
+                    alert.setContentText("Field Kosong");
+                    alert.showAndWait();
+        }
+        else if(!inFolder.getText().equals(tempt)){
                 DBUtil.getInstance().dbExecuteUpdate(insertStmt);
                 FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
@@ -63,12 +70,17 @@ public class NewFolderController implements Initializable {
                 HomeController controller = loader.getController();
                 controller.data(data);
                 controller.fillCombo();
+                controller.show(data);
                 Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                 app_stage.setScene(backHome);
                 app_stage.show();
             }
-            else{
-                JOptionPane.showMessageDialog(null,"Folder sudah terdaftar");
+         else {
+                 Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Error");
+                    alert.setContentText("Folder sudah terdaftar");
+                    alert.showAndWait();
+                    inFolder.clear();
             }
  
     }
@@ -105,6 +117,7 @@ public class NewFolderController implements Initializable {
         HomeController controller = loader.getController();
         controller.data(data);
         controller.fillCombo();
+        controller.show(data);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(backHome);
         app_stage.show();

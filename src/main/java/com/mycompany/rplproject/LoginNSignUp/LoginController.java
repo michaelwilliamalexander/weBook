@@ -21,6 +21,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -50,13 +52,6 @@ public class LoginController implements Initializable {
     @FXML
     private Button loginBtn;
     
-    /**
-     *
-     * @param event
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws SQLException
-     */
     @FXML
      public void SignIn(ActionEvent event) throws IOException, ClassNotFoundException, SQLException{
         String selectStmt;
@@ -77,6 +72,7 @@ public class LoginController implements Initializable {
                     Scene signIn = new Scene(signInPage);
                     HomeController controller = loader.getController();
                     controller.data(email);
+                    controller.show(email);
                     Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                     app_stage.close();
                     app_stage.setScene(signIn);
@@ -84,7 +80,10 @@ public class LoginController implements Initializable {
                 }
             }
             else{
-                JOptionPane.showMessageDialog(null,"Email atau Password salah !");
+                Alert alert = new Alert(AlertType.WARNING);
+                alert.setTitle("Error");
+                alert.setContentText("Email atau password salah");
+                alert.showAndWait();
                 emailInput.clear();
                 passwordInput.clear();
                 

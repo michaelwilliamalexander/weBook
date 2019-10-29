@@ -20,6 +20,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.input.MouseEvent;
@@ -80,6 +81,7 @@ public class GantiPasswordController implements Initializable {
         HomeController controller = loader.getController();
         controller.data(data);
         controller.fillCombo();
+        controller.show(data);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(backHome);
         app_stage.show();
@@ -128,8 +130,10 @@ public class GantiPasswordController implements Initializable {
                     app_stage.setScene(anotherChangePassword);
                     app_stage.show();
                 }else{
-                    JOptionPane.showMessageDialog(null,"Password salah !");
-   
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Error");
+                    alert.setContentText("Password salah !");
+                    alert.showAndWait();
                 }
             }
             

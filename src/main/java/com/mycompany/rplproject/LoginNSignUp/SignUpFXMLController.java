@@ -20,6 +20,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -77,31 +78,46 @@ public class SignUpFXMLController implements Initializable {
         String selectStmt = "Select email from Account";
         if(newEmailInput.getText().isEmpty() || newPasswordInput.getText().isEmpty() || rePasswordInput.getText().isEmpty()){
             //alert masukin semua field
-            JOptionPane.showMessageDialog(null,"Pastikan semua data terisi");
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Error");
+            alert.setContentText("Pastikan semua data terisi");
+            alert.showAndWait();
             newPasswordInput.clear();
             rePasswordInput.clear();
             newEmailInput.clear();
         }
         else if(!(Pattern.matches("^[a-zA-Z0-9]+[@]{1}+[a-zA-Z0-9]+[.]{1}+[a-zA-Z0-9]+[.]{1}+[a-zA-Z0-9]+[.]{1}+[a-zA-Z0-9]+$",newEmailInput.getText()))){
-            JOptionPane.showMessageDialog(null,"Format Email Salah");
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Error");
+            alert.setContentText("Format Email Salah");
+            alert.showAndWait();
             newPasswordInput.clear();
             rePasswordInput.clear();
             newEmailInput.clear();
         }
         else if(!newPasswordInput.getText().toString().equalsIgnoreCase(rePasswordInput.getText().toString())){
-            JOptionPane.showMessageDialog(null,"Konfirmasi Password Salah");
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Error");
+            alert.setContentText("Konfirmasi Password Salah");
+            alert.showAndWait();
             newPasswordInput.clear();
             rePasswordInput.clear();
             newEmailInput.clear();
         }
         else if(passwordLength(newPasswordInput.getText().toString())==false && passwordLength(rePasswordInput.getText().toString())==false){
-            JOptionPane.showMessageDialog(null,"Password min 8 digit");
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Error");
+            alert.setContentText("Password min 8 digit");
+            alert.showAndWait();
             newPasswordInput.clear();
             rePasswordInput.clear();
             newEmailInput.clear();
         }
         else if(checkPassword(newPasswordInput.getText().toString())==false && checkPassword(rePasswordInput.getText().toString())==false){
-            JOptionPane.showMessageDialog(null,"Password harus mengandung huruf besar ,kecil dan angka");
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Error");
+            alert.setContentText("Password harus mengandung huruf besar ,kecil dan angka");
+            alert.showAndWait();
             newPasswordInput.clear();
             rePasswordInput.clear();
             newEmailInput.clear();
@@ -113,7 +129,10 @@ public class SignUpFXMLController implements Initializable {
                 String email = rs.getString("EMAIL");
                 if(newEmailInput.getText().equals(email)){
                     //alert email sudah terdaftar
-                    JOptionPane.showMessageDialog(null,"Email sudah terdaftar");
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Error");
+                    alert.setContentText("Email sudah terdaftar");
+                    alert.showAndWait();
                 }
             }
             //check password memenuhi syarat

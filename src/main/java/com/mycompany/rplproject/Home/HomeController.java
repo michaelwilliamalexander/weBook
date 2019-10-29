@@ -141,20 +141,16 @@ public class HomeController implements Initializable {
     public void fillCombo(){
         ComboName.setItems(list);
     }
-    
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-        this.fillCombo();
-        String sqlQuery = "SELECT * FROM Folder where parent_folder is NULL;";
+    public void show(String s){
+        String sqlQuery = "SELECT * FROM Folder where parent_folder is NULL and email='"+s+"';";
         //VBox vbox = new VBox();
         //vbox.setPrefWidth(100); digunakan meenyamakan panjang button
-        List<Text> textlist = new ArrayList<>(); //our Collection to hold newly created Buttons
+        List<Button> textlist = new ArrayList<>(); //our Collection to hold newly created Buttons
         try {
             ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sqlQuery);
             while (rs.next()) { //iterate over every row returned
                 String folderName = rs.getString("nama_folder"); //extract button text, adapt the String to the columnname that you are interested in
-                textlist.add(new Text(folderName));
+                textlist.add(new Button(folderName));
             }
             contentBox.getChildren().clear();
             contentBox.getChildren().addAll(textlist);
@@ -165,6 +161,13 @@ public class HomeController implements Initializable {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        // TODO
+        this.fillCombo();
+        System.out.println("this is data ="+data);
+        
     }    
     
 }

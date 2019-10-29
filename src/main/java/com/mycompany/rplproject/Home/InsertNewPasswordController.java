@@ -20,6 +20,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.input.MouseEvent;
@@ -81,6 +82,7 @@ public class InsertNewPasswordController implements Initializable {
         Scene backHome = new Scene(backHomePage);
         HomeController controller = loader.getController();
         controller.data(data);
+        controller.show(data);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(backHome);
         app_stage.show();
@@ -115,17 +117,26 @@ public class InsertNewPasswordController implements Initializable {
         String passConf = inPasConf.getText();
         stmt = "Update Account set password = '"+pass+"' where email = '"+data+"'";
         if(!inPas.getText().equalsIgnoreCase(inPasConf.getText())){
-            JOptionPane.showMessageDialog(null,"Konfirmasi Password Salah");
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Error");
+            alert.setContentText("Konfirmasi Password Salah");
+            alert.showAndWait();
             inPasConf.clear();
             inPas.clear();
         }
         else if(passwordLength(inPas.getText())==false && passwordLength(inPasConf.getText())==false){
-            JOptionPane.showMessageDialog(null,"Password min 8 digit");
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Error");
+            alert.setContentText("Password min 8 digit");
+            alert.showAndWait();
             inPasConf.clear();
             inPas.clear();
         }
         else if(checkPassword(inPas.getText())==false && checkPassword(inPasConf.getText())==false){
-            JOptionPane.showMessageDialog(null,"Password harus mengandung huruf besar ,kecil dan angka");
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Error");
+            alert.setContentText("Password harus mengandung huruf besar ,kecil dan angka");
+            alert.showAndWait();
             inPasConf.clear();
             inPas.clear();
         }
@@ -145,7 +156,10 @@ public class InsertNewPasswordController implements Initializable {
                 throw e;
             }
         }else{
-            JOptionPane.showMessageDialog(null,"Password dan Confirmation Password not match");
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Error");
+            alert.setContentText("Password dan Confirmation Password not match");
+            alert.showAndWait();
         }
     }
     @Override
