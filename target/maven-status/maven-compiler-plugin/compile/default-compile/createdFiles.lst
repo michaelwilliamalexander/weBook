@@ -1,4 +1,7 @@
 com\mycompany\rplproject\Home\InsertNewPasswordController.class
+com\mycompany\rplproject\FXMLController.class
+com\mycompany\rplproject\Home\HomeController$1.class
+com\mycompany\rplproject\Home\GantiPasswordController.class
 com\mycompany\rplproject\Home\NewFolderController.class
 com\mycompany\rplproject\Home\SettingController.class
 com\mycompany\rplproject\Home\NewURLController.class
@@ -6,6 +9,5 @@ com\mycompany\rplproject\MainApp.class
 com\mycompany\rplproject\Home\HomeController.class
 com\mycompany\rplproject\LoginNSignUp\SignUpFXMLController.class
 com\mycompany\rplproject\db\DBUtil.class
-com\mycompany\rplproject\FXMLController.class
-com\mycompany\rplproject\Home\GantiPasswordController.class
+com\mycompany\rplproject\Home\SubFolderController.class
 com\mycompany\rplproject\LoginNSignUp\LoginController.class

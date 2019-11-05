@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -50,9 +51,6 @@ public class HomeController implements Initializable {
     
     @FXML
     private Button tambahFolder;
-    
-    @FXML
-    private ComboBox<String> ComboName;
 
     @FXML
     private Text logOut;
@@ -138,24 +136,49 @@ public class HomeController implements Initializable {
         namaAkun.setText(s);
     }
 
-    public void fillCombo(){
-        ComboName.setItems(list);
-    }
+   
     public void show(String s){
         String sqlQuery = "SELECT * FROM Folder where parent_folder is NULL and email='"+s+"';";
+        int count = 0;
         //VBox vbox = new VBox();
         //vbox.setPrefWidth(100); digunakan meenyamakan panjang button
-        List<Button> textlist = new ArrayList<>(); //our Collection to hold newly created Buttons
+        List<Button > textlist = new ArrayList<>(); //our Collection to hold newly created Buttons
         try {
             ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sqlQuery);
             while (rs.next()) { //iterate over every row returned
                 String folderName = rs.getString("nama_folder"); //extract button text, adapt the String to the columnname that you are interested in
-                textlist.add(new Button(folderName));
+                Button button = new Button(folderName);
+                button.setId(folderName);
+                textlist.add(button);
             }
             contentBox.getChildren().clear();
             contentBox.getChildren().addAll(textlist);
-            //vbox.getChildren().addAll(buttonlist); //tadi buat nmenyamakan panjang button
+            for(int i=0;i<contentBox.getChildren().size();i++){
+                count = i;
+                final String tempt = contentBox.getChildren().get(i).getId();
+                contentBox.getChildren().get(i).setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    public void handle(MouseEvent me) {
+                        FXMLLoader loader = new FXMLLoader();
+                        loader.setLocation(getClass().getResource("/fxml/SubFolder.fxml"));
+                        try {
+                             Parent subFolderPage = loader.load();
+                             SubFolderController controller = loader.getController();
+                             controller.data(data);
+                             Scene subFolder = new Scene(subFolderPage);
+                             Stage app_stage = (Stage)((Node) me.getSource()).getScene().getWindow();
+                             app_stage.setScene(subFolder);
+                             app_stage.show();
+                        } catch (IOException ex) {
+                            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        
+                    }
+                });
+                
+            }
             
+            
+            //vbox.getChildren().addAll(buttonlist); //tadi buat nmenyamakan panjang button
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException ex) {
@@ -165,8 +188,7 @@ public class HomeController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        this.fillCombo();
-        System.out.println("this is data ="+data);
+       
         
     }    
     

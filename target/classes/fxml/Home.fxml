@@ -3,7 +3,6 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -16,7 +15,7 @@
    <children>
       <VBox alignment="BOTTOM_CENTER" prefHeight="59.0" prefWidth="158.0" style="-fx-background-color: #57606f;">
          <children>
-            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome Back">
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome">
                <font>
                   <Font name="Consolas Bold" size="14.0" />
                </font>
@@ -45,14 +44,7 @@
                   <Insets left="5.0" right="10.0" top="5.0" />
                </HBox.margin></FontAwesomeIcon>
          </children></HBox>
-      <HBox alignment="CENTER_RIGHT" layoutX="158.0" layoutY="21.0" prefHeight="37.0" prefWidth="542.0" style="-fx-background-color: #57606f;">
-         <children>
-            <ComboBox fx:id="ComboName" prefHeight="25.0" prefWidth="94.0" promptText="Sort By">
-               <HBox.margin>
-                  <Insets right="10.0" />
-               </HBox.margin></ComboBox>
-         </children>
-      </HBox>
+      <HBox alignment="CENTER_RIGHT" layoutX="158.0" layoutY="21.0" prefHeight="37.0" prefWidth="542.0" style="-fx-background-color: #57606f;" />
       <HBox layoutY="58.0" prefHeight="342.0" prefWidth="700.0">
          <children>
             <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="400.0" style="-fx-background-color: #e6e6e6;">
@@ -85,7 +77,7 @@
                   <Button fx:id="tambahURL" layoutX="21.0" layoutY="297.0" mnemonicParsing="false" onMouseClicked="#tambahURL" prefHeight="31.0" prefWidth="226.0" text="Tambah URL" />
                   <ScrollPane prefHeight="291.0" prefWidth="542.0">
                      <content>
-                        <VBox fx:id="contentBox" prefHeight="200.0" prefWidth="147.0" />
+                        <VBox fx:id="contentBox" prefHeight="221.0" prefWidth="465.0" />
                      </content>
                   </ScrollPane>
                </children></AnchorPane>
