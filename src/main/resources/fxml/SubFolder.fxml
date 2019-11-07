@@ -69,7 +69,7 @@
                   <Button fx:id="tambahURL" layoutX="21.0" layoutY="297.0" mnemonicParsing="false" onMouseClicked="#tambahURL" prefHeight="31.0" prefWidth="226.0" text="Tambah URL" />
                   <ScrollPane prefHeight="291.0" prefWidth="542.0">
                      <content>
-                        <VBox fx:id="contentBox" prefHeight="200.0" prefWidth="147.0" />
+                        <VBox fx:id="subFolder" prefHeight="200.0" prefWidth="147.0" />
                      </content>
                   </ScrollPane>
                </children></AnchorPane>

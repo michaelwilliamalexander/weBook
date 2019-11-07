@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -38,7 +39,7 @@ public class SubFolderController implements Initializable {
     private ObservableList<Button> folders = FXCollections.observableArrayList();
     private ObservableList<String> list = FXCollections.observableArrayList("Tag","Folder");
     private String data;
-    private String parent = null;
+    private List<String> parent = new ArrayList<>();
     
     @FXML
     private Text namaAkun;
@@ -59,11 +60,10 @@ public class SubFolderController implements Initializable {
     private Text logOut;
     double x,y;
     @FXML
-    private VBox contentBox;
+    private VBox subFolder;
     
     @FXML
     public void isBack(MouseEvent event) throws IOException{
-       
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
             Parent backHomePage = loader.load();
@@ -76,6 +76,7 @@ public class SubFolderController implements Initializable {
             app_stage.show();
        
     }
+    
     
     @FXML
     void dragged(MouseEvent event){
@@ -157,13 +158,10 @@ public class SubFolderController implements Initializable {
         data = s;
         namaAkun.setText(s);
     }
-    
-    public void getParent(String tempt){
-        this.parent = tempt;
-    }
 
-    public void show(String s){
-        String sqlQuery = "SELECT * FROM Folder where parent_folder is NULL and email='"+s+"';";
+
+    public void show(String s,String x){
+        String sqlQuery = "SELECT * FROM Folder where parent_folder = '"+s+"' and email='"+x+"';";
         //VBox vbox = new VBox();
         //vbox.setPrefWidth(100); digunakan meenyamakan panjang button
         List<Button> textlist = new ArrayList<>(); //our Collection to hold newly created Buttons
@@ -173,10 +171,32 @@ public class SubFolderController implements Initializable {
                 String folderName = rs.getString("nama_folder"); //extract button text, adapt the String to the columnname that you are interested in
                 textlist.add(new Button(folderName));
             }
-            contentBox.getChildren().clear();
-            contentBox.getChildren().addAll(textlist);
+            subFolder.getChildren().clear();
+            subFolder.getChildren().addAll(textlist);
             //vbox.getChildren().addAll(buttonlist); //tadi buat nmenyamakan panjang button
-            
+             for(int i=0;i<subFolder.getChildren().size();i++){
+                final String tempt = subFolder.getChildren().get(i).getId();
+                subFolder.getChildren().get(i).setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    public void handle(MouseEvent me) {
+                        FXMLLoader loader = new FXMLLoader();
+                        loader.setLocation(getClass().getResource("/fxml/SubFolder.fxml"));
+                        try {
+                             Parent subFolderPage = loader.load();
+                             SubFolderController controller = loader.getController();
+                             controller.data(data);
+                             controller.show(tempt,data);
+                             Scene subFolder = new Scene(subFolderPage);
+                             Stage app_stage = (Stage)((Node) me.getSource()).getScene().getWindow();
+                             app_stage.setScene(subFolder);
+                             app_stage.show();
+                        } catch (IOException ex) {
+                            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        
+                    }
+                });
+                
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException ex) {

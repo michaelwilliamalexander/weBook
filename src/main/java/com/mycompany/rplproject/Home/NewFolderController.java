@@ -83,6 +83,8 @@ public class NewFolderController implements Initializable {
             }
  
     }
+    
+    
    @FXML
     void dragged(MouseEvent event){
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();

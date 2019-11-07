@@ -139,7 +139,7 @@ public class HomeController implements Initializable {
    
     public void show(String s){
         String sqlQuery = "SELECT * FROM Folder where parent_folder is NULL and email='"+s+"';";
-        int count = 0;
+       
         //VBox vbox = new VBox();
         //vbox.setPrefWidth(100); digunakan meenyamakan panjang button
         List<Button > textlist = new ArrayList<>(); //our Collection to hold newly created Buttons
@@ -154,7 +154,6 @@ public class HomeController implements Initializable {
             contentBox.getChildren().clear();
             contentBox.getChildren().addAll(textlist);
             for(int i=0;i<contentBox.getChildren().size();i++){
-                count = i;
                 final String tempt = contentBox.getChildren().get(i).getId();
                 contentBox.getChildren().get(i).setOnMouseClicked(new EventHandler<MouseEvent>() {
                     public void handle(MouseEvent me) {
@@ -164,6 +163,7 @@ public class HomeController implements Initializable {
                              Parent subFolderPage = loader.load();
                              SubFolderController controller = loader.getController();
                              controller.data(data);
+                             controller.show(tempt,data);
                              Scene subFolder = new Scene(subFolderPage);
                              Stage app_stage = (Stage)((Node) me.getSource()).getScene().getWindow();
                              app_stage.setScene(subFolder);
