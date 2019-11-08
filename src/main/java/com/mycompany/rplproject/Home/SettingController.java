@@ -53,6 +53,11 @@ public class SettingController implements Initializable {
         stage.setIconified(true);
     }
     
+    public void data(String s){
+        data = s;
+        namaAkun.setText(s);
+    }
+    
     public void backHome(MouseEvent event) throws IOException{
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
@@ -64,11 +69,6 @@ public class SettingController implements Initializable {
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(backHome);
         app_stage.show();
-    }
-    
-    public void data(String s){
-        data = s;
-        namaAkun.setText(s);
     }
     
      @FXML

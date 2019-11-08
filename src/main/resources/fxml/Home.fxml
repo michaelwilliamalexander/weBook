@@ -44,7 +44,13 @@
                   <Insets left="5.0" right="10.0" top="5.0" />
                </HBox.margin></FontAwesomeIcon>
          </children></HBox>
-      <HBox alignment="CENTER_RIGHT" layoutX="158.0" layoutY="21.0" prefHeight="37.0" prefWidth="542.0" style="-fx-background-color: #57606f;" />
+      <HBox alignment="CENTER_RIGHT" layoutX="158.0" layoutY="21.0" prefHeight="37.0" prefWidth="542.0" style="-fx-background-color: #57606f;">
+         <children>
+            <HBox alignment="TOP_RIGHT" prefHeight="37.0" prefWidth="536.0">
+               <children>
+                  <HBox alignment="TOP_RIGHT" prefHeight="35.0" prefWidth="307.0" />
+               </children></HBox>
+         </children></HBox>
       <HBox layoutY="58.0" prefHeight="342.0" prefWidth="700.0">
          <children>
             <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="400.0" style="-fx-background-color: #e6e6e6;">
@@ -56,7 +62,7 @@
                   </Text>
                   <Text fx:id="settings" onMouseClicked="#setting" strokeType="OUTSIDE" strokeWidth="0.0" text="Settings">
                      <VBox.margin>
-                        <Insets bottom="10.0" top="10.0" />
+                        <Insets bottom="10.0" top="15.0" />
                      </VBox.margin></Text>
                   <Text fx:id="logOut" onMouseClicked="#logOut" strokeType="OUTSIDE" strokeWidth="0.0" text="Logout">
                      <VBox.margin>
@@ -75,9 +81,15 @@
                   <Button fx:id="tambahFolder" layoutX="268.0" layoutY="297.0" mnemonicParsing="false" onMouseClicked="#tambahFolder" prefHeight="31.0" prefWidth="249.0" text="Tambah Folder" />
                   <Line endX="-115.0" endY="279.0" layoutX="115.0" layoutY="63.0" startX="-115.0" startY="-63.0" />
                   <Button fx:id="tambahURL" layoutX="21.0" layoutY="297.0" mnemonicParsing="false" onMouseClicked="#tambahURL" prefHeight="31.0" prefWidth="226.0" text="Tambah URL" />
-                  <ScrollPane prefHeight="291.0" prefWidth="542.0">
+                  <ScrollPane prefHeight="286.0" prefWidth="542.0">
                      <content>
-                        <VBox fx:id="contentBox" prefHeight="221.0" prefWidth="465.0" />
+                        <HBox prefHeight="285.0" prefWidth="539.0">
+                           <children>
+                              <VBox fx:id="contentBox" prefHeight="285.0" prefWidth="378.0" />
+                              <VBox fx:id="editBox" prefHeight="285.0" prefWidth="65.0" />
+                              <VBox fx:id="deleteBox" prefHeight="285.0" prefWidth="63.0" />
+                           </children>
+                        </HBox>
                      </content>
                   </ScrollPane>
                </children></AnchorPane>

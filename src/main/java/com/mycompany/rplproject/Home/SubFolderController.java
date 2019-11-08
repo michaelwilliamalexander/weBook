@@ -34,6 +34,7 @@ import javafx.stage.Stage;
 import javafx.scene.control.ComboBox;
 
 public class SubFolderController implements Initializable {
+    NewURLController url = new NewURLController();
     private List<String> listOfSomething = null;
     private ListView<Button> listview;
     private ObservableList<Button> folders = FXCollections.observableArrayList();

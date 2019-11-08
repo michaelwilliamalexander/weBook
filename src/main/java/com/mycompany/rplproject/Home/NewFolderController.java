@@ -12,6 +12,9 @@ import static java.sql.JDBCType.NULL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -49,6 +52,7 @@ public class NewFolderController implements Initializable {
     public void tambahFolder (MouseEvent event) throws IOException, SQLException, ClassNotFoundException{
         String stmt = "Select * From Folder where nama_folder = '"+inFolder.getText()+"'";
         String insertStmt = "Insert into Folder (nama_folder,email) values('"+inFolder.getText()+"','"+data+"')";
+        
         ResultSet rs = DBUtil.getInstance().dbExecuteQuery(stmt);
         String tempt = null;
         while(rs.next()){
@@ -145,7 +149,44 @@ public class NewFolderController implements Initializable {
         app_stage.setScene(backSetting);
         app_stage.show();
     }
+    public void editData(String newName, int id){
+        String sql = "update folder set nama_folder = '"+newName+"' where id_folder = "+id;
+        try{
+            DBUtil.getInstance().dbExecuteUpdate(sql);
+            
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(NewFolderController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public void editFolder(final String nama, final int id){
+        inFolder.setText(nama);
+        folderBtn.setText("Edit");
+        folderBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                try {
+                    editData(inFolder.getText(),id);
+                    FXMLLoader loader = new FXMLLoader();
+                    loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
+                    Parent backHomePage = loader.load();
+                    Scene backHome = new Scene(backHomePage);
+                    HomeController controller = loader.getController();
+                    controller.data(data);
+                    controller.show(data);
+                    Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                    app_stage.setScene(backHome);
+                    app_stage.show();
+                } catch (IOException ex) {
+                    Logger.getLogger(NewFolderController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
     
+    
+        });
+    }
+    public void editURL(String nama, String url, int id_tag){
+        
+    }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
