@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.mycompany.rplproject.Home;
 
 import com.mycompany.rplproject.Home.SettingController;
@@ -65,6 +61,9 @@ public class SubFolderController implements Initializable {
     
     @FXML
     public void isBack(MouseEvent event) throws IOException{
+        for(int i=0;i<parent.size();i++){
+            System.out.println(parent.get(i).toString());
+        }
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
             Parent backHomePage = loader.load();
@@ -78,6 +77,18 @@ public class SubFolderController implements Initializable {
        
     }
     
+    public void backHome(MouseEvent event) throws IOException{
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
+        Parent backHomePage = loader.load();
+        Scene backHome = new Scene(backHomePage);
+        HomeController controller = loader.getController();
+        controller.data(data);
+        controller.show(data);
+        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        app_stage.setScene(backHome);
+        app_stage.show();
+    }
     
     @FXML
     void dragged(MouseEvent event){
@@ -112,20 +123,27 @@ public class SubFolderController implements Initializable {
         app_stage.setScene(signOut);
         app_stage.show();
     }
-    
+    public void getParent(String data){
+        this.parent.add(data);
+    }
     @FXML
     public void tambahFolder(MouseEvent event) throws IOException{
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/fxml/NewFolder.fxml"));
-        Parent tambahFolderPage = loader.load();
-        NewFolderController controller = loader.getController();
-        controller.data(data);
-        Scene tambahFolder = new Scene(tambahFolderPage);
-        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        app_stage.setScene(tambahFolder);
-        app_stage.show();
+       
+
     }
     
+     @FXML
+    void tagList(MouseEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/fxml/TagList.fxml"));
+        Parent tagListPage = loader.load();
+        Scene tagList = new Scene(tagListPage);
+        TagListController controller = loader.getController();
+        controller.data(data);
+        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        app_stage.setScene(tagList);
+        app_stage.show();
+    }
     
     @FXML
     public void setting(MouseEvent event) throws IOException{
@@ -169,8 +187,11 @@ public class SubFolderController implements Initializable {
         try {
             ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sqlQuery);
             while (rs.next()) { //iterate over every row returned
-                String folderName = rs.getString("nama_folder"); //extract button text, adapt the String to the columnname that you are interested in
-                textlist.add(new Button(folderName));
+                String folderName = rs.getString("id_folder"); //extract button text, adapt the String to the columnname that you are interested in
+                Button button = new Button(folderName); 
+                button.setId(String.valueOf(rs.getInt("id_folder")));
+                button.setMinWidth(350);
+                textlist.add(button);
             }
             subFolder.getChildren().clear();
             subFolder.getChildren().addAll(textlist);

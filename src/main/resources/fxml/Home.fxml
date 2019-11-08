@@ -60,9 +60,14 @@
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </Text>
+                  <Text fx:id="tagName" onMouseClicked="#tagList" strokeType="OUTSIDE" strokeWidth="0.0" text="Tag List">
+                     <VBox.margin>
+                        <Insets bottom="10.0" top="10.0" />
+                     </VBox.margin>
+                  </Text>
                   <Text fx:id="settings" onMouseClicked="#setting" strokeType="OUTSIDE" strokeWidth="0.0" text="Settings">
                      <VBox.margin>
-                        <Insets bottom="10.0" top="15.0" />
+                        <Insets bottom="10.0" top="10.0" />
                      </VBox.margin></Text>
                   <Text fx:id="logOut" onMouseClicked="#logOut" strokeType="OUTSIDE" strokeWidth="0.0" text="Logout">
                      <VBox.margin>

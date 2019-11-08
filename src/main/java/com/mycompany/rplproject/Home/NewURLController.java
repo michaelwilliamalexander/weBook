@@ -117,6 +117,20 @@ public class NewURLController implements Initializable {
         app_stage.show();
     }
     
+    @FXML
+    void tagList(MouseEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/fxml/TagList.fxml"));
+        Parent tagListPage = loader.load();
+        Scene tagList = new Scene(tagListPage);
+        TagListController controller = loader.getController();
+        controller.data(data);
+        controller.show(data);
+        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        app_stage.setScene(tagList);
+        app_stage.show();
+    }
+    
     //fungsi menampilkan list folder dan tag yang ada ke combo box
     public void setComboBoxValue() throws SQLException{
         String queryTag = "select * from tag where email = '"+data+"'";

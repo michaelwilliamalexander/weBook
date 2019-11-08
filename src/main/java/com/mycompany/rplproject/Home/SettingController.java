@@ -91,6 +91,21 @@ public class SettingController implements Initializable {
         app_stage.setScene(changePassword);
         app_stage.show();
     }
+    
+      @FXML
+    void tagList(MouseEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/fxml/TagList.fxml"));
+        Parent tagListPage = loader.load();
+        Scene tagList = new Scene(tagListPage);
+        TagListController controller = loader.getController();
+        controller.data(data);
+        controller.show(data);
+        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        app_stage.setScene(tagList);
+        app_stage.show();
+    }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO

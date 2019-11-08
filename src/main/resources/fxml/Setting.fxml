@@ -43,6 +43,11 @@
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </Text>
+                  <Text fx:id="tagList" onMouseClicked="#tagList" strokeType="OUTSIDE" strokeWidth="0.0" text="Tag List">
+                     <VBox.margin>
+                        <Insets bottom="10.0" top="10.0" />
+                     </VBox.margin>
+                  </Text>
                   <Text fx:id="settings" strokeType="OUTSIDE" strokeWidth="0.0" text="Settings">
                      <VBox.margin>
                         <Insets bottom="10.0" top="10.0" />

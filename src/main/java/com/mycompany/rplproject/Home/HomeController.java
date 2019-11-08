@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,6 +31,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
@@ -45,6 +47,7 @@ public class HomeController implements Initializable {
     private ObservableList<Button> folders = FXCollections.observableArrayList();
     private ObservableList<String> list = FXCollections.observableArrayList("Tag","Folder");
     private String data;
+    private List<String> parent = new ArrayList<>();
     
     @FXML
     private Text namaAkun;
@@ -151,7 +154,20 @@ public class HomeController implements Initializable {
         app_stage.show();
     }
     
-  
+    @FXML
+    void tagList(MouseEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/fxml/TagList.fxml"));
+        Parent tagListPage = loader.load();
+        Scene tagList = new Scene(tagListPage);
+        TagListController controller = loader.getController();
+        controller.data(data);
+        controller.show(data);
+        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        app_stage.setScene(tagList);
+        app_stage.show();
+    }
+    
     //ambil data email
     public void data(String s){
         data = s;
@@ -193,17 +209,20 @@ public class HomeController implements Initializable {
                 if(rsUrl.getString("nama_url").equals(""))
                     text = new Button(rsUrl.getString("link_url"));
                 else
-                    text = new Button(rsUrl.getString("nama_url"));                
+                    text = new Button(rsUrl.getString("nama_url"));    
+                
                 text.setMinHeight(30);
                 text.setMinWidth(350);
                 text.setBackground(Background.EMPTY);
                 Button editURL = new Button("edit");
                 Button delURL = new Button("X");
                 delURL.setBackground(Background.EMPTY);
+                delURL.setId(String.valueOf(rsUrl.getInt("id_url")));
+                editURL.setId(String.valueOf(rsUrl.getInt("id_url")));
                 text.setId(String.valueOf(rsUrl.getInt("id_url")));
                 urlList.add(text);
                 edit.add(editURL);
-                delete.add(delURL);
+                delete.add(delURL); 
             }
             contentBox.getChildren().clear();
             contentBox.getChildren().addAll(folderList);
@@ -215,15 +234,42 @@ public class HomeController implements Initializable {
             for(int i=0;i<delete.size();i++){
                 final int o = i;
                 final String tempt = deleteBox.getChildren().get(i).getId();
+                System.out.println(tempt);
                 deleteBox.getChildren().get(i).setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    
+                
+                        
                     public void handle(MouseEvent me) {
                         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                         alert.setTitle("Confirmation");
                         alert.setContentText("Apakah anda ingin menghapus folder ini");
-                        
-                        alert.showAndWait();
-                        
+                        Optional<ButtonType> option = alert.showAndWait();
+                        if(option.get() == ButtonType.OK){
+                             try {
+                               String sqmt = "delete from URL where id_url = '"+tempt+"' ";
+                               DBUtil.getInstance().dbExecuteUpdate(sqmt);
+                               
+                               String selectFolder = "delete from Folder where id_folder = "+tempt+" and email = '"+data+"'";
+                               DBUtil.getInstance().dbExecuteUpdate(selectFolder);
+                               
+                            } catch (SQLException | ClassNotFoundException ex) {
+                                Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            FXMLLoader loader = new FXMLLoader();
+                            loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
+                            Parent backHomePage;
+                            try {
+                                backHomePage = loader.load();
+                                Scene backHome = new Scene(backHomePage);
+                                HomeController controller = loader.getController();
+                                controller.data(data);
+                                controller.show(data);
+                                Stage app_stage = (Stage)((Node) me.getSource()).getScene().getWindow();
+                                app_stage.setScene(backHome);
+                                app_stage.show();
+                            } catch (IOException ex) {
+                                Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+                            } 
+                        }
                     }
                 });
                 editBox.getChildren().get(i).setOnMouseClicked(new EventHandler<MouseEvent>(){
@@ -265,6 +311,7 @@ public class HomeController implements Initializable {
                              Parent subFolderPage = loader.load();
                              SubFolderController controller = loader.getController();
                              controller.data(data);
+                             controller.getParent(tempt);
                              controller.show(tempt,data);
                              Scene subFolder = new Scene(subFolderPage);
                              Stage app_stage = (Stage)((Node) me.getSource()).getScene().getWindow();

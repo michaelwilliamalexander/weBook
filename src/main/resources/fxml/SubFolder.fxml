@@ -41,9 +41,14 @@
          <children>
             <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="400.0" style="-fx-background-color: #e6e6e6;">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Home">
+                  <Text onMouseClicked="#backHome" strokeType="OUTSIDE" strokeWidth="0.0" text="Home">
                      <VBox.margin>
                         <Insets bottom="10.0" />
+                     </VBox.margin>
+                  </Text>
+                  <Text fx:id="tagList" onMouseClicked="#tagList" strokeType="OUTSIDE" strokeWidth="0.0" text="Tag List">
+                     <VBox.margin>
+                        <Insets bottom="10.0" top="10.0" />
                      </VBox.margin>
                   </Text>
                   <Text fx:id="settings" onMouseClicked="#setting" strokeType="OUTSIDE" strokeWidth="0.0" text="Settings">

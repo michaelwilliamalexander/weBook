@@ -58,6 +58,20 @@ public class InsertNewPasswordController implements Initializable {
     }
     
     @FXML
+    void tagList(MouseEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/fxml/TagList.fxml"));
+        Parent tagListPage = loader.load();
+        Scene tagList = new Scene(tagListPage);
+        TagListController controller = loader.getController();
+        controller.data(data);
+        controller.show(data);
+        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        app_stage.setScene(tagList);
+        app_stage.show();
+    }
+    
+    @FXML
     public void move(MouseEvent event){
         x = event.getSceneX();
         y = event.getSceneY();

@@ -87,7 +87,76 @@ public class NewFolderController implements Initializable {
             }
  
     }
+    public void tambah(String parent,String id) {
+        String stmt = "Select * From Folder where nama_folder = '"+inFolder.getText()+"'";
+        String insertStmt = "Insert into Folder values('"+inFolder.getText()+"','"+parent+"','"+data+"')";
+        try {
+            ResultSet rs = DBUtil.getInstance().dbExecuteQuery(stmt);
+            String tempt = null;
+            while(rs.next()){
+                tempt= rs.getString("nama_folder");
+                System.out.println(tempt);
+            }
+            if(inFolder.getText().isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Error");
+                    alert.setContentText("Field Kosong");
+                    alert.showAndWait();
+        }
+        else if(!inFolder.getText().equals(tempt)){
+                tambahFolder(parent,data);
+            }
+         else {
+                 Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Error");
+                    alert.setContentText("Folder sudah terdaftar");
+                    alert.showAndWait();
+                    inFolder.clear();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(NewFolderController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(NewFolderController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    public void tambahFolder(final String parent,final String email){
+        folderBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                try {
+                    FXMLLoader loader = new FXMLLoader();
+                    loader.setLocation(getClass().getResource("/fxml/SubFolder.fxml"));
+                    Parent backHomePage = loader.load();
+                    Scene backHome = new Scene(backHomePage);
+                    SubFolderController controller = loader.getController();
+                    controller.data(data);
+                    controller.show(parent,data);
+                    Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                    app_stage.setScene(backHome);
+                    app_stage.show();
+                } catch (IOException ex) {
+                    Logger.getLogger(NewFolderController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
     
+    
+        });
+    }
+    
+    @FXML
+    void tagList(MouseEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/fxml/TagList.fxml"));
+        Parent tagListPage = loader.load();
+        Scene tagList = new Scene(tagListPage);
+        TagListController controller = loader.getController();
+        controller.data(data);
+        controller.show(data);
+        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        app_stage.setScene(tagList);
+        app_stage.show();
+    }
     
    @FXML
     void dragged(MouseEvent event){
@@ -153,7 +222,6 @@ public class NewFolderController implements Initializable {
         String sql = "update folder set nama_folder = '"+newName+"' where id_folder = "+id;
         try{
             DBUtil.getInstance().dbExecuteUpdate(sql);
-            
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(NewFolderController.class.getName()).log(Level.SEVERE, null, ex);
         }
