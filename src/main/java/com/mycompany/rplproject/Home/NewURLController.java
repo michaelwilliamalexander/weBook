@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -42,6 +43,7 @@ public class NewURLController implements Initializable {
 
     private double x,y;
     private String data;
+    private Vector<String> v = new Vector();
 
     @FXML
     private Text namaAkun;
@@ -88,7 +90,7 @@ public class NewURLController implements Initializable {
         Scene backHome = new Scene(backHomePage);
         HomeController controller = loader.getController();
         controller.data(data);
-        controller.show(data);
+        controller.show(v,data);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(backHome);
         app_stage.show();
@@ -165,7 +167,7 @@ public class NewURLController implements Initializable {
                 Scene backHome = new Scene(backHomePage);
                 HomeController controller = loader.getController();
                 controller.data(data);
-                controller.show(data);
+                controller.show(v,data);
                 Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                 app_stage.setScene(backHome);
                 app_stage.show();

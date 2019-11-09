@@ -5,19 +5,20 @@
  */
 package com.mycompany.rplproject.Home;
 
-import com.mycompany.rplproject.Home.SettingController;
 import com.mycompany.rplproject.db.DBUtil;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import static java.sql.JDBCType.NULL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -37,8 +38,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.scene.control.ComboBox;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 
 public class HomeController implements Initializable {
@@ -47,8 +48,14 @@ public class HomeController implements Initializable {
     private ObservableList<Button> folders = FXCollections.observableArrayList();
     private ObservableList<String> list = FXCollections.observableArrayList("Tag","Folder");
     private String data;
-    private List<String> parent = new ArrayList<>();
-    
+    //private List<String> parent = new ArrayList<>();
+    private Vector<String> parent = new Vector<>();
+     List<Button> folderList = new ArrayList<>(); //our Collection to hold newly created Buttons
+        List<Button> urlList = new ArrayList<>();
+        //List<HBox> hbox = new ArrayList<>();
+        List<Button> edit = new ArrayList<>();
+        List<Button> delete = new ArrayList<>();
+ 
     @FXML
     private Text namaAkun;
     
@@ -78,6 +85,9 @@ public class HomeController implements Initializable {
 
     @FXML
     private VBox deleteBox;
+    
+    @FXML
+    private HBox backBox;
 
     @FXML
     void dragged(MouseEvent event){
@@ -173,20 +183,8 @@ public class HomeController implements Initializable {
         data = s;
         namaAkun.setText(s);
     }
-
-   
-    public void show(String s){
-        String location = "NULL";
-        String queryFolder = "SELECT * FROM Folder where parent_folder is "+location+" and email = '"+data+"';";
-        String queryUrl = "select * from url where email = '"+data+"'";
-        
-       
-        List<Button> folderList = new ArrayList<>(); //our Collection to hold newly created Buttons
-        List<Button> urlList = new ArrayList<>();
-        //List<HBox> hbox = new ArrayList<>();
-        List<Button> edit = new ArrayList<>();
-        List<Button> delete = new ArrayList<>();
-       
+    
+    public void displayFolder(String queryFolder){
         try {
             ResultSet rs = DBUtil.getInstance().dbExecuteQuery(queryFolder);
             while (rs.next()) { //iterate over every row returned
@@ -202,28 +200,56 @@ public class HomeController implements Initializable {
                 deleteButton.setId(String.valueOf(rs.getInt("id_folder")));
                 delete.add(deleteButton);           
             }
-            
+        }catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }     
+    public void displayUrl(String queryUrl){
+        try {
             ResultSet rsUrl = DBUtil.getInstance().dbExecuteQuery(queryUrl);
             while(rsUrl.next()){
                 Button text;
-                if(rsUrl.getString("nama_url").equals(""))
+                if(rsUrl.getString("nama_url")== null){
                     text = new Button(rsUrl.getString("link_url"));
-                else
-                    text = new Button(rsUrl.getString("nama_url"));    
-                
+                }else{
+                    text = new Button(rsUrl.getString("nama_url"));
+                }     
+                //text = new Button(rsUrl.getString("link_url"));
                 text.setMinHeight(30);
                 text.setMinWidth(350);
-                text.setBackground(Background.EMPTY);
+                
                 Button editURL = new Button("edit");
                 Button delURL = new Button("X");
                 delURL.setBackground(Background.EMPTY);
+                text.setBackground(Background.EMPTY);
+                
                 delURL.setId(String.valueOf(rsUrl.getInt("id_url")));
                 editURL.setId(String.valueOf(rsUrl.getInt("id_url")));
                 text.setId(String.valueOf(rsUrl.getInt("id_url")));
+                
                 urlList.add(text);
                 edit.add(editURL);
                 delete.add(delURL); 
             }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void show(Vector<String> t,String s){
+            String queryFolder,queryUrl;
+            parent = t;
+             if(parent.size()==0){
+                queryFolder = "SELECT * FROM Folder where parent_folder is NULL and email = '"+data+"';";
+                queryUrl = "select * from url where email = '"+data+"' and id_folder is NULL";
+            }else{
+                queryFolder = "select * from folder where parent_folder = "+parent.get(parent.size()-1)+" and email='"+data+"'";
+                queryUrl = "select * from url where email = '"+data+"' and id_folder = "+parent.get(parent.size()-1)+"";
+                System.out.println(queryFolder);
+                System.out.println(queryUrl);
+             }
+             displayFolder(queryFolder);
+             displayUrl(queryUrl);
             contentBox.getChildren().clear();
             contentBox.getChildren().addAll(folderList);
             contentBox.getChildren().addAll(urlList);
@@ -231,13 +257,12 @@ public class HomeController implements Initializable {
             deleteBox.getChildren().clear();
             editBox.getChildren().addAll(edit);
             deleteBox.getChildren().addAll(delete);
+            
             for(int i=0;i<delete.size();i++){
                 final int o = i;
                 final String tempt = deleteBox.getChildren().get(i).getId();
-                System.out.println(tempt);
                 deleteBox.getChildren().get(i).setOnMouseClicked(new EventHandler<MouseEvent>() {
-                
-                        
+                    //EventHandler buat Delete
                     public void handle(MouseEvent me) {
                         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                         alert.setTitle("Confirmation");
@@ -262,7 +287,7 @@ public class HomeController implements Initializable {
                                 Scene backHome = new Scene(backHomePage);
                                 HomeController controller = loader.getController();
                                 controller.data(data);
-                                controller.show(data);
+                                controller.show(parent,data);
                                 Stage app_stage = (Stage)((Node) me.getSource()).getScene().getWindow();
                                 app_stage.setScene(backHome);
                                 app_stage.show();
@@ -301,25 +326,56 @@ public class HomeController implements Initializable {
             
             for(int i=0;i<folderList.size();i++){
                 final String tempt = contentBox.getChildren().get(i).getId();
-                
                 contentBox.getChildren().get(i).setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    
                     public void handle(MouseEvent me) {
+                        System.out.println(tempt);
+                        parent.add(tempt);
                         FXMLLoader loader = new FXMLLoader();
-                        loader.setLocation(getClass().getResource("/fxml/SubFolder.fxml"));
+                        loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
+                        Parent backHomePage;
                         try {
-                             Parent subFolderPage = loader.load();
-                             SubFolderController controller = loader.getController();
-                             controller.data(data);
-                             controller.getParent(tempt);
-                             controller.show(tempt,data);
-                             Scene subFolder = new Scene(subFolderPage);
-                             Stage app_stage = (Stage)((Node) me.getSource()).getScene().getWindow();
-                             app_stage.setScene(subFolder);
-                             app_stage.show();
+                            backHomePage = loader.load();
+                            Scene backHome = new Scene(backHomePage);
+                            HomeController controller = loader.getController();
+                            controller.data(data);
+                            parent.add(tempt);
+                            controller.show(parent,data);
+                            backBox.getChildren().clear();
+                            Button back = new Button("Back");
+                            back.setId("isBack");
+                            backBox.getChildren().add(back);
+                            backBox.getChildren().get(0).setOnMouseClicked(new EventHandler<MouseEvent>(){
+                            @Override
+                            public void handle(MouseEvent event) {
+                                FXMLLoader loader = new FXMLLoader();
+                                        loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
+                                        try {
+                                            Parent subFolderPage = loader.load();
+                                             HomeController controller = loader.getController();
+                                             controller.data(data);
+                                             System.out.println(parent.size());
+                                             parent.removeElementAt(parent.size()-1);
+                                             controller.show(parent,data);
+                                             Scene subFolder = new Scene(subFolderPage);
+                                             Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                                             app_stage.setScene(subFolder);
+                                             app_stage.show();
+
+
+                                        } catch (IOException ex) {
+                                            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+                                        }
+                                }
+
+                            });
+                            Stage app_stage = (Stage)((Node) me.getSource()).getScene().getWindow();
+                            app_stage.setScene(backHome);
+                            app_stage.show();
                         } catch (IOException ex) {
                             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
                         }
+                        
+                        
                     }
                 });
             }
@@ -350,18 +406,18 @@ public class HomeController implements Initializable {
                 });
             }
             //vbox.getChildren().addAll(buttonlist); //tadi buat nmenyamakan panjang button
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-    
+        
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
        
         
-    }    
-    
+    }   
 }
+    
+    
+   
+    
+     
+    

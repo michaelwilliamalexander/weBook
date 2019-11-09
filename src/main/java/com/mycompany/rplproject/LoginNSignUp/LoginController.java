@@ -7,15 +7,13 @@ package com.mycompany.rplproject.LoginNSignUp;
 
 
 import com.mycompany.rplproject.Home.HomeController;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import com.mycompany.rplproject.db.DBUtil;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Vector;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,7 +27,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javax.swing.JOptionPane;
 import javafx.scene.input.MouseEvent;
 
 /**
@@ -39,6 +36,7 @@ import javafx.scene.input.MouseEvent;
  */
 public class LoginController implements Initializable {
     private String email=null,password=null;
+    private Vector<String> v = new Vector();
     /**
      * Initializes the controller class.
      */
@@ -56,6 +54,7 @@ public class LoginController implements Initializable {
     
     @FXML
      public void SignIn(ActionEvent event) throws IOException, ClassNotFoundException, SQLException{
+       
         String selectStmt;
         String inpemail = emailInput.getText();
         String inppass = passwordInput.getText();
@@ -74,7 +73,7 @@ public class LoginController implements Initializable {
                     Scene signIn = new Scene(signInPage);
                     HomeController controller = loader.getController();
                     controller.data(email);
-                    controller.show(email);
+                    controller.show(v,email);
                     Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                     app_stage.close();
                     app_stage.setScene(signIn);

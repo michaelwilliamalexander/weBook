@@ -12,6 +12,7 @@ import static java.sql.JDBCType.NULL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.EventHandler;
@@ -39,6 +40,7 @@ public class NewFolderController implements Initializable {
 
     private double x,y;
     private String data;
+    private Vector<String> v = new Vector();
 
     @FXML
     private Text namaAkun;
@@ -73,7 +75,7 @@ public class NewFolderController implements Initializable {
                 Scene backHome = new Scene(backHomePage);
                 HomeController controller = loader.getController();
                 controller.data(data);
-                controller.show(data);
+                controller.show(v,data);
                 Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                 app_stage.setScene(backHome);
                 app_stage.show();
@@ -86,62 +88,6 @@ public class NewFolderController implements Initializable {
                     inFolder.clear();
             }
  
-    }
-    public void tambah(String parent,String id) {
-        String stmt = "Select * From Folder where nama_folder = '"+inFolder.getText()+"'";
-        String insertStmt = "Insert into Folder values('"+inFolder.getText()+"','"+parent+"','"+data+"')";
-        try {
-            ResultSet rs = DBUtil.getInstance().dbExecuteQuery(stmt);
-            String tempt = null;
-            while(rs.next()){
-                tempt= rs.getString("nama_folder");
-                System.out.println(tempt);
-            }
-            if(inFolder.getText().isEmpty()){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Error");
-                    alert.setContentText("Field Kosong");
-                    alert.showAndWait();
-        }
-        else if(!inFolder.getText().equals(tempt)){
-                tambahFolder(parent,data);
-            }
-         else {
-                 Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Error");
-                    alert.setContentText("Folder sudah terdaftar");
-                    alert.showAndWait();
-                    inFolder.clear();
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(NewFolderController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(NewFolderController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-    }
-    public void tambahFolder(final String parent,final String email){
-        folderBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                try {
-                    FXMLLoader loader = new FXMLLoader();
-                    loader.setLocation(getClass().getResource("/fxml/SubFolder.fxml"));
-                    Parent backHomePage = loader.load();
-                    Scene backHome = new Scene(backHomePage);
-                    SubFolderController controller = loader.getController();
-                    controller.data(data);
-                    controller.show(parent,data);
-                    Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-                    app_stage.setScene(backHome);
-                    app_stage.show();
-                } catch (IOException ex) {
-                    Logger.getLogger(NewFolderController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-    
-    
-        });
     }
     
     @FXML
@@ -190,7 +136,7 @@ public class NewFolderController implements Initializable {
         Scene backHome = new Scene(backHomePage);
         HomeController controller = loader.getController();
         controller.data(data);
-        controller.show(data);
+        controller.show(v,data);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(backHome);
         app_stage.show();
@@ -240,7 +186,7 @@ public class NewFolderController implements Initializable {
                     Scene backHome = new Scene(backHomePage);
                     HomeController controller = loader.getController();
                     controller.data(data);
-                    controller.show(data);
+                    controller.show(v,data);
                     Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                     app_stage.setScene(backHome);
                     app_stage.show();

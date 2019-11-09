@@ -14,6 +14,7 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.Vector;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -34,7 +35,7 @@ import javax.swing.JOptionPane;
  * @author Michael William
  */
 public class GantiPasswordController implements Initializable {
-
+    private Vector<String> v = new Vector();
       private double x,y;
     private String data;
     private String email = null, password = null;
@@ -94,7 +95,7 @@ public class GantiPasswordController implements Initializable {
         Scene backHome = new Scene(backHomePage);
         HomeController controller = loader.getController();
         controller.data(data);
-        controller.show(data);
+        controller.show(v,data);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(backHome);
         app_stage.show();
