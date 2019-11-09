@@ -7,18 +7,17 @@ package com.mycompany.rplproject.Home;
 
 import com.mycompany.rplproject.Tag;
 import com.mycompany.rplproject.db.DBUtil;
-import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -28,11 +27,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 
 /**
  * FXML Controller class
@@ -57,6 +54,9 @@ public class NewURLController implements Initializable {
 
     @FXML
     private ComboBox namaTag;
+    
+    @FXML
+    private Button insertUrlButton;
     
     @FXML
     void dragged(MouseEvent event){
@@ -135,18 +135,15 @@ public class NewURLController implements Initializable {
     
     //fungsi menampilkan list folder dan tag yang ada ke combo box
     public void setComboBoxValue() throws SQLException{
-        String queryTag = "select * from tag where email = '"+data+"'";
-        ObservableList id = FXCollections.observableArrayList();
-        ObservableList listTag = FXCollections.observableArrayList(); //to show tag data into tag
-        Tag Default = new Tag(0,"General");
+        String queryTag = "select * from tag where email = '"+data+"' or id_tag=0";
+        ObservableList listTag = FXCollections.observableArrayList(); //to show tag data into tag  
         try{
             ResultSet rsTag = DBUtil.getInstance().dbExecuteQuery(queryTag);
             while(rsTag.next()){
                  listTag.add(new Tag(rsTag.getInt("id_tag"),rsTag.getString("nama_tag")));
             }
-            namaTag.setValue(Default);
-            namaTag.setItems(listTag);
-            
+            //namaTag.setValue(Default);
+            namaTag.setItems(listTag);    
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(NewURLController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -177,7 +174,39 @@ public class NewURLController implements Initializable {
         }
     }
     
-    
+    public void editBookmark(String nama, String link, final int id, final int tag){
+        try {
+            insertUrlButton.setText("edit");
+            namaUrl.setText(nama);
+            linkUrl.setText(link);
+            String sql = "select * from tag where id_tag = "+tag;
+            ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
+            if(rs.next()){
+                namaTag.setValue(new Tag(rs.getInt("id_tag"), rs.getString("nama_tag")));
+                setComboBoxValue();
+                
+            }
+            //ketika button diklik akan melakukan update
+            insertUrlButton.setOnMouseClicked(new EventHandler<MouseEvent>(){
+                @Override
+                public void handle(MouseEvent event) {
+                    try {
+                        Tag t = (Tag) namaTag.getSelectionModel().getSelectedItem();
+                        String sql = "update url set nama_url='"+namaUrl.getText()+"', link_url='"+linkUrl.getText()+"', id_tag ="+t.getIdTag()+" where id_url = "+id;
+                        DBUtil.getInstance().dbExecuteUpdate(sql);
+                        
+                    } catch (SQLException | ClassNotFoundException ex) {
+                        Logger.getLogger(NewURLController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            });     } catch (SQLException ex) {
+            Logger.getLogger(NewURLController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(NewURLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
 
    
     @Override

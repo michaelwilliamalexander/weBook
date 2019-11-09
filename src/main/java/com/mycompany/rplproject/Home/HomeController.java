@@ -5,6 +5,7 @@
  */
 package com.mycompany.rplproject.Home;
 
+import com.mycompany.rplproject.Tag;
 import com.mycompany.rplproject.db.DBUtil;
 import java.awt.Desktop;
 import java.io.IOException;
@@ -50,11 +51,10 @@ public class HomeController implements Initializable {
     private String data;
     //private List<String> parent = new ArrayList<>();
     private Vector<String> parent = new Vector<>();
-     List<Button> folderList = new ArrayList<>(); //our Collection to hold newly created Buttons
-        List<Button> urlList = new ArrayList<>();
-        //List<HBox> hbox = new ArrayList<>();
-        List<Button> edit = new ArrayList<>();
-        List<Button> delete = new ArrayList<>();
+    List<Button> folderList = new ArrayList<>(); //our Collection to hold newly created Buttons
+    List<Button> urlList = new ArrayList<>();
+    List<Button> edit = new ArrayList<>();
+    List<Button> delete = new ArrayList<>();
  
     @FXML
     private Text namaAkun;
@@ -106,6 +106,7 @@ public class HomeController implements Initializable {
     public void close(MouseEvent event){
         Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
         stage.close();
+       
     }
 
     @FXML
@@ -192,12 +193,14 @@ public class HomeController implements Initializable {
                 Button button = new Button(rs.getString("nama_folder"));
                 button.setId(String.valueOf(rs.getInt("id_folder")));
                 button.setMinWidth(350);
+                
                 Button editButton = new Button("Edit");
                 folderList.add(button);
                 editButton.setId(String.valueOf(rs.getInt("id_folder")));
                 edit.add(editButton);
                 Button deleteButton = new Button("X");
                 deleteButton.setId(String.valueOf(rs.getInt("id_folder")));
+                deleteButton.setBackground(Background.EMPTY);
                 delete.add(deleteButton);           
             }
         }catch (SQLException | ClassNotFoundException ex) {
@@ -247,8 +250,8 @@ public class HomeController implements Initializable {
                 queryFolder = "select * from folder where parent_folder = "+parent.get(parent.size()-1)+" and email='"+data+"'";
                 queryUrl = "select * from url where email = '"+data+"' and id_folder = "+parent.get(parent.size()-1)+"";
              }
-             displayFolder(queryFolder);
-             displayUrl(queryUrl);
+            displayFolder(queryFolder);
+            displayUrl(queryUrl);
             contentBox.getChildren().clear();
             contentBox.getChildren().addAll(folderList);
             contentBox.getChildren().addAll(urlList);
@@ -297,6 +300,7 @@ public class HomeController implements Initializable {
                     }
                 });
                 editBox.getChildren().get(i).setOnMouseClicked(new EventHandler<MouseEvent>(){
+                    @Override
                     public void handle(MouseEvent me){
                         try {
                             FXMLLoader loader = new FXMLLoader();
@@ -317,8 +321,6 @@ public class HomeController implements Initializable {
                         } catch (IOException | SQLException | ClassNotFoundException ex) {
                             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        
-                        
                     }
                 });
             }
@@ -326,6 +328,7 @@ public class HomeController implements Initializable {
             for(int i=0;i<folderList.size();i++){
                 final String tempt = contentBox.getChildren().get(i).getId();
                 contentBox.getChildren().get(i).setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
                     public void handle(MouseEvent me) {
                         System.out.println(tempt);
                       
@@ -339,7 +342,7 @@ public class HomeController implements Initializable {
                             controller.data(data);
                             parent.add(tempt);
                             controller.show(parent,data);
-                            if(parent.size()!=0){
+                            if(!parent.isEmpty()){
                                 controller.getBack(parent,data);
                             }
                             Stage app_stage = (Stage)((Node) me.getSource()).getScene().getWindow();
@@ -353,10 +356,11 @@ public class HomeController implements Initializable {
                     }
                 });
             }
+            //untuk edit delete Bookmark
             for(int i=folderList.size();i<contentBox.getChildren().size();i++){
                 final int o = i;
                 contentBox.getChildren().get(i).setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    
+                    @Override
                     public void handle(MouseEvent me) {
                         try {
                                String selectUrl = "select * from url where id_url = "+contentBox.getChildren().get(o).getId()+" and email = '"+data+"'";
@@ -374,7 +378,25 @@ public class HomeController implements Initializable {
                 editBox.getChildren().get(i).setOnMouseClicked(new EventHandler<MouseEvent>(){
                     @Override
                     public void handle(MouseEvent event) {
-                        
+                        try {
+                            FXMLLoader loader = new FXMLLoader();
+                            loader.setLocation(getClass().getResource("/fxml/NewURL.fxml"));
+                            Parent tambahURLPage = loader.load();
+                            NewURLController controller = loader.getController();
+                            String sql = "select * from url where id_url = '"+editBox.getChildren().get(o).getId()+"'";
+                            ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
+                            if(rs.next()){
+                                controller.editBookmark(rs.getString("nama_url"),rs.getString("link_url"),rs.getInt("id_url"),rs.getInt("id_tag"));     
+                                controller.data(data);
+                                Scene tambahURL = new Scene(tambahURLPage);
+                                Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                                app_stage.setScene(tambahURL);
+                                app_stage.show();
+                            }
+                            
+                        } catch (IOException | SQLException | ClassNotFoundException ex) {
+                            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                     
                 });
@@ -406,6 +428,7 @@ public class HomeController implements Initializable {
                     Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                     app_stage.setScene(backHome);
                     app_stage.show();
+                    
                 } catch (IOException ex) {
                     Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -419,9 +442,4 @@ public class HomeController implements Initializable {
         
     }   
 }
-    
-    
    
-    
-     
-    

@@ -17,6 +17,7 @@ com\mycompany\rplproject\Home\InputTagListController.class
 com\mycompany\rplproject\Home\TagListController.class
 com\mycompany\rplproject\Home\SettingController.class
 com\mycompany\rplproject\Home\NewURLController.class
+com\mycompany\rplproject\Home\NewURLController$1.class
 com\mycompany\rplproject\MainApp.class
 com\mycompany\rplproject\Home\TagListController$5.class
 com\mycompany\rplproject\Home\HomeController.class

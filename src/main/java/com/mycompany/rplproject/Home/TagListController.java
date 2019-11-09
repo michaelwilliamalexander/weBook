@@ -37,11 +37,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-/**
- * FXML Controller class
- *
- * @author Michael William
- */
+
 public class TagListController implements Initializable {
     private double x,y;
     private String data;
@@ -209,7 +205,7 @@ public class TagListController implements Initializable {
         contentBox.getChildren().clear();
         editBox.getChildren().clear();
         deleteBox.getChildren().clear();
-        String sql = "Select * from Tag where email = '"+s+"'";
+        String sql = "Select * from Tag where email = '"+s+"' or id_tag = 0";
         String sql1= "Select * from URL where id_tag ='"+idtag+"' and email = '"+s+"'";
         
         if(idtag == null){
