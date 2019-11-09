@@ -172,7 +172,7 @@ public class HomeController implements Initializable {
         Scene tagList = new Scene(tagListPage);
         TagListController controller = loader.getController();
         controller.data(data);
-        controller.show(data);
+        controller.show(null,data);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(tagList);
         app_stage.show();
@@ -246,9 +246,6 @@ public class HomeController implements Initializable {
             }else{
                 queryFolder = "select * from folder where parent_folder = "+parent.get(parent.size()-1)+" and email='"+data+"'";
                 queryUrl = "select * from url where email = '"+data+"' and id_folder = "+parent.get(parent.size()-1)+"";
-                System.out.println(queryFolder);
-                System.out.println(queryUrl);
-                
              }
              displayFolder(queryFolder);
              displayUrl(queryUrl);

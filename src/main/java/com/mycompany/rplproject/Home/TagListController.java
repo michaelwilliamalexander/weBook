@@ -6,7 +6,10 @@
 package com.mycompany.rplproject.Home;
 
 import com.mycompany.rplproject.db.DBUtil;
+import java.awt.Desktop;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,6 +31,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -41,6 +46,9 @@ public class TagListController implements Initializable {
     private double x,y;
     private String data;
     private Vector<String> v = new Vector();
+    private List<Button> tag = new ArrayList<>();
+    private List<Button> edit = new ArrayList<>();
+    private List<Button> delete = new ArrayList<>();
     
     @FXML
     private Text namaAkun;
@@ -53,6 +61,10 @@ public class TagListController implements Initializable {
 
     @FXML
     private VBox deleteBox;
+    
+    @FXML
+    private HBox backBox;
+    
     /**
      * Initializes the controller class.
      */
@@ -124,13 +136,10 @@ public class TagListController implements Initializable {
         app_stage.show();
     }
     
-    public void show(String s){
-        String sql = "Select * from Tag where email = '"+s+"'";
-        List<Button> tag = new ArrayList<>();
-        List<Button> edit = new ArrayList<>();
-        List<Button> delete = new ArrayList<>();
+    public void displayTag(String sql){
         try {
             ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
+            System.out.println(sql);
             while(rs.next()){
                 Button button = new Button(rs.getString("nama_tag"));
                 button.setMinWidth(350);
@@ -141,19 +150,79 @@ public class TagListController implements Initializable {
                 edit.add(editButton);
                 Button deleteButton = new Button("X");
                 deleteButton.setId(String.valueOf(rs.getInt("id_tag")));
+                deleteButton.setBackground(Background.EMPTY);
                 delete.add(deleteButton);  
+                }
+            }catch (SQLException | ClassNotFoundException ex) {
+                Logger.getLogger(TagListController.class.getName()).log(Level.SEVERE, null, ex);
             }
-            contentBox.getChildren().clear();
-            contentBox.getChildren().addAll(tag);
-            editBox.getChildren().clear();
-            deleteBox.getChildren().clear();
-            editBox.getChildren().addAll(edit);
-            deleteBox.getChildren().addAll(delete);
+        contentBox.getChildren().addAll(tag);
+        editBox.getChildren().addAll(edit);
+        deleteBox.getChildren().addAll(delete);
+    }
+        
+    public void displayURL(String sql){
+        try {
+            ResultSet rs= DBUtil.getInstance().dbExecuteQuery(sql);
+            System.out.println(sql);
+             while(rs.next()){
+                 
+                final Button button = new Button(rs.getString("nama_url"));
+                button.setMinWidth(350);
+                button.setId(String.valueOf(rs.getInt("id_url")));
+                button.setBackground(Background.EMPTY);
+                tag.add(button);
+                Button editButton = new Button("Edit");
+                editButton.setId(String.valueOf(rs.getInt("id_url")));
+                edit.add(editButton);
+                Button deleteButton = new Button("X");
+                deleteButton.setId(String.valueOf(rs.getInt("id_url")));
+                deleteButton.setBackground(Background.EMPTY);
+                delete.add(deleteButton);  
+                button.setOnMouseClicked(new EventHandler<MouseEvent>(){
+                    @Override
+                    public void handle(MouseEvent event) {
+                        try {
+                            String selectUrl = "select * from url where id_url = "+button.getId()+" and email = '"+data+"'";
+                            Desktop d = Desktop.getDesktop();
+                            ResultSet rs = DBUtil.getInstance().dbExecuteQuery(selectUrl);
+                            if(rs.next()){
+                                d.browse(new URI(rs.getString("link_url")));
+                            }
+                        } catch (SQLException | ClassNotFoundException | URISyntaxException | IOException ex) {
+                            Logger.getLogger(TagListController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+             
+             });
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(TagListController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        contentBox.getChildren().addAll(tag);
+        editBox.getChildren().addAll(edit);
+        deleteBox.getChildren().addAll(delete);
+    }    
+    
+    public void show(final String idtag, String s){
+        
+        contentBox.getChildren().clear();
+        editBox.getChildren().clear();
+        deleteBox.getChildren().clear();
+        String sql = "Select * from Tag where email = '"+s+"'";
+        String sql1= "Select * from URL where id_tag ='"+idtag+"' and email = '"+s+"'";
+        
+        if(idtag == null){
+            displayTag(sql);
+        }else{
+            displayURL(sql1);
+        }
             for(int i=0;i<delete.size();i++){
                 final int o = i;
                 final String tempt = deleteBox.getChildren().get(i).getId();
                 deleteBox.getChildren().get(i).setOnMouseClicked(new EventHandler<MouseEvent>(){
                 
+                    @Override
                     public void handle(MouseEvent me) {
                         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                         alert.setTitle("Confirmation");
@@ -167,7 +236,7 @@ public class TagListController implements Initializable {
                             } catch (SQLException | ClassNotFoundException ex) {
                                 Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                             FXMLLoader loader = new FXMLLoader();
+                            FXMLLoader loader = new FXMLLoader();
                             loader.setLocation(getClass().getResource("/fxml/TagList.fxml"));
                             Parent TagListPage;
                             try {
@@ -175,7 +244,7 @@ public class TagListController implements Initializable {
                                 Scene TagList = new Scene(TagListPage);
                                 TagListController controller = loader.getController();
                                 controller.data(data);
-                                controller.show(data);
+                                controller.show(idtag, data);
                                 Stage app_stage = (Stage)((Node) me.getSource()).getScene().getWindow();
                                 app_stage.setScene(TagList);
                                 app_stage.show();
@@ -208,6 +277,7 @@ public class TagListController implements Initializable {
                         } 
                     }  
                 });
+                
                 contentBox.getChildren().get(i).setOnMouseClicked(new EventHandler<MouseEvent>(){
                     @Override
                     public void handle(MouseEvent event) {     
@@ -218,52 +288,45 @@ public class TagListController implements Initializable {
                             Scene TagList = new Scene(TagListPage);
                             TagListController controller = loader.getController();
                             controller.data(data);
-                            controller.showURL(tempt);
+                                controller.getBack(contentBox.getChildren().get(o).getId(), data);
+                            controller.show(contentBox.getChildren().get(o).getId(), data);
                             Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                             app_stage.setScene(TagList);
                             app_stage.show();
                         } catch (IOException ex) {
-                            Logger.getLogger(TagListController.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (SQLException ex) {
-                            Logger.getLogger(TagListController.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (ClassNotFoundException ex) {
                             Logger.getLogger(TagListController.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                     
                 });
             }
-        } catch (SQLException ex ) {
-            Logger.getLogger(TagListController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(TagListController.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-    }
-    public void showURL(String url) throws SQLException, ClassNotFoundException{
-        String sql= "Select * from URL where id_tag ='"+url+"'";
-        List<Button> tag = new ArrayList<>();
-        List<Button> edit = new ArrayList<>();
-        List<Button> delete = new ArrayList<>();
-        ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
-         while(rs.next()){
-                Button button = new Button(rs.getString("nama_url"));
-                button.setMinWidth(350);
-                button.setId(String.valueOf(rs.getInt("id_url")));
-                tag.add(button);
-                Button editButton = new Button("Edit");
-                editButton.setId(String.valueOf(rs.getInt("id_url")));
-                edit.add(editButton);
-                Button deleteButton = new Button("X");
-                deleteButton.setId(String.valueOf(rs.getInt("id_url")));
-                delete.add(deleteButton);  
+    public void getBack(String idTag,String email){
+        Button back = new Button("Back");
+        final String tempt = idTag;
+        back.setId("back");
+        backBox.getChildren().clear();
+        backBox.getChildren().add(back);
+        backBox.getChildren().get(backBox.getChildren().size()-1).setOnMouseClicked(new EventHandler<MouseEvent>(){
+            @Override
+            public void handle(MouseEvent event) {
+                try {
+                    FXMLLoader loader = new FXMLLoader();
+                    loader.setLocation(getClass().getResource("/fxml/TagList.fxml"));
+                    Parent tagListPage = loader.load();
+                    Scene tagList = new Scene(tagListPage);
+                    TagListController controller = loader.getController();
+                    controller.data(data);
+                    controller.show(null,data);
+                    Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                    app_stage.setScene(tagList);
+                    app_stage.show();
+                } catch (IOException ex) {
+                    Logger.getLogger(TagListController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-            contentBox.getChildren().clear();
-            contentBox.getChildren().addAll(tag);
-            editBox.getChildren().clear();
-            deleteBox.getChildren().clear();
-            editBox.getChildren().addAll(edit);
-            deleteBox.getChildren().addAll(delete);
+        });
     }
      @FXML
     void tambahTag(MouseEvent event) throws IOException {

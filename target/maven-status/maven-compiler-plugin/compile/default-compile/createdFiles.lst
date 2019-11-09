@@ -2,6 +2,7 @@ com\mycompany\rplproject\Home\InsertNewPasswordController.class
 com\mycompany\rplproject\Home\TagListController$1.class
 com\mycompany\rplproject\Home\EvenHandler.class
 com\mycompany\rplproject\Home\HomeController$4.class
+com\mycompany\rplproject\Home\TagListController$4.class
 com\mycompany\rplproject\FXMLController.class
 com\mycompany\rplproject\Home\HomeController$1.class
 com\mycompany\rplproject\Home\GantiPasswordController.class
@@ -17,6 +18,7 @@ com\mycompany\rplproject\Home\TagListController.class
 com\mycompany\rplproject\Home\SettingController.class
 com\mycompany\rplproject\Home\NewURLController.class
 com\mycompany\rplproject\MainApp.class
+com\mycompany\rplproject\Home\TagListController$5.class
 com\mycompany\rplproject\Home\HomeController.class
 com\mycompany\rplproject\LoginNSignUp\SignUpFXMLController.class
 com\mycompany\rplproject\db\DBUtil.class

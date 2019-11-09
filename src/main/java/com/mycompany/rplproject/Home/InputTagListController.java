@@ -108,7 +108,7 @@ public class InputTagListController implements Initializable {
         Scene tagList = new Scene(tagListPage);
         TagListController controller = loader.getController();
         controller.data(data);
-        controller.show(data);
+        controller.show(null,data);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(tagList);
         app_stage.show();
@@ -151,7 +151,7 @@ public class InputTagListController implements Initializable {
             Scene tagList = new Scene(tagListPage);
             TagListController controller = loader.getController();
             controller.data(data);
-            controller.show(data);
+            controller.show(null,data);
             Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
             app_stage.setScene(tagList);
             app_stage.show();
@@ -181,7 +181,7 @@ public class InputTagListController implements Initializable {
                     Scene tagList = new Scene(tagListPage);
                     TagListController controller = loader.getController();
                     controller.data(data);
-                    controller.show(data);
+                    controller.show(null,data);
                     Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                     app_stage.setScene(tagList);
                     app_stage.show();
