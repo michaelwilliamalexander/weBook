@@ -218,7 +218,7 @@ public class HomeController implements Initializable {
                 text.setMinHeight(30);
                 text.setMinWidth(350);
                 
-                Button editURL = new Button("edit");
+                Button editURL = new Button("Edit");
                 Button delURL = new Button("X");
                 delURL.setBackground(Background.EMPTY);
                 text.setBackground(Background.EMPTY);
@@ -242,11 +242,13 @@ public class HomeController implements Initializable {
              if(parent.size()==0){
                 queryFolder = "SELECT * FROM Folder where parent_folder is NULL and email = '"+data+"';";
                 queryUrl = "select * from url where email = '"+data+"' and id_folder is NULL";
+                backBox.getChildren().clear();
             }else{
                 queryFolder = "select * from folder where parent_folder = "+parent.get(parent.size()-1)+" and email='"+data+"'";
                 queryUrl = "select * from url where email = '"+data+"' and id_folder = "+parent.get(parent.size()-1)+"";
                 System.out.println(queryFolder);
                 System.out.println(queryUrl);
+                
              }
              displayFolder(queryFolder);
              displayUrl(queryUrl);
@@ -329,7 +331,7 @@ public class HomeController implements Initializable {
                 contentBox.getChildren().get(i).setOnMouseClicked(new EventHandler<MouseEvent>() {
                     public void handle(MouseEvent me) {
                         System.out.println(tempt);
-                        parent.add(tempt);
+                      
                         FXMLLoader loader = new FXMLLoader();
                         loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
                         Parent backHomePage;
@@ -340,34 +342,9 @@ public class HomeController implements Initializable {
                             controller.data(data);
                             parent.add(tempt);
                             controller.show(parent,data);
-                            backBox.getChildren().clear();
-                            Button back = new Button("Back");
-                            back.setId("isBack");
-                            backBox.getChildren().add(back);
-                            backBox.getChildren().get(0).setOnMouseClicked(new EventHandler<MouseEvent>(){
-                            @Override
-                            public void handle(MouseEvent event) {
-                                FXMLLoader loader = new FXMLLoader();
-                                        loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
-                                        try {
-                                            Parent subFolderPage = loader.load();
-                                             HomeController controller = loader.getController();
-                                             controller.data(data);
-                                             System.out.println(parent.size());
-                                             parent.removeElementAt(parent.size()-1);
-                                             controller.show(parent,data);
-                                             Scene subFolder = new Scene(subFolderPage);
-                                             Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-                                             app_stage.setScene(subFolder);
-                                             app_stage.show();
-
-
-                                        } catch (IOException ex) {
-                                            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
-                                        }
-                                }
-
-                            });
+                            if(parent.size()!=0){
+                                controller.getBack(parent,data);
+                            }
                             Stage app_stage = (Stage)((Node) me.getSource()).getScene().getWindow();
                             app_stage.setScene(backHome);
                             app_stage.show();
@@ -407,7 +384,37 @@ public class HomeController implements Initializable {
             }
             //vbox.getChildren().addAll(buttonlist); //tadi buat nmenyamakan panjang button
         }
-        
+     
+    public void getBack(Vector<String> t,String s){
+        parent = t;
+        Button button = new Button("Back");
+        backBox.getChildren().clear();
+        backBox.getChildren().add(button);
+        backBox.getChildren().get(backBox.getChildren().size()-1).setOnMouseClicked(new EventHandler<MouseEvent>(){
+            @Override
+            public void handle(MouseEvent event) {
+                System.out.println("Hai");
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
+                try {
+                    Parent backHomePage = loader.load();
+                    Scene backHome = new Scene(backHomePage);
+                    HomeController controller = loader.getController();
+                    controller.data(data);
+                    parent.remove(parent.size()-1);
+                    controller.show(parent,data);
+                    if(parent.size()!=0){
+                        controller.getBack(parent,data);
+                    }
+                    Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                    app_stage.setScene(backHome);
+                    app_stage.show();
+                } catch (IOException ex) {
+                    Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+    }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
