@@ -58,6 +58,9 @@ public class NewURLController implements Initializable {
     private Button insertUrlButton;
     
     @FXML
+    private Button isBack;
+    
+    @FXML
     void dragged(MouseEvent event){
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         stage.setX(event.getScreenX() - x);
@@ -184,6 +187,28 @@ public class NewURLController implements Initializable {
             }
             
         });
+        isBack.setOnMouseClicked(new EventHandler<MouseEvent>(){
+                @Override
+                public void handle(MouseEvent event) {
+                    try {
+                        FXMLLoader loader = new FXMLLoader();
+                        loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
+                        Parent backHomePage = loader.load();
+                        Scene backHome = new Scene(backHomePage);
+                        HomeController controller = loader.getController();
+                        controller.data(data);
+                        controller.show(v,data);
+                        if(!v.isEmpty()){
+                            controller.getBack(v,data);
+                        }
+                        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                        app_stage.setScene(backHome);
+                        app_stage.show();
+                    } catch (IOException ex) {
+                        Logger.getLogger(NewURLController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            });
        
     }
     
@@ -214,7 +239,7 @@ public class NewURLController implements Initializable {
                         HomeController controller = loader.getController();
                         controller.data(data);
                         controller.show(v,data);
-                        if(v.size()!=0){
+                        if(!v.isEmpty()){
                                 controller.getBack(v,data);
                         }
                         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
@@ -224,11 +249,31 @@ public class NewURLController implements Initializable {
                     } catch (SQLException | ClassNotFoundException | IOException ex) {
                         Logger.getLogger(NewURLController.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                }    
+            });  
+            isBack.setOnMouseClicked(new EventHandler<MouseEvent>(){
+                @Override
+                public void handle(MouseEvent event) {
+                    try {
+                        FXMLLoader loader = new FXMLLoader();
+                        loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
+                        Parent backHomePage = loader.load();
+                        Scene backHome = new Scene(backHomePage);
+                        HomeController controller = loader.getController();
+                        controller.data(data);
+                        controller.show(v,data);
+                        if(!v.isEmpty()){
+                            controller.getBack(v,data);
+                        }
+                        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                        app_stage.setScene(backHome);
+                        app_stage.show();
+                    } catch (IOException ex) {
+                        Logger.getLogger(NewURLController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
-                
-            });     } catch (SQLException ex) {
-            Logger.getLogger(NewURLController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
+            });
+        } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(NewURLController.class.getName()).log(Level.SEVERE, null, ex);
         }
         

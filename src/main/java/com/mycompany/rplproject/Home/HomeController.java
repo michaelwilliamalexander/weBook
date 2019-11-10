@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -35,6 +36,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -51,6 +53,7 @@ public class HomeController implements Initializable {
     private String data;
     //private List<String> parent = new ArrayList<>();
     private Vector<String> parent = new Vector<>();
+    private double x,y;
     List<Button> folderList = new ArrayList<>(); //our Collection to hold newly created Buttons
     List<Button> urlList = new ArrayList<>();
     List<Button> edit = new ArrayList<>();
@@ -58,6 +61,18 @@ public class HomeController implements Initializable {
  
     @FXML
     private Text namaAkun;
+    
+    @FXML
+    private Text settings;
+    
+    @FXML
+    private Text logOut;
+    
+    @FXML
+    private TextField inSearch;
+
+    @FXML
+    private Button btnSearch;
     
     @FXML
     private Button tambahURL;
@@ -69,14 +84,8 @@ public class HomeController implements Initializable {
     private Button btnDelete;
     
     @FXML
-    private Text settings;
-    
-    @FXML
     private Button tambahFolder;
 
-    @FXML
-    private Text logOut;
-    double x,y;
     @FXML
     private VBox contentBox;
     
@@ -208,7 +217,8 @@ public class HomeController implements Initializable {
         }catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }     
+    } 
+    
     public void displayUrl(String queryUrl){
         try {
             ResultSet rsUrl = DBUtil.getInstance().dbExecuteQuery(queryUrl);
@@ -243,16 +253,29 @@ public class HomeController implements Initializable {
         }
     }
     
+    
+   
+    //Menampilkan Data di Home
     public void show(Vector<String> t,String s){
             String queryFolder,queryUrl;
             parent = t;
+            System.out.println(inSearch.getText());
              if(parent.size()==0){
                 queryFolder = "SELECT * FROM Folder where parent_folder is NULL and email = '"+data+"';";
                 queryUrl = "select * from url where email = '"+data+"' and id_folder is NULL";
                 backBox.getChildren().clear();
+            }/*kamu ganti else if diawah ini jadi !inSearch.getText().isEmpty() 
+             g isa search tp isa ngliat anak-anak dari root folder 
+             terus method btnSearch ada dibawah sendiri method show*/
+             else if(inSearch.getText().isEmpty()){
+                queryFolder = "select * from folder where nama_folder like '%"+parent.get(parent.size()-1)+"%' and email='"+data+"'";
+                queryUrl = "Select * from url where email='"+data+"' and nama_url like '%"+parent.get(parent.size()-1)+"%' or link_url like '%"+parent.get(parent.size()-1)+"%'";
             }else{
                 queryFolder = "select * from folder where parent_folder = "+parent.get(parent.size()-1)+" and email='"+data+"'";
                 queryUrl = "select * from url where email = '"+data+"' and id_folder = "+parent.get(parent.size()-1)+"";
+            }
+             for(int i=0;i<parent.size();i++){
+                 System.out.println(parent.get(i));
              }
             displayFolder(queryFolder);
             displayUrl(queryUrl);
@@ -294,6 +317,9 @@ public class HomeController implements Initializable {
                                 HomeController controller = loader.getController();
                                 controller.data(data);
                                 controller.show(parent,data);
+                                if(!parent.isEmpty()){
+                                    controller.getBack(parent,data);
+                                }
                                 Stage app_stage = (Stage)((Node) me.getSource()).getScene().getWindow();
                                 app_stage.setScene(backHome);
                                 app_stage.show();
@@ -403,6 +429,36 @@ public class HomeController implements Initializable {
                     }
                     
                 });
+                
+                //Button untuk search
+                btnSearch.setOnMouseClicked(new EventHandler<MouseEvent>(){
+                @Override
+                public void handle(MouseEvent event) {
+                    System.out.println(inSearch.getText());
+                    FXMLLoader loader = new FXMLLoader();
+                    loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
+                    Parent backHomePage;
+                    try {
+                        backHomePage = loader.load();
+                        Scene backHome = new Scene(backHomePage);
+                        HomeController controller = loader.getController();
+                        controller.data(data);
+                        parent.add(inSearch.getText());
+                        controller.show(parent,data);
+                        controller.tambahFolder.setVisible(false);
+                        controller.tambahURL.setVisible(false);
+                        controller.inSearch.setText(inSearch.getText());
+                        if(!parent.isEmpty()){
+                            controller.getBack(parent,data);
+                        }
+                        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                        app_stage.setScene(backHome);
+                        app_stage.show();
+                    } catch (IOException ex) {
+                        Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+                    }   
+                }
+            });
             }
             //vbox.getChildren().addAll(buttonlist); //tadi buat nmenyamakan panjang button
         }
@@ -438,6 +494,7 @@ public class HomeController implements Initializable {
             }
         });
     }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO

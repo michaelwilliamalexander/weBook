@@ -37,9 +37,7 @@ import javafx.scene.input.MouseEvent;
 public class LoginController implements Initializable {
     private String email=null,password=null;
     private Vector<String> v = new Vector();
-    /**
-     * Initializes the controller class.
-     */
+    
     @FXML
     private TextField emailInput;
     
