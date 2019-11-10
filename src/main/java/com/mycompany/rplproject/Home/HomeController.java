@@ -131,6 +131,7 @@ public class HomeController implements Initializable {
         Parent tambahFolderPage = loader.load();
         NewFolderController controller = loader.getController();
         controller.data(data);
+        controller.tambahFolder(parent, data);
         Scene tambahFolder = new Scene(tambahFolderPage);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(tambahFolder);
@@ -158,6 +159,7 @@ public class HomeController implements Initializable {
         Parent tambahURLPage = loader.load();
         NewURLController controller = loader.getController();
         controller.data(data);
+        controller.tambahURL(parent, data);
         controller.setComboBoxValue();
         Scene tambahURL = new Scene(tambahURLPage);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
@@ -225,6 +227,8 @@ public class HomeController implements Initializable {
                 Button delURL = new Button("X");
                 delURL.setBackground(Background.EMPTY);
                 text.setBackground(Background.EMPTY);
+                editURL.setMinHeight(30);
+                delURL.setMinHeight(30);
                 
                 delURL.setId(String.valueOf(rsUrl.getInt("id_url")));
                 editURL.setId(String.valueOf(rsUrl.getInt("id_url")));
@@ -311,9 +315,8 @@ public class HomeController implements Initializable {
                             String sql = "select * from folder where id_folder = '"+editBox.getChildren().get(o).getId()+"'";
                             ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
                             if(rs.next()){
-                                controller.editFolder(rs.getString("nama_folder"),rs.getInt("id_folder"));
+                                controller.editFolder(parent,rs.getString("nama_folder"),rs.getInt("id_folder"));
                             }
-                            
                             Scene tambahFolder = new Scene(tambahFolderPage);
                             Stage app_stage = (Stage)((Node) me.getSource()).getScene().getWindow();
                             app_stage.setScene(tambahFolder);
@@ -386,7 +389,7 @@ public class HomeController implements Initializable {
                             String sql = "select * from url where id_url = '"+editBox.getChildren().get(o).getId()+"'";
                             ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
                             if(rs.next()){
-                                controller.editBookmark(rs.getString("nama_url"),rs.getString("link_url"),rs.getInt("id_url"),rs.getInt("id_tag"));     
+                                controller.editBookmark(parent,rs.getString("nama_url"),rs.getString("link_url"),rs.getInt("id_url"),rs.getInt("id_tag"));     
                                 controller.data(data);
                                 Scene tambahURL = new Scene(tambahURLPage);
                                 Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();

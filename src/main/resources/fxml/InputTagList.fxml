@@ -28,7 +28,7 @@
             </Text>
          </children>
       </VBox>
-      <HBox alignment="TOP_RIGHT" layoutX="158.0" prefHeight="59.0" prefWidth="542.0" style="-fx-background-color: #57606f;">
+      <HBox alignment="TOP_RIGHT" layoutX="158.0" prefHeight="25.0" prefWidth="542.0" style="-fx-background-color: #57606f;">
          <children>
             <FontAwesomeIcon fill="#0ce430" iconName="MINUS" onMouseClicked="#minimize" text="">
                <HBox.margin>
@@ -38,6 +38,10 @@
                <HBox.margin>
                   <Insets left="5.0" right="10.0" top="5.0" />
                </HBox.margin></FontAwesomeIcon>
+         </children></HBox>
+      <HBox fx:id="backBox" alignment="CENTER_LEFT" layoutX="158.0" layoutY="25.0" prefHeight="33.0" prefWidth="542.0" style="-fx-background-color: #57606f;">
+         <children>
+            <Button fx:id="isBack" mnemonicParsing="false" onMouseClicked="#tagList" text="Back" />
          </children></HBox>
       <HBox layoutY="58.0" prefHeight="342.0" prefWidth="700.0">
          <children>

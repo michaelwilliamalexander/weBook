@@ -51,7 +51,6 @@ public class NewURLController implements Initializable {
     @FXML
     private TextField linkUrl;
 
-
     @FXML
     private ComboBox namaTag;
     
@@ -148,34 +147,49 @@ public class NewURLController implements Initializable {
             Logger.getLogger(NewURLController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public void tambahURL(MouseEvent event) throws IOException, SQLException, ClassNotFoundException{
-        Tag t = (Tag) namaTag.getSelectionModel().getSelectedItem();
-        String SqlQuery;
-        
-        SqlQuery = "insert into URL (nama_url, link_url, id_tag, email) values ('"+namaUrl.getText()+"','"+linkUrl.getText()+"',"+t.getIdTag()+",'"+data+"')";
-        
-        try{
-            DBUtil.getInstance().dbExecuteUpdate(SqlQuery);
-            System.out.println("input berhasil heheheheee");
+    
+    public void tambahURL(Vector<String> parent,String s){
+        v = parent;
+        insertUrlButton.setOnMouseClicked(new EventHandler<MouseEvent>(){
+            @Override
+            public void handle(MouseEvent event) {
+                 Tag t = (Tag) namaTag.getSelectionModel().getSelectedItem();
+                String SqlQuery;
+                if(v.size()==0){
+                    SqlQuery = "insert into URL (nama_url, link_url, id_tag, email) values ('"+namaUrl.getText()+"','"+linkUrl.getText()+"',"+t.getIdTag()+",'"+data+"')";
+                }else{
+                    SqlQuery = "insert into URL (nama_url, link_url, id_tag,id_folder, email) values ('"+namaUrl.getText()+"','"+linkUrl.getText()+"',"+t.getIdTag()+",'"+v.get(v.size()-1)+"','"+data+"')";
+                }
+                try{
+                    DBUtil.getInstance().dbExecuteUpdate(SqlQuery);
+                    System.out.println("input berhasil heheheheee");
+
+                        FXMLLoader loader = new FXMLLoader();
+                        loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
+                        Parent backHomePage = loader.load();
+                        Scene backHome = new Scene(backHomePage);
+                        HomeController controller = loader.getController();
+                        controller.data(data);
+                        controller.show(v,data);
+                        if(v.size()!=0){
+                                controller.getBack(v,data);
+                        }
+                        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                        app_stage.setScene(backHome);
+                        app_stage.show();
+
+                }catch (SQLException | ClassNotFoundException | IOException ex) {
+                    Logger.getLogger(NewURLController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
             
-                FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
-                Parent backHomePage = loader.load();
-                Scene backHome = new Scene(backHomePage);
-                HomeController controller = loader.getController();
-                controller.data(data);
-                controller.show(v,data);
-                Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-                app_stage.setScene(backHome);
-                app_stage.show();
-                
-        }catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(NewURLController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        });
+       
     }
     
-    public void editBookmark(String nama, String link, final int id, final int tag){
+    public void editBookmark(Vector<String>parent,String nama, String link, final int id, final int tag){
         try {
+            v=parent;
             insertUrlButton.setText("edit");
             namaUrl.setText(nama);
             linkUrl.setText(link);
@@ -183,8 +197,7 @@ public class NewURLController implements Initializable {
             ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
             if(rs.next()){
                 namaTag.setValue(new Tag(rs.getInt("id_tag"), rs.getString("nama_tag")));
-                setComboBoxValue();
-                
+                setComboBoxValue(); 
             }
             //ketika button diklik akan melakukan update
             insertUrlButton.setOnMouseClicked(new EventHandler<MouseEvent>(){
@@ -194,8 +207,21 @@ public class NewURLController implements Initializable {
                         Tag t = (Tag) namaTag.getSelectionModel().getSelectedItem();
                         String sql = "update url set nama_url='"+namaUrl.getText()+"', link_url='"+linkUrl.getText()+"', id_tag ="+t.getIdTag()+" where id_url = "+id;
                         DBUtil.getInstance().dbExecuteUpdate(sql);
+                        FXMLLoader loader = new FXMLLoader();
+                        loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
+                        Parent backHomePage = loader.load();
+                        Scene backHome = new Scene(backHomePage);
+                        HomeController controller = loader.getController();
+                        controller.data(data);
+                        controller.show(v,data);
+                        if(v.size()!=0){
+                                controller.getBack(v,data);
+                        }
+                        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                        app_stage.setScene(backHome);
+                        app_stage.show();
                         
-                    } catch (SQLException | ClassNotFoundException ex) {
+                    } catch (SQLException | ClassNotFoundException | IOException ex) {
                         Logger.getLogger(NewURLController.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -208,7 +234,6 @@ public class NewURLController implements Initializable {
         
     }
 
-   
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO

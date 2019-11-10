@@ -86,7 +86,7 @@
                            </rowConstraints>
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nama Folder" />
-                              <Button fx:id="folderBtn" mnemonicParsing="false" onMouseClicked="#tambahFolder" text="Confirm" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                              <Button fx:id="folderBtn" mnemonicParsing="false" text="Confirm" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                  <GridPane.margin>
                                     <Insets left="50.0" top="10.0" />
                                  </GridPane.margin>
