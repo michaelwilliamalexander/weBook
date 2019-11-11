@@ -5,6 +5,7 @@
  */
 package com.mycompany.rplproject.Home;
 
+import com.mycompany.rplproject.User;
 import com.mycompany.rplproject.db.DBUtil;
 import java.awt.Desktop;
 import java.io.IOException;
@@ -45,7 +46,7 @@ public class TagListController implements Initializable {
     private List<Button> tag = new ArrayList<>();
     private List<Button> edit = new ArrayList<>();
     private List<Button> delete = new ArrayList<>();
-    
+    private User now;
     @FXML
     private Text namaAkun;
     
@@ -92,9 +93,9 @@ public class TagListController implements Initializable {
         stage.setIconified(true);
     }
     
-    public void data(String s){
-        data = s;
-        namaAkun.setText(s);
+    public void data(User s){
+        now = s;
+        namaAkun.setText(now.getEmail());
     }
     
     public void backHome(MouseEvent event) throws IOException{
@@ -103,7 +104,7 @@ public class TagListController implements Initializable {
         Parent backHomePage = loader.load();
         Scene backHome = new Scene(backHomePage);
         HomeController controller = loader.getController();
-        controller.data(data);
+        controller.data(now);
         controller.show(v,data,false);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(backHome);
@@ -116,7 +117,7 @@ public class TagListController implements Initializable {
         loader.setLocation(getClass().getResource("/fxml/Setting.fxml"));
         Parent settingPage = loader.load();
         SettingController controller = loader.getController();
-        controller.data(data);
+        controller.data(now);
         Scene setting = new Scene(settingPage);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setX(event.getScreenX() - x);
@@ -244,7 +245,7 @@ public class TagListController implements Initializable {
                                 TagListPage = loader.load();
                                 Scene TagList = new Scene(TagListPage);
                                 TagListController controller = loader.getController();
-                                controller.data(data);
+                                controller.data(now);
                                 controller.show(idtag, data,false);
                                 Stage app_stage = (Stage)((Node) me.getSource()).getScene().getWindow();
                                 app_stage.setScene(TagList);
@@ -267,7 +268,7 @@ public class TagListController implements Initializable {
                             ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
                             if(rs.next()){
                                 controller.editBookmark(v,rs.getString("nama_url"),rs.getString("link_url"),rs.getInt("id_url"),rs.getInt("id_tag"));     
-                                controller.data(data);
+                                controller.data(now);
                                 controller.setComboBoxValue();
                                 Scene tambahURL = new Scene(tambahURLPage);
                                 Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
@@ -290,7 +291,7 @@ public class TagListController implements Initializable {
                             Parent TagListPage = loader.load();
                             Scene TagList = new Scene(TagListPage);
                             TagListController controller = loader.getController();
-                            controller.data(data);
+                            controller.data(now);
                             controller.getBack(contentBox.getChildren().get(o).getId(), data);
                             controller.show(contentBox.getChildren().get(o).getId(), data,false);
                             Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
@@ -312,7 +313,7 @@ public class TagListController implements Initializable {
                             Parent tagListPage = loader.load();
                             Scene tagList = new Scene(tagListPage);
                             TagListController controller = loader.getController();
-                            controller.data(data);
+                            controller.data(now);
                             controller.inSearchTag.setText(inSearchTag.getText());
                             controller.show(inSearchTag.getText(), data,true);
                             controller.getBack(contentBox.getChildren().get(o).getId(), data);
@@ -344,7 +345,7 @@ public class TagListController implements Initializable {
                     Parent tagListPage = loader.load();
                     Scene tagList = new Scene(tagListPage);
                     TagListController controller = loader.getController();
-                    controller.data(data);
+                    controller.data(now);
                     controller.show(null,data,false);
                     Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                     app_stage.setScene(tagList);
@@ -362,7 +363,7 @@ public class TagListController implements Initializable {
         Parent TagListPage = loader.load();
         Scene TagList = new Scene(TagListPage);
         InputTagListController controller = loader.getController();
-        controller.data(data);
+        controller.data(now);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(TagList);
         app_stage.show();

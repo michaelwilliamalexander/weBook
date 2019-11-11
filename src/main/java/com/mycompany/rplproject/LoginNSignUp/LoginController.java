@@ -7,6 +7,7 @@ package com.mycompany.rplproject.LoginNSignUp;
 
 
 import com.mycompany.rplproject.Home.HomeController;
+import com.mycompany.rplproject.User;
 import com.mycompany.rplproject.db.DBUtil;
 import java.io.IOException;
 import java.net.URL;
@@ -70,7 +71,10 @@ public class LoginController implements Initializable {
                     Parent signInPage = loader.load();
                     Scene signIn = new Scene(signInPage);
                     HomeController controller = loader.getController();
-                    controller.data(email);
+                    User logged = new User();
+                    logged.setEmail(email);
+                    logged.setPassword(password);
+                    controller.data(logged);
                     controller.show(v,email,false);
                     Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                     app_stage.close();

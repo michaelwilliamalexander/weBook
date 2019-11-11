@@ -5,6 +5,7 @@
  */
 package com.mycompany.rplproject.Home;
 
+import com.mycompany.rplproject.User;
 import com.mycompany.rplproject.db.DBUtil;
 import java.io.IOException;
 import java.net.URL;
@@ -39,7 +40,7 @@ public class InputTagListController implements Initializable {
     private double x,y;
     private String data;
     private Vector<String> v = new Vector();
-    
+    private User now;
     @FXML
     private Text namaAkun;
    
@@ -77,9 +78,9 @@ public class InputTagListController implements Initializable {
         stage.setIconified(true);
     }
     
-    public void data(String s){
-        data = s;
-        namaAkun.setText(s);
+    public void data(User s){
+        now = s;
+        namaAkun.setText(now.getEmail());
     }
     
     public void backHome(MouseEvent event) throws IOException{
@@ -88,7 +89,7 @@ public class InputTagListController implements Initializable {
         Parent backHomePage = loader.load();
         Scene backHome = new Scene(backHomePage);
         HomeController controller = loader.getController();
-        controller.data(data);
+        controller.data(now);
         controller.show(v,data,false);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(backHome);
@@ -111,7 +112,7 @@ public class InputTagListController implements Initializable {
         Parent tagListPage = loader.load();
         Scene tagList = new Scene(tagListPage);
         TagListController controller = loader.getController();
-        controller.data(data);
+        controller.data(now);
         controller.show(null,data,false);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(tagList);
@@ -124,7 +125,7 @@ public class InputTagListController implements Initializable {
         loader.setLocation(getClass().getResource("/fxml/Setting.fxml"));
         Parent settingPage = loader.load();
         SettingController controller = loader.getController();
-        controller.data(data);
+        controller.data(now);
         Scene setting = new Scene(settingPage);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setX(event.getScreenX() - x);
@@ -136,7 +137,7 @@ public class InputTagListController implements Initializable {
        @FXML
     void tambahTag(MouseEvent event) throws SQLException, ClassNotFoundException, IOException {
         String sql = "Select * from tag where nama_tag = '"+inTag.getText().toString()+"'";
-        String dataBaru = "Insert into Tag(nama_tag,email) values('"+inTag.getText().toString()+"','"+data+"')";
+        String dataBaru = "Insert into Tag(nama_tag,email) values('"+inTag.getText().toString()+"','"+now.getEmail()+"')";
         String tempt = null; 
         ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
         while(rs.next()){
@@ -154,7 +155,7 @@ public class InputTagListController implements Initializable {
             Parent tagListPage = loader.load();
             Scene tagList = new Scene(tagListPage);
             TagListController controller = loader.getController();
-            controller.data(data);
+            controller.data(now);
             controller.show(null,data,false);
             Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
             app_stage.setScene(tagList);
@@ -184,7 +185,7 @@ public class InputTagListController implements Initializable {
                     Parent tagListPage = loader.load();
                     Scene tagList = new Scene(tagListPage);
                     TagListController controller = loader.getController();
-                    controller.data(data);
+                    controller.data(now);
                     controller.show(null,data,false);
                     Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                     app_stage.setScene(tagList);

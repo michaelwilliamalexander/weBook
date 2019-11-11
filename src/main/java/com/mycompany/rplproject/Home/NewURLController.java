@@ -6,6 +6,7 @@
 package com.mycompany.rplproject.Home;
 
 import com.mycompany.rplproject.Tag;
+import com.mycompany.rplproject.User;
 import com.mycompany.rplproject.db.DBUtil;
 import java.io.IOException;
 import java.net.URL;
@@ -41,7 +42,7 @@ public class NewURLController implements Initializable {
     private double x,y;
     private String data;
     private Vector<String> v = new Vector();
-
+    private User now;
     @FXML
     private Text namaAkun;
     
@@ -91,15 +92,15 @@ public class NewURLController implements Initializable {
         Parent backHomePage = loader.load();
         Scene backHome = new Scene(backHomePage);
         HomeController controller = loader.getController();
-        controller.data(data);
+        controller.data(now);
         controller.show(v,data,false);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(backHome);
         app_stage.show();
     }
-     public void data(String s){
-        data = s;
-        namaAkun.setText(s);
+    public void data(User s){
+        now = s;
+        namaAkun.setText(now.getEmail());
     }
      @FXML
     public void logOut(MouseEvent event) throws IOException{
@@ -115,7 +116,7 @@ public class NewURLController implements Initializable {
         Parent backSettingPage = loader.load();
         Scene backSetting = new Scene(backSettingPage);
         SettingController controller = loader.getController();
-        controller.data(data);
+        controller.data(now);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(backSetting);
         app_stage.show();
@@ -128,7 +129,7 @@ public class NewURLController implements Initializable {
         Parent tagListPage = loader.load();
         Scene tagList = new Scene(tagListPage);
         TagListController controller = loader.getController();
-        controller.data(data);
+        controller.data(now);
         controller.show(null, data,false);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(tagList);
@@ -172,7 +173,7 @@ public class NewURLController implements Initializable {
                         Parent backHomePage = loader.load();
                         Scene backHome = new Scene(backHomePage);
                         HomeController controller = loader.getController();
-                        controller.data(data);
+                        controller.data(now);
                         controller.show(v,data,false);
                         if(v.size()!=0){
                                 controller.getBack(v,data);
@@ -196,7 +197,7 @@ public class NewURLController implements Initializable {
                         Parent backHomePage = loader.load();
                         Scene backHome = new Scene(backHomePage);
                         HomeController controller = loader.getController();
-                        controller.data(data);
+                        controller.data(now);
                         controller.show(v,data,false);
                         if(!v.isEmpty()){
                             controller.getBack(v,data);
@@ -237,7 +238,7 @@ public class NewURLController implements Initializable {
                         Parent backHomePage = loader.load();
                         Scene backHome = new Scene(backHomePage);
                         HomeController controller = loader.getController();
-                        controller.data(data);
+                        controller.data(now);
                         controller.show(v,data,false);
                         if(!v.isEmpty()){
                                 controller.getBack(v,data);
@@ -260,7 +261,7 @@ public class NewURLController implements Initializable {
                         Parent backHomePage = loader.load();
                         Scene backHome = new Scene(backHomePage);
                         HomeController controller = loader.getController();
-                        controller.data(data);
+                        controller.data(now);
                         controller.show(v,data,false);
                         if(!v.isEmpty()){
                             controller.getBack(v,data);

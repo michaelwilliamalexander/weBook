@@ -5,6 +5,7 @@
  */
 package com.mycompany.rplproject.Home;
 
+import com.mycompany.rplproject.User;
 import com.mycompany.rplproject.db.DBUtil;
 import java.awt.Desktop;
 import java.io.IOException;
@@ -47,14 +48,14 @@ public class HomeController implements Initializable {
     private ListView<Button> listview;
     private ObservableList<Button> folders = FXCollections.observableArrayList();
     private ObservableList<String> list = FXCollections.observableArrayList("Tag","Folder");
-    private String data;
+    
     private Vector<String> parent = new Vector<>();
     private double x,y;
     List<Button> folderList = new ArrayList<>(); //our Collection to hold newly created Buttons
     List<Button> urlList = new ArrayList<>();
     List<Button> edit = new ArrayList<>();
     List<Button> delete = new ArrayList<>();
- 
+    private User now;
     @FXML
     private Text namaAkun;
     
@@ -135,8 +136,8 @@ public class HomeController implements Initializable {
         loader.setLocation(getClass().getResource("/fxml/NewFolder.fxml"));
         Parent tambahFolderPage = loader.load();
         NewFolderController controller = loader.getController();
-        controller.data(data);
-        controller.tambahFolder(parent, data);
+        controller.data(now);
+        controller.tambahFolder(parent, now.getEmail());
         Scene tambahFolder = new Scene(tambahFolderPage);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(tambahFolder);
@@ -148,7 +149,7 @@ public class HomeController implements Initializable {
         loader.setLocation(getClass().getResource("/fxml/Setting.fxml"));
         Parent settingPage = loader.load();
         SettingController controller = loader.getController();
-        controller.data(data);
+        controller.data(now);
         Scene setting = new Scene(settingPage);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setX(event.getScreenX() - x);
@@ -163,8 +164,8 @@ public class HomeController implements Initializable {
         loader.setLocation(getClass().getResource("/fxml/NewURL.fxml"));
         Parent tambahURLPage = loader.load();
         NewURLController controller = loader.getController();
-        controller.data(data);
-        controller.tambahURL(parent, data);
+        controller.data(now);
+        controller.tambahURL(parent, now.getEmail());
         controller.setComboBoxValue();
         Scene tambahURL = new Scene(tambahURLPage);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
@@ -179,17 +180,17 @@ public class HomeController implements Initializable {
         Parent tagListPage = loader.load();
         Scene tagList = new Scene(tagListPage);
         TagListController controller = loader.getController();
-        controller.data(data);
-        controller.show(null,data,false);
+        controller.data(now);
+        controller.show(null,now.getEmail(),false);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(tagList);
         app_stage.show();
     }
     
     //ambil data email
-    public void data(String s){
-        data = s;
-        namaAkun.setText(s);
+    public void data(User s){
+        now = s;
+        namaAkun.setText(now.getEmail());
     }
     
     public void displayFolder(String queryFolder){
@@ -200,15 +201,18 @@ public class HomeController implements Initializable {
                 Button button = new Button(rs.getString("nama_folder"));
                 button.setId(String.valueOf(rs.getInt("id_folder")));
                 button.setMinWidth(350);
+                folderList.add(button);
+               
                 
                 Button editButton = new Button("Edit");
-                folderList.add(button);
                 editButton.setId(String.valueOf(rs.getInt("id_folder")));
                 edit.add(editButton);
+                
                 Button deleteButton = new Button("X");
                 deleteButton.setId(String.valueOf(rs.getInt("id_folder")));
                 deleteButton.setBackground(Background.EMPTY);
-                delete.add(deleteButton);           
+                delete.add(deleteButton);      
+                
             }
         }catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
@@ -225,7 +229,7 @@ public class HomeController implements Initializable {
                 }else{
                     text = new Button(rsUrl.getString("nama_url"));
                 }     
-                //text = new Button(rsUrl.getString("link_url"));
+                
                 text.setMinHeight(30);
                 text.setMinWidth(350);
                 
@@ -256,27 +260,29 @@ public class HomeController implements Initializable {
             
             System.out.println(inSearch.getText());
              if(parent.size()==0){
-                queryFolder = "SELECT * FROM Folder where parent_folder is NULL and email = '"+data+"';";
-                queryUrl = "select * from url where email = '"+data+"' and id_folder is NULL";
+                queryFolder = "SELECT * FROM Folder where parent_folder is NULL and email = '"+now.getEmail()+"';";
+                queryUrl = "select * from url where email = '"+now.getEmail()+"' and id_folder is NULL";
                 backBox.getChildren().clear();
             }else if(Search==true){
-                queryFolder = "select * from folder where nama_folder like '%"+parent.get(parent.size()-1)+"%' and email='"+data+"'";
-                queryUrl = "Select * from url where email='"+data+"' and nama_url like '%"+parent.get(parent.size()-1)+"%' or link_url like '%"+parent.get(parent.size()-1)+"%'";
+                queryFolder = "select * from folder where nama_folder like '%"+parent.get(parent.size()-1)+"%' and email='"+now.getEmail()+"'";
+                queryUrl = "Select * from url where email='"+now.getEmail()+"' and nama_url like '%"+parent.get(parent.size()-1)+"%' or link_url like '%"+parent.get(parent.size()-1)+"%'";
             }else {
-                queryFolder = "select * from folder where parent_folder = "+parent.get(parent.size()-1)+" and email='"+data+"'";
-                queryUrl = "select * from url where email = '"+data+"' and id_folder = "+parent.get(parent.size()-1)+"";
+                queryFolder = "select * from folder where parent_folder = "+parent.get(parent.size()-1)+" and email='"+now.getEmail()+"'";
+                queryUrl = "select * from url where email = '"+now.getEmail()+"' and id_folder = "+parent.get(parent.size()-1)+"";
             }
-             for(int i=0;i<parent.size();i++){
-                 System.out.println(parent.get(i));
-             }
+            for(int i=0;i<parent.size();i++){
+                System.out.println(parent.get(i));
+            }
             displayFolder(queryFolder);
             displayUrl(queryUrl);
             contentBox.getChildren().clear();
             contentBox.getChildren().addAll(folderList);
             contentBox.getChildren().addAll(urlList);
+            
             editBox.getChildren().clear();
-            deleteBox.getChildren().clear();
             editBox.getChildren().addAll(edit);
+            
+            deleteBox.getChildren().clear();
             deleteBox.getChildren().addAll(delete);
             
             for(int i=0;i<delete.size();i++){
@@ -294,7 +300,7 @@ public class HomeController implements Initializable {
                                String sqmt = "delete from URL where id_url = '"+tempt+"' ";
                                DBUtil.getInstance().dbExecuteUpdate(sqmt);
                                
-                               String selectFolder = "delete from Folder where id_folder = "+tempt+" and email = '"+data+"'";
+                               String selectFolder = "delete from Folder where id_folder = "+tempt+" and email = '"+now.getEmail()+"'";
                                DBUtil.getInstance().dbExecuteUpdate(selectFolder);
                                
                             } catch (SQLException | ClassNotFoundException ex) {
@@ -307,10 +313,10 @@ public class HomeController implements Initializable {
                                 backHomePage = loader.load();
                                 Scene backHome = new Scene(backHomePage);
                                 HomeController controller = loader.getController();
-                                controller.data(data);
-                                controller.show(parent,data,false);
+                                controller.data(now);
+                                controller.show(parent,now.getEmail(),false);
                                 if(!parent.isEmpty()){
-                                    controller.getBack(parent,data);
+                                    controller.getBack(parent,now.getEmail());
                                 }
                                 Stage app_stage = (Stage)((Node) me.getSource()).getScene().getWindow();
                                 app_stage.setScene(backHome);
@@ -329,7 +335,7 @@ public class HomeController implements Initializable {
                             loader.setLocation(getClass().getResource("/fxml/NewFolder.fxml"));
                             Parent tambahFolderPage = loader.load();
                             NewFolderController controller = loader.getController();
-                            controller.data(data);
+                            controller.data(now);
                             String sql = "select * from folder where id_folder = '"+editBox.getChildren().get(o).getId()+"'";
                             ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
                             if(rs.next()){
@@ -360,11 +366,11 @@ public class HomeController implements Initializable {
                             backHomePage = loader.load();
                             Scene backHome = new Scene(backHomePage);
                             HomeController controller = loader.getController();
-                            controller.data(data);
+                            controller.data(now);
                             parent.add(tempt);
-                            controller.show(parent,data,false);
+                            controller.show(parent,now.getEmail(),false);
                             if(!parent.isEmpty()){
-                                controller.getBack(parent,data);
+                                controller.getBack(parent,now.getEmail());
                             }
                             Stage app_stage = (Stage)((Node) me.getSource()).getScene().getWindow();
                             app_stage.setScene(backHome);
@@ -384,7 +390,7 @@ public class HomeController implements Initializable {
                     @Override
                     public void handle(MouseEvent me) {
                         try {
-                               String selectUrl = "select * from url where id_url = "+contentBox.getChildren().get(o).getId()+" and email = '"+data+"'";
+                               String selectUrl = "select * from url where id_url = "+contentBox.getChildren().get(o).getId()+" and email = '"+now.getEmail()+"'";
                                Desktop d = Desktop.getDesktop();
                                ResultSet rs = DBUtil.getInstance().dbExecuteQuery(selectUrl);
                                if(rs.next()){      
@@ -408,7 +414,7 @@ public class HomeController implements Initializable {
                             ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
                             if(rs.next()){
                                 controller.editBookmark(parent,rs.getString("nama_url"),rs.getString("link_url"),rs.getInt("id_url"),rs.getInt("id_tag"));     
-                                controller.data(data);
+                                controller.data(now);
                                 controller.setComboBoxValue();
                                 Scene tambahURL = new Scene(tambahURLPage);
                                 Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
@@ -434,14 +440,14 @@ public class HomeController implements Initializable {
                         backHomePage = loader.load();
                         Scene backHome = new Scene(backHomePage);
                         HomeController controller = loader.getController();
-                        controller.data(data);
+                        controller.data(now);
                         parent.add(inSearch.getText());
-                        controller.show(parent,data,true);
+                        controller.show(parent,now.getEmail(),true);
                         controller.tambahFolder.setVisible(false);
                         controller.tambahURL.setVisible(false);
                         controller.inSearch.setText(inSearch.getText());
                         if(!parent.isEmpty()){
-                            controller.getBack(parent,data);
+                            controller.getBack(parent,now.getEmail());
                         }
                         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                         app_stage.setScene(backHome);
@@ -470,15 +476,15 @@ public class HomeController implements Initializable {
                     Parent backHomePage = loader.load();
                     Scene backHome = new Scene(backHomePage);
                     HomeController controller = loader.getController();
-                    controller.data(data);
+                    controller.data(now);
                     parent.remove(parent.size()-1);
                     if(parent.size()==0){
-                        controller.show(parent,data,false);
+                        controller.show(parent,now.getEmail(),false);
                     }else {
-                        controller.show(parent,data,true);
+                        controller.show(parent,now.getEmail(),true);
                     }
                     if(parent.size()!=0){
-                        controller.getBack(parent,data);
+                        controller.getBack(parent,now.getEmail());
                     }
                     Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                     app_stage.setScene(backHome);

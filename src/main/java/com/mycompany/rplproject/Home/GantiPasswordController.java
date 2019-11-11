@@ -6,9 +6,7 @@
 package com.mycompany.rplproject.Home;
 
 import com.mycompany.rplproject.db.DBUtil;
-import com.mycompany.rplproject.Home.HomeController;
-import com.mycompany.rplproject.Home.SettingController;
-import com.mycompany.rplproject.Home.InsertNewPasswordController;
+import com.mycompany.rplproject.User;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
@@ -36,10 +34,10 @@ import javax.swing.JOptionPane;
  */
 public class GantiPasswordController implements Initializable {
     private Vector<String> v = new Vector();
-      private double x,y;
+    private double x,y;
     private String data;
     private String email = null, password = null;
-    
+    private User now;
       @FXML
     private PasswordField passLama;
 
@@ -81,7 +79,7 @@ public class GantiPasswordController implements Initializable {
         Parent tagListPage = loader.load();
         Scene tagList = new Scene(tagListPage);
         TagListController controller = loader.getController();
-        controller.data(data);
+        controller.data(now);
         controller.show(null, data,false);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(tagList);
@@ -94,15 +92,15 @@ public class GantiPasswordController implements Initializable {
         Parent backHomePage = loader.load();
         Scene backHome = new Scene(backHomePage);
         HomeController controller = loader.getController();
-        controller.data(data);
+        controller.data(now);
         controller.show(v,data,false);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(backHome);
         app_stage.show();
     }
-     public void data(String s){
-        data = s;
-        namaAkun.setText(s);
+     public void data(User s){
+        now = s;
+        namaAkun.setText(now.getEmail());
     }
      @FXML
     public void logOut(MouseEvent event) throws IOException{
@@ -118,7 +116,7 @@ public class GantiPasswordController implements Initializable {
         Parent backSettingPage = loader.load();
         Scene backSetting = new Scene(backSettingPage);
         SettingController controller = loader.getController();
-        controller.data(data);
+        controller.data(now);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(backSetting);
         app_stage.show();
@@ -127,7 +125,7 @@ public class GantiPasswordController implements Initializable {
     public void checkPass(MouseEvent event) throws ClassNotFoundException, IOException, SQLException{
         String stmt;
         String pass = passLama.getText();
-        stmt = "Select * from Account where email = '"+data+"'";
+        stmt = "Select * from Account where email = '"+now.getEmail()+"'";
           try {
             ResultSet rs = DBUtil.getInstance().dbExecuteQuery(stmt);
             if(rs.next()){
@@ -139,7 +137,7 @@ public class GantiPasswordController implements Initializable {
                     Parent anotherChangePasswordPage = loader.load();
                     Scene anotherChangePassword = new Scene(anotherChangePasswordPage);
                     InsertNewPasswordController controller = loader.getController();
-                    controller.data(data);
+                    controller.data(now);
                     Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                     app_stage.setScene(anotherChangePassword);
                     app_stage.show();

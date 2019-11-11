@@ -7,6 +7,7 @@ package com.mycompany.rplproject.Home;
 
 import com.mycompany.rplproject.Home.HomeController;
 import com.mycompany.rplproject.Home.GantiPasswordController;
+import com.mycompany.rplproject.User;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -26,7 +27,7 @@ public class SettingController implements Initializable {
     private double x,y;
     private String data;
     private Vector<String> v = new Vector();
-    
+    private User now;
     @FXML
     private Text namaAkun;
     
@@ -55,9 +56,9 @@ public class SettingController implements Initializable {
         stage.setIconified(true);
     }
     
-    public void data(String s){
-        data = s;
-        namaAkun.setText(s);
+     public void data(User s){
+        now = s;
+        namaAkun.setText(now.getEmail());
     }
     
     public void backHome(MouseEvent event) throws IOException{
@@ -66,7 +67,7 @@ public class SettingController implements Initializable {
         Parent backHomePage = loader.load();
         Scene backHome = new Scene(backHomePage);
         HomeController controller = loader.getController();
-        controller.data(data);
+        controller.data(now);
         controller.show(v,data,false);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(backHome);
@@ -88,7 +89,7 @@ public class SettingController implements Initializable {
         Parent changePasswordPage = loader.load();
         Scene changePassword = new Scene(changePasswordPage);
         GantiPasswordController controller = loader.getController();
-        controller.data(data);
+        controller.data(now);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(changePassword);
         app_stage.show();
@@ -101,7 +102,7 @@ public class SettingController implements Initializable {
         Parent tagListPage = loader.load();
         Scene tagList = new Scene(tagListPage);
         TagListController controller = loader.getController();
-        controller.data(data);
+        controller.data(now);
         controller.show(null, data,false);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(tagList);
