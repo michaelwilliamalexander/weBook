@@ -8,10 +8,6 @@ package com.mycompany.rplproject;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author Alvin
- */
 public class User {
     private String email;
     private String password;

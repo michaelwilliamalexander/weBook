@@ -84,16 +84,16 @@ public class InputTagListController implements Initializable {
     }
     
     public void backHome(MouseEvent event) throws IOException{
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
-        Parent backHomePage = loader.load();
-        Scene backHome = new Scene(backHomePage);
-        HomeController controller = loader.getController();
-        controller.data(now);
-        controller.show(v,data,false);
-        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        app_stage.setScene(backHome);
-        app_stage.show();
+//        FXMLLoader loader = new FXMLLoader();
+//        loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
+//        Parent backHomePage = loader.load();
+//        Scene backHome = new Scene(backHomePage);
+//        HomeController controller = loader.getController();
+//        controller.data(now);
+//        controller.show(v,data,false);
+//        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+//        app_stage.setScene(backHome);
+//        app_stage.show();
     }
     
      @FXML

@@ -6,18 +6,15 @@ com\mycompany\rplproject\Home\TagListController$4.class
 com\mycompany\rplproject\FXMLController.class
 com\mycompany\rplproject\Home\HomeController$1.class
 com\mycompany\rplproject\Folder.class
-com\mycompany\rplproject\Home\NewURLController$3.class
 com\mycompany\rplproject\Home\InputTagListController$1.class
 com\mycompany\rplproject\Home\NewFolderController$1.class
 com\mycompany\rplproject\Home\NewFolderController.class
 com\mycompany\rplproject\Home\InputTagListController.class
-com\mycompany\rplproject\Home\NewURLController$4.class
 com\mycompany\rplproject\Home\NewURLController.class
 com\mycompany\rplproject\Home\NewURLController$1.class
 com\mycompany\rplproject\Home\TagListController$5.class
 com\mycompany\rplproject\Home\HomeController.class
 com\mycompany\rplproject\LoginNSignUp\SignUpFXMLController.class
-com\mycompany\rplproject\Home\HomeController$5.class
 com\mycompany\rplproject\Home\HomeController$2.class
 com\mycompany\rplproject\LoginNSignUp\LoginController.class
 com\mycompany\rplproject\Home\InsertNewPasswordController.class
@@ -26,7 +23,6 @@ com\mycompany\rplproject\Home\ChangeFolderController.class
 com\mycompany\rplproject\Home\GantiPasswordController.class
 com\mycompany\rplproject\User.class
 com\mycompany\rplproject\Home\TagListController$2.class
-com\mycompany\rplproject\Home\HomeController$6.class
 com\mycompany\rplproject\Tag.class
 com\mycompany\rplproject\Home\HomeController$3.class
 com\mycompany\rplproject\Home\TagListController.class
@@ -34,5 +30,4 @@ com\mycompany\rplproject\Home\SettingController.class
 com\mycompany\rplproject\MainApp.class
 com\mycompany\rplproject\db\DBUtil.class
 com\mycompany\rplproject\Home\NewURLController$2.class
-com\mycompany\rplproject\Home\HomeController$7.class
 com\mycompany\rplproject\Home\TagListController$3.class

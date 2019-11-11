@@ -14,6 +14,10 @@ public class Folder {
     private String nama;
     private int id_parent;
     
+    public Folder(int id){
+        this.id = id;
+    }
+    
     public Folder(int id, String nama, int id_parent){
         this.id = id;
         this.nama = nama;

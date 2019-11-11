@@ -38,6 +38,7 @@ import javafx.scene.input.MouseEvent;
 public class LoginController implements Initializable {
     private String email=null,password=null;
     private Vector<String> v = new Vector();
+    private User user = new User();
     
     @FXML
     private TextField emailInput;
@@ -71,11 +72,9 @@ public class LoginController implements Initializable {
                     Parent signInPage = loader.load();
                     Scene signIn = new Scene(signInPage);
                     HomeController controller = loader.getController();
-                    User logged = new User();
-                    logged.setEmail(email);
-                    logged.setPassword(password);
+                    User logged = new User(email,password);
                     controller.data(logged);
-                    controller.show(v,email,false);
+                    controller.show(logged,false);
                     Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                     app_stage.close();
                     app_stage.setScene(signIn);

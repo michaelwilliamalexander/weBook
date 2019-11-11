@@ -5,6 +5,7 @@
  */
 package com.mycompany.rplproject.Home;
 
+import com.mycompany.rplproject.Folder;
 import com.mycompany.rplproject.User;
 import com.mycompany.rplproject.db.DBUtil;
 import java.io.IOException;
@@ -52,18 +53,18 @@ public class NewFolderController implements Initializable {
     @FXML
     private TextField inFolder;
     
-    public void tambahFolder (Vector<String>parent, String tamp){
-        v = parent;
+    public void tambahFolder (User user){
+        now = user;
         folderBtn.setOnMouseClicked(new EventHandler<MouseEvent>(){
             @Override
             public void handle(MouseEvent event) {
                 try {
                     String stmt = "Select * From Folder where nama_folder = '"+inFolder.getText()+"'";
                     String insertStmt;
-                    if(v.size()==0){
-                        insertStmt = "Insert into Folder (nama_folder,email) values('"+inFolder.getText()+"','"+data+"')";
+                    if(now.getFolder().size()==0){
+                        insertStmt = "Insert into Folder (nama_folder,email) values('"+inFolder.getText()+"','"+now.getEmail()+"')";
                     }else{
-                        insertStmt = "Insert into Folder (nama_folder,Parent_folder,email) values('"+inFolder.getText()+"','"+v.get(v.size()-1)+"','"+data+"')";
+                        insertStmt = "Insert into Folder (nama_folder,Parent_folder,email) values('"+inFolder.getText()+"','"+now.getFolder().get(now.getFolder().size()-1).getId()+"','"+now.getEmail()+"')";
                     }
                     ResultSet rs = DBUtil.getInstance().dbExecuteQuery(stmt);
                     String tempt = null;
@@ -81,17 +82,22 @@ public class NewFolderController implements Initializable {
                         DBUtil.getInstance().dbExecuteUpdate(insertStmt);
                         FXMLLoader loader = new FXMLLoader();
                         loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
-                        Parent backHomePage = loader.load();
-                        Scene backHome = new Scene(backHomePage);
-                        HomeController controller = loader.getController();
-                        controller.data(now);
-                        controller.show(v,data,false);
-                        if(v.size()!=0){
-                            controller.getBack(v,data);
+                        Parent backHomePage;
+                        try {
+                            backHomePage = loader.load();
+                            Scene backHome = new Scene(backHomePage);
+                            HomeController controller = loader.getController();
+                            controller.data(now);
+                            controller.show(now,false);
+                            if(!now.getFolder().isEmpty()){
+                                controller.getBack(now);
+                            }
+                            Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                            app_stage.setScene(backHome);
+                            app_stage.show();
+                        } catch (IOException ex) {
+                            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-                        app_stage.setScene(backHome);
-                        app_stage.show();
                     }
                     else {
                         Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -100,7 +106,7 @@ public class NewFolderController implements Initializable {
                         alert.showAndWait();
                         inFolder.clear();
                     }
-                } catch (SQLException | ClassNotFoundException | IOException ex) {
+                } catch (SQLException | ClassNotFoundException  ex) {
                     Logger.getLogger(NewFolderController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -153,7 +159,7 @@ public class NewFolderController implements Initializable {
         Scene backHome = new Scene(backHomePage);
         HomeController controller = loader.getController();
         controller.data(now);
-        controller.show(v,data,false);
+        controller.show(now,false);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(backHome);
         app_stage.show();
@@ -192,8 +198,8 @@ public class NewFolderController implements Initializable {
         }
     }
     
-    public void editFolder(Vector<String>parent,final String nama, final int id){
-        v = parent;
+    public void editFolder(User user,final String nama, final int id){
+        now = user;
         inFolder.setText(nama);
         folderBtn.setText("Edit");
         folderBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -207,9 +213,9 @@ public class NewFolderController implements Initializable {
                     Scene backHome = new Scene(backHomePage);
                     HomeController controller = loader.getController();
                     controller.data(now);
-                    controller.show(v,data,false);
+                    controller.show(now,false);
                     if(v.size()!=0){
-                            controller.getBack(v,data);
+                            controller.getBack(now);
                     }
                     Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                     app_stage.setScene(backHome);
