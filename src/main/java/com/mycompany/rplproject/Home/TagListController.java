@@ -259,22 +259,24 @@ public class TagListController implements Initializable {
                     @Override
                     public void handle(MouseEvent event) {
                             try {
-                                FXMLLoader loader = new FXMLLoader();
-                                loader.setLocation(getClass().getResource("/fxml/InputTagList.fxml"));
-                                Parent TagListPage = loader.load();
-                                Scene TagList = new Scene(TagListPage);
-                                InputTagListController controller = loader.getController();
+                            FXMLLoader loader = new FXMLLoader();
+                            loader.setLocation(getClass().getResource("/fxml/NewURL.fxml"));
+                            Parent tambahURLPage = loader.load();
+                            NewURLController controller = loader.getController();
+                            String sql = "select * from url where id_url = '"+editBox.getChildren().get(o).getId()+"'";
+                            ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
+                            if(rs.next()){
+                                controller.editBookmark(v,rs.getString("nama_url"),rs.getString("link_url"),rs.getInt("id_url"),rs.getInt("id_tag"));     
                                 controller.data(data);
-                                controller.editTag(tempt,data);
+                                controller.setComboBoxValue();
+                                Scene tambahURL = new Scene(tambahURLPage);
                                 Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-                                app_stage.setScene(TagList);
+                                app_stage.setScene(tambahURL);
                                 app_stage.show();
-                            } catch (IOException ex) {
-                                Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
-                            } catch (SQLException ex) { 
-                            Logger.getLogger(TagListController.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (ClassNotFoundException ex) {
-                            Logger.getLogger(TagListController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            
+                        } catch (IOException | SQLException | ClassNotFoundException ex) {
+                            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
                         } 
                     }  
                 });
@@ -328,7 +330,7 @@ public class TagListController implements Initializable {
         }
         
     public void getBack(final String idTag,String email){
-        Button back = new Button("Back");
+        Button back = new Button("<");
         final String tempt = idTag;
         back.setId("back");
         backBox.getChildren().clear();

@@ -409,6 +409,7 @@ public class HomeController implements Initializable {
                             if(rs.next()){
                                 controller.editBookmark(parent,rs.getString("nama_url"),rs.getString("link_url"),rs.getInt("id_url"),rs.getInt("id_tag"));     
                                 controller.data(data);
+                                controller.setComboBoxValue();
                                 Scene tambahURL = new Scene(tambahURLPage);
                                 Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                                 app_stage.setScene(tambahURL);
@@ -456,7 +457,7 @@ public class HomeController implements Initializable {
      
     public void getBack(Vector<String> t,String s){
         parent = t;
-        Button button = new Button("Back");
+        Button button = new Button("<");
         backBox.getChildren().clear();
         backBox.getChildren().add(button);
         backBox.getChildren().get(backBox.getChildren().size()-1).setOnMouseClicked(new EventHandler<MouseEvent>(){

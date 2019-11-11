@@ -38,7 +38,7 @@
                </HBox.margin></FontAwesomeIcon>
          </children></HBox>
       <HBox fx:id="backBox" alignment="CENTER_LEFT" layoutX="158.0" layoutY="21.0" prefHeight="37.0" prefWidth="280.0" style="-fx-background-color: #57606f;" />
-      <HBox alignment="CENTER_LEFT" layoutX="438.0" layoutY="21.0" prefHeight="37.0" prefWidth="263.0" style="-fx-background-color: #57606f;">
+      <HBox alignment="CENTER_LEFT" layoutX="437.0" layoutY="21.0" prefHeight="37.0" prefWidth="263.0" style="-fx-background-color: #57606f;">
          <children>
             <TextField fx:id="inSearch" prefHeight="25.0" prefWidth="179.0">
                <HBox.margin>
