@@ -5,14 +5,12 @@
  */
 package com.mycompany.rplproject.Home;
 
-import com.mycompany.rplproject.Tag;
 import com.mycompany.rplproject.db.DBUtil;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import static java.sql.JDBCType.NULL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -25,7 +23,6 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -37,12 +34,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 
 public class HomeController implements Initializable {
@@ -51,7 +48,6 @@ public class HomeController implements Initializable {
     private ObservableList<Button> folders = FXCollections.observableArrayList();
     private ObservableList<String> list = FXCollections.observableArrayList("Tag","Folder");
     private String data;
-    //private List<String> parent = new ArrayList<>();
     private Vector<String> parent = new Vector<>();
     private double x,y;
     List<Button> folderList = new ArrayList<>(); //our Collection to hold newly created Buttons
@@ -184,7 +180,7 @@ public class HomeController implements Initializable {
         Scene tagList = new Scene(tagListPage);
         TagListController controller = loader.getController();
         controller.data(data);
-        controller.show(null,data);
+        controller.show(null,data,false);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(tagList);
         app_stage.show();
@@ -252,25 +248,21 @@ public class HomeController implements Initializable {
             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
-   
+      
     //Menampilkan Data di Home
-    public void show(Vector<String> t,String s){
+    public void show(Vector<String> t,String s,boolean Search){
             String queryFolder,queryUrl;
             parent = t;
+            
             System.out.println(inSearch.getText());
              if(parent.size()==0){
                 queryFolder = "SELECT * FROM Folder where parent_folder is NULL and email = '"+data+"';";
                 queryUrl = "select * from url where email = '"+data+"' and id_folder is NULL";
                 backBox.getChildren().clear();
-            }/*kamu ganti else if diawah ini jadi !inSearch.getText().isEmpty() 
-             g isa search tp isa ngliat anak-anak dari root folder 
-             terus method btnSearch ada dibawah sendiri method show*/
-             else if(inSearch.getText().isEmpty()){
+            }else if(Search==true){
                 queryFolder = "select * from folder where nama_folder like '%"+parent.get(parent.size()-1)+"%' and email='"+data+"'";
                 queryUrl = "Select * from url where email='"+data+"' and nama_url like '%"+parent.get(parent.size()-1)+"%' or link_url like '%"+parent.get(parent.size()-1)+"%'";
-            }else{
+            }else {
                 queryFolder = "select * from folder where parent_folder = "+parent.get(parent.size()-1)+" and email='"+data+"'";
                 queryUrl = "select * from url where email = '"+data+"' and id_folder = "+parent.get(parent.size()-1)+"";
             }
@@ -316,7 +308,7 @@ public class HomeController implements Initializable {
                                 Scene backHome = new Scene(backHomePage);
                                 HomeController controller = loader.getController();
                                 controller.data(data);
-                                controller.show(parent,data);
+                                controller.show(parent,data,false);
                                 if(!parent.isEmpty()){
                                     controller.getBack(parent,data);
                                 }
@@ -370,7 +362,7 @@ public class HomeController implements Initializable {
                             HomeController controller = loader.getController();
                             controller.data(data);
                             parent.add(tempt);
-                            controller.show(parent,data);
+                            controller.show(parent,data,false);
                             if(!parent.isEmpty()){
                                 controller.getBack(parent,data);
                             }
@@ -429,7 +421,6 @@ public class HomeController implements Initializable {
                     }
                     
                 });
-                
                 //Button untuk search
                 btnSearch.setOnMouseClicked(new EventHandler<MouseEvent>(){
                 @Override
@@ -444,7 +435,7 @@ public class HomeController implements Initializable {
                         HomeController controller = loader.getController();
                         controller.data(data);
                         parent.add(inSearch.getText());
-                        controller.show(parent,data);
+                        controller.show(parent,data,true);
                         controller.tambahFolder.setVisible(false);
                         controller.tambahURL.setVisible(false);
                         controller.inSearch.setText(inSearch.getText());
@@ -480,7 +471,11 @@ public class HomeController implements Initializable {
                     HomeController controller = loader.getController();
                     controller.data(data);
                     parent.remove(parent.size()-1);
-                    controller.show(parent,data);
+                    if(parent.size()==0){
+                        controller.show(parent,data,false);
+                    }else {
+                        controller.show(parent,data,true);
+                    }
                     if(parent.size()!=0){
                         controller.getBack(parent,data);
                     }

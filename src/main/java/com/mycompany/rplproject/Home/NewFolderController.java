@@ -84,7 +84,7 @@ public class NewFolderController implements Initializable {
                         Scene backHome = new Scene(backHomePage);
                         HomeController controller = loader.getController();
                         controller.data(data);
-                        controller.show(v,data);
+                        controller.show(v,data,false);
                         if(v.size()!=0){
                             controller.getBack(v,data);
                         }
@@ -114,7 +114,7 @@ public class NewFolderController implements Initializable {
         Scene tagList = new Scene(tagListPage);
         TagListController controller = loader.getController();
         controller.data(data);
-        controller.show(null,data);
+        controller.show(null,data,false);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(tagList);
         app_stage.show();
@@ -152,7 +152,7 @@ public class NewFolderController implements Initializable {
         Scene backHome = new Scene(backHomePage);
         HomeController controller = loader.getController();
         controller.data(data);
-        controller.show(v,data);
+        controller.show(v,data,false);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(backHome);
         app_stage.show();
@@ -206,7 +206,7 @@ public class NewFolderController implements Initializable {
                     Scene backHome = new Scene(backHomePage);
                     HomeController controller = loader.getController();
                     controller.data(data);
-                    controller.show(v,data);
+                    controller.show(v,data,false);
                     if(v.size()!=0){
                             controller.getBack(v,data);
                     }

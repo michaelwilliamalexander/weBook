@@ -30,13 +30,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
 
 public class TagListController implements Initializable {
     private double x,y;
@@ -61,9 +61,11 @@ public class TagListController implements Initializable {
     @FXML
     private HBox backBox;
     
-    /**
-     * Initializes the controller class.
-     */
+    @FXML
+    private TextField inSearchTag;
+
+    @FXML
+    private Button btnSearchTag;
     
    @FXML
     void dragged(MouseEvent event){
@@ -102,7 +104,7 @@ public class TagListController implements Initializable {
         Scene backHome = new Scene(backHomePage);
         HomeController controller = loader.getController();
         controller.data(data);
-        controller.show(v,data);
+        controller.show(v,data,false);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(backHome);
         app_stage.show();
@@ -200,16 +202,19 @@ public class TagListController implements Initializable {
         deleteBox.getChildren().addAll(delete);
     }    
     
-    public void show(final String idtag, String s){
+    public void show(final String idtag, String s,boolean Search){
         
         contentBox.getChildren().clear();
         editBox.getChildren().clear();
         deleteBox.getChildren().clear();
         String sql = "Select * from Tag where email = '"+s+"' or id_tag = 0";
         String sql1= "Select * from URL where id_tag ='"+idtag+"' and email = '"+s+"'";
+        String sql2 = "Select * from Tag where nama_tag like '%"+idtag+"%'";
         
         if(idtag == null){
             displayTag(sql);
+        }else if(Search==true){
+            displayTag(sql2);
         }else{
             displayURL(sql1);
         }
@@ -240,7 +245,7 @@ public class TagListController implements Initializable {
                                 Scene TagList = new Scene(TagListPage);
                                 TagListController controller = loader.getController();
                                 controller.data(data);
-                                controller.show(idtag, data);
+                                controller.show(idtag, data,false);
                                 Stage app_stage = (Stage)((Node) me.getSource()).getScene().getWindow();
                                 app_stage.setScene(TagList);
                                 app_stage.show();
@@ -284,8 +289,8 @@ public class TagListController implements Initializable {
                             Scene TagList = new Scene(TagListPage);
                             TagListController controller = loader.getController();
                             controller.data(data);
-                                controller.getBack(contentBox.getChildren().get(o).getId(), data);
-                            controller.show(contentBox.getChildren().get(o).getId(), data);
+                            controller.getBack(contentBox.getChildren().get(o).getId(), data);
+                            controller.show(contentBox.getChildren().get(o).getId(), data,false);
                             Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                             app_stage.setScene(TagList);
                             app_stage.show();
@@ -295,10 +300,34 @@ public class TagListController implements Initializable {
                     }
                     
                 });
+                btnSearchTag.setOnMouseClicked(new EventHandler<MouseEvent>(){
+                    @Override
+                    public void handle(MouseEvent event) {
+                        try {
+                            System.out.println(inSearchTag.getText());
+                            FXMLLoader loader = new FXMLLoader();
+                            loader.setLocation(getClass().getResource("/fxml/TagList.fxml"));
+                            Parent tagListPage = loader.load();
+                            Scene tagList = new Scene(tagListPage);
+                            TagListController controller = loader.getController();
+                            controller.data(data);
+                            controller.inSearchTag.setText(inSearchTag.getText());
+                            controller.show(inSearchTag.getText(), data,true);
+                            controller.getBack(contentBox.getChildren().get(o).getId(), data);
+                            Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                            app_stage.setScene(tagList);
+                            app_stage.show();
+                        } catch (IOException ex) {
+                            Logger.getLogger(TagListController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    
+                });
+                
             }
         }
         
-    public void getBack(String idTag,String email){
+    public void getBack(final String idTag,String email){
         Button back = new Button("Back");
         final String tempt = idTag;
         back.setId("back");
@@ -314,7 +343,7 @@ public class TagListController implements Initializable {
                     Scene tagList = new Scene(tagListPage);
                     TagListController controller = loader.getController();
                     controller.data(data);
-                    controller.show(null,data);
+                    controller.show(null,data,false);
                     Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                     app_stage.setScene(tagList);
                     app_stage.show();
