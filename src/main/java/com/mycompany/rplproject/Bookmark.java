@@ -14,11 +14,10 @@ import java.util.List;
 public class Bookmark {
     private String nama;
     private int id;
-    //private List<Tag> id_tag;
     private String link;
     private int id_folder;
     
-    public Bookmark(String nama, int id, String link, int id_folder){
+    public Bookmark(int id, String nama, String link, int id_folder){
         this.nama = nama;
         this.id = id;
        

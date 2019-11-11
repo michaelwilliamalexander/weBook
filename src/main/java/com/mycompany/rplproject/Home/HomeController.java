@@ -49,7 +49,9 @@ public class HomeController implements Initializable {
     private ListView<Button> listview;
     private ObservableList<Button> folders = FXCollections.observableArrayList();
     private ObservableList<String> list = FXCollections.observableArrayList("Tag","Folder");
-   
+    
+    List<Integer> folderTree = new ArrayList<>();
+    
     private double x,y;
     List<Button> folderList = new ArrayList<>(); //our Collection to hold newly created Buttons
     List<Button> urlList = new ArrayList<>();
@@ -96,6 +98,10 @@ public class HomeController implements Initializable {
     @FXML
     private HBox backBox;
 
+    public HomeController() {
+        this.folderTree = new Vector();
+    }
+
     @FXML
     void dragged(MouseEvent event){
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -137,7 +143,8 @@ public class HomeController implements Initializable {
         loader.setLocation(getClass().getResource("/fxml/NewFolder.fxml"));
         Parent tambahFolderPage = loader.load();
         NewFolderController controller = loader.getController();
-        controller.data(now);
+        controller.data(now, folderTree.get(folderTree.size()-1));
+        System.out.println(folderTree.get(folderTree.size()-1));
         controller.tambahFolder(now);
         Scene tambahFolder = new Scene(tambahFolderPage);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
@@ -161,17 +168,17 @@ public class HomeController implements Initializable {
     
     @FXML
     void tambahURL(MouseEvent event) throws IOException, SQLException {
-//        FXMLLoader loader = new FXMLLoader();
-//        loader.setLocation(getClass().getResource("/fxml/NewURL.fxml"));
-//        Parent tambahURLPage = loader.load();
-//        NewURLController controller = loader.getController();
-//        controller.data(now);
-//        controller.tambahURL(parent, now.getEmail());
-//        controller.setComboBoxValue();
-//        Scene tambahURL = new Scene(tambahURLPage);
-//        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-//        app_stage.setScene(tambahURL);
-//        app_stage.show();
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/fxml/NewURL.fxml"));
+        Parent tambahURLPage = loader.load();
+        NewURLController controller = loader.getController();
+        controller.data(now);
+        controller.tambahURL(folderTree.get(folderTree.size()-1), now.getEmail());
+        controller.setComboBoxValue();
+        Scene tambahURL = new Scene(tambahURLPage);
+        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        app_stage.setScene(tambahURL);
+        app_stage.show();
     }
     
     @FXML
@@ -192,103 +199,293 @@ public class HomeController implements Initializable {
     public void data(User s){
         now = s;
         namaAkun.setText(now.getEmail());
+        folderTree.add(0);
+        show(false);
     }
     
-    public void displayFolder(String queryFolder){
-        try {
-            ResultSet rs = DBUtil.getInstance().dbExecuteQuery(queryFolder);
-            while (rs.next()) { //iterate over every row returned
-                 //extract button text, adapt the String to the columnname that you are interested in
-                Button button = new Button(rs.getString("nama_folder"));
-                button.setId(String.valueOf(rs.getInt("id_folder")));
-                button.setMinWidth(350);
-                folderList.add(button);
-               
-                
-                Button editButton = new Button("Edit");
-                editButton.setId(String.valueOf(rs.getInt("id_folder")));
-                edit.add(editButton);
-                
-                Button deleteButton = new Button("X");
-                deleteButton.setId(String.valueOf(rs.getInt("id_folder")));
-                deleteButton.setBackground(Background.EMPTY);
-                delete.add(deleteButton);      
-                
-            }
-        }catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    } 
-    
-    public void displayUrl(String queryUrl){
-        try {
-            ResultSet rsUrl = DBUtil.getInstance().dbExecuteQuery(queryUrl);
-            while(rsUrl.next()){
-                Button text;
-                if(rsUrl.getString("nama_url")== null){
-                    text = new Button(rsUrl.getString("link_url"));
-                }else{
-                    text = new Button(rsUrl.getString("nama_url"));
-                }     
-                
-                text.setMinHeight(30);
-                text.setMinWidth(350);
-                
-                Button editURL = new Button("Edit");
-                Button delURL = new Button("X");
-                delURL.setBackground(Background.EMPTY);
-                text.setBackground(Background.EMPTY);
-                editURL.setMinHeight(30);
-                delURL.setMinHeight(30);
-                
-                delURL.setId(String.valueOf(rsUrl.getInt("id_url")));
-                editURL.setId(String.valueOf(rsUrl.getInt("id_url")));
-                text.setId(String.valueOf(rsUrl.getInt("id_url")));
-                
-                urlList.add(text);
-                edit.add(editURL);
-                delete.add(delURL); 
-            }
-        } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+//    public void displayFolder(String queryFolder){
+//        try {
+//            ResultSet rs = DBUtil.getInstance().dbExecuteQuery(queryFolder);
+//            while (rs.next()) { //iterate over every row returned
+//                 //extract button text, adapt the String to the columnname that you are interested in
+//                Button button = new Button(rs.getString("nama_folder"));
+//                button.setId(String.valueOf(rs.getInt("id_folder")));
+//                button.setMinWidth(350);
+//                folderList.add(button);
+//               
+//                
+//                Button editButton = new Button("Edit");
+//                editButton.setId(String.valueOf(rs.getInt("id_folder")));
+//                edit.add(editButton);
+//                
+//                Button deleteButton = new Button("X");
+//                deleteButton.setId(String.valueOf(rs.getInt("id_folder")));
+//                deleteButton.setBackground(Background.EMPTY);
+//                delete.add(deleteButton);      
+//                
+//            }
+//        }catch (SQLException | ClassNotFoundException ex) {
+//            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    } 
+//    
+//    public void displayUrl(String queryUrl){
+//        try {
+//            ResultSet rsUrl = DBUtil.getInstance().dbExecuteQuery(queryUrl);
+//            while(rsUrl.next()){
+//                Button text;
+//                if(rsUrl.getString("nama_url")== null){
+//                    text = new Button(rsUrl.getString("link_url"));
+//                }else{
+//                    text = new Button(rsUrl.getString("nama_url"));
+//                }     
+//                
+//                text.setMinHeight(30);
+//                text.setMinWidth(350);
+//                
+//                Button editURL = new Button("Edit");
+//                Button delURL = new Button("X");
+//                delURL.setBackground(Background.EMPTY);
+//                text.setBackground(Background.EMPTY);
+//                editURL.setMinHeight(30);
+//                delURL.setMinHeight(30);
+//                
+//                delURL.setId(String.valueOf(rsUrl.getInt("id_url")));
+//                editURL.setId(String.valueOf(rsUrl.getInt("id_url")));
+//                text.setId(String.valueOf(rsUrl.getInt("id_url")));
+//                
+//                urlList.add(text);
+//                edit.add(editURL);
+//                delete.add(delURL); 
+//            }
+//        } catch (SQLException | ClassNotFoundException ex) {
+//            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
       
     //Menampilkan Data di Home
-    public void show(User user,boolean Search){
-            String queryFolder,queryUrl;
-            now=user;
-            
-            System.out.println(inSearch.getText());
-             if(now.getFolder().isEmpty()){
-                queryFolder = "SELECT * FROM Folder where parent_folder is NULL and email = '"+now.getEmail()+"';";
-                queryUrl = "select * from url where email = '"+now.getEmail()+"' and id_folder is NULL";
-                backBox.getChildren().clear();
-            }else if(Search==true){
-                queryFolder = "select * from folder where nama_folder like '%"+now.getFolder().get(now.getFolder().size()-1).getNama()+"%' and email='"+now.getEmail()+"'";
-                queryUrl = "Select * from url where email='"+now.getEmail()+"' and nama_url like '%"+now.getBookmark().get(now.getBookmark().size()-1).getNama()+"%' or link_url like '%"+now.getBookmark().get(now.getBookmark().size()-1).getLink()+"%'";
-            }else {
-                queryFolder = "select * from folder where parent_folder = "+now.getFolder().get(now.getFolder().size()-1).getId_parent()+" and email='"+now.getEmail()+"'";
-                queryUrl = "select * from url where email = '"+now.getEmail()+"' and id_folder = "+now.getFolder().get(now.getFolder().size()-1).getId()+"";
+    public void show(boolean Search){
+        System.out.println("masuk ke show");
+        
+        //agar dapat digunakan untuk menampilkan subfolder
+        contentBox.getChildren().clear();
+        editBox.getChildren().clear();
+        deleteBox.getChildren().clear();
+        folderList.clear();
+        urlList.clear();
+        delete.clear();
+        edit.clear();
+        
+        //tambah folder ke home
+        for(int i=0;i<now.getFolder().size();i++){
+            final int o = i;
+            System.out.println("perulangan folder");
+            if(folderTree.get(folderTree.size()-1)==0){
+                System.out.println("jebol");
+                if(now.getFolder().get(i).getId_parent() == folderTree.get(folderTree.size()-1)){
+                    //tampilkan folder di home
+                    System.out.println("masuk yang sini");
+                    final Button folder = new Button(now.getFolder().get(i).getNama());
+                    folder.setId(String.valueOf(now.getFolder().get(i).getId()));
+                    folder.setMinWidth(400);
+                    folder.setOnMouseClicked(new EventHandler<MouseEvent>(){
+                        @Override
+                        public void handle(MouseEvent event) {
+                            folderTree.add(Integer.parseInt(folder.getId()));
+                            show(false);
+                        }
+                    });
+                    //buat button edit folder
+                    Button Edit = new Button("Edit");
+                    Edit.setId(String.valueOf(now.getFolder().get(o).getId()));
+                    Edit.setBackground(Background.EMPTY);
+                    Edit.setOnMouseClicked(new EventHandler<MouseEvent>(){
+                        @Override
+                        public void handle(MouseEvent event) {
+                            //panggil fungsi edit folder . . .
+                            //belum dikerjain
+                        }
+                    });
+                    //buat button delete folder
+                    final Button Delete = new Button("X");
+                    Delete.setId(String.valueOf(now.getFolder().get(o).getId()));
+                    Delete.setBackground(Background.EMPTY);
+                    Delete.setOnMouseClicked(new EventHandler<MouseEvent>(){
+                        @Override
+                        public void handle(MouseEvent event) {
+                            try {
+                                String deleteFolder = "delete from folder where id_folder = "+Delete.getId();
+                                DBUtil.getInstance().dbExecuteUpdate(deleteFolder);
+                                for(int j=0; j<now.getFolder().size();j++){
+                                    if(Integer.parseInt(Delete.getId()) == now.getFolder().get(j).getId()){
+                                        now.getFolder().remove(j);
+                                        break;
+                                    }
+                                }
+                                show(false);
+                            } catch (SQLException | ClassNotFoundException ex) {
+                                Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                    });
+                    folderList.add(folder); 
+                    edit.add(Edit);
+                    delete.add(Delete);
+                }
+            }else{
+                //menampilkan folder didalam folder
+                System.out.println("masuk kesini gan");
+                if(now.getFolder().get(i).getId_parent() == folderTree.get(folderTree.size()-1)){
+                    final Button folder = new Button(now.getFolder().get(i).getNama());
+                    folder.setId(String.valueOf(now.getFolder().get(i).getId()));
+                    folder.setMinWidth(400);
+                    folder.setOnMouseClicked(new EventHandler<MouseEvent>(){
+                        @Override
+                        public void handle(MouseEvent event) {
+                            folderTree.add(Integer.parseInt(folder.getId()));
+                            show(false);
+                        }
+                    });
+                    folderList.add(folder);
+                }
             }
-            for(int i=0;i<now.getFolder().size();i++){
-                System.out.println(now.getFolder().get(i));
+        }
+        System.out.println("udah ketambah");
+        
+        //tambah bookmark ke home
+        for(int i=0;i<now.getBookmark().size();i++){
+            final int o = i;
+            //menampilkan bookmark dalam home
+            if(folderTree.get(folderTree.size()-1)==0){
+                if(now.getBookmark().get(i).getId_folder()==folderTree.get(i)){
+                    Button url;
+                    if(now.getBookmark().get(i).getNama().equals(null)){
+                        url = new Button(now.getBookmark().get(i).getLink());
+                    }else{
+                        url = new Button(now.getBookmark().get(i).getNama());
+                    }
+                    url.setMinWidth(400);
+                    url.setBackground(Background.EMPTY);
+                    url.setOnMouseClicked(new EventHandler<MouseEvent>(){
+                        @Override
+                        public void handle(MouseEvent event) {
+                            try {
+                                Desktop d = Desktop.getDesktop();
+                                d.browse(new URI(now.getBookmark().get(o).getLink()));
+                            } catch (URISyntaxException | IOException ex) {
+                                Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                    });
+                    final Button Delete = new Button("X");
+                    Delete.setId(String.valueOf(now.getBookmark().get(o).getId()));
+                    Delete.setBackground(Background.EMPTY);
+                    Delete.setOnMouseClicked(new EventHandler<MouseEvent>(){
+                        @Override
+                        public void handle(MouseEvent event) {
+                            try {
+                                String deleteFolder = "delete from Url where id_url = "+Delete.getId();
+                                DBUtil.getInstance().dbExecuteUpdate(deleteFolder);
+                                for(int j=0; j<now.getBookmark().size();j++){
+                                    if(Integer.parseInt(Delete.getId()) == now.getBookmark().get(j).getId()){
+                                        now.getBookmark().remove(j);
+                                        break;
+                                    }
+                                }
+                                show(false);
+                            } catch (SQLException | ClassNotFoundException ex) {
+                                Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                    });
+                    delete.add(Delete);
+                    urlList.add(url);
+                }else{
+                    //menampilkan bookmark didalam folder
+                    if(now.getBookmark().get(i).getId_folder()==folderTree.get(i)){
+                        Button url;
+                        if(now.getBookmark().get(i).getNama().equals(null)){
+                            url = new Button(now.getBookmark().get(i).getLink());
+                        }else{
+                            url = new Button(now.getBookmark().get(i).getNama());
+                        }
+                        url.setMinWidth(400);
+                        url.setBackground(Background.EMPTY);
+                        url.setOnMouseClicked(new EventHandler<MouseEvent>(){
+                            @Override
+                            public void handle(MouseEvent event) {
+                                try {
+                                    Desktop d = Desktop.getDesktop();
+                                    d.browse(new URI(now.getBookmark().get(o).getLink()));
+                                } catch (URISyntaxException | IOException ex) {
+                                    Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                        });
+                        final Button Delete = new Button("X");
+                        Delete.setId(String.valueOf(now.getBookmark().get(o).getId()));
+                        Delete.setBackground(Background.EMPTY);
+                        Delete.setOnMouseClicked(new EventHandler<MouseEvent>(){
+                            @Override
+                            public void handle(MouseEvent event) {
+                                try {
+                                    String deleteFolder = "delete from Url where id_url = "+Delete.getId();
+                                    DBUtil.getInstance().dbExecuteUpdate(deleteFolder);
+                                    for(int j=0; j<now.getBookmark().size();j++){
+                                        if(Integer.parseInt(Delete.getId()) == now.getBookmark().get(j).getId()){
+                                            now.getBookmark().remove(j);
+                                            break;
+                                        }
+                                    }
+                                    show(false);
+                                } catch (SQLException | ClassNotFoundException ex) {
+                                    Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                        });
+                        delete.add(Delete);
+                        urlList.add(url);
+                    }
+                }
             }
-            displayFolder(queryFolder);
-            displayUrl(queryUrl);
-            contentBox.getChildren().clear();
-            contentBox.getChildren().addAll(folderList);
-            contentBox.getChildren().addAll(urlList);
-            
-            editBox.getChildren().clear();
-            editBox.getChildren().addAll(edit);
-            
-            deleteBox.getChildren().clear();
-            deleteBox.getChildren().addAll(delete);
-            
-            for(int i=0;i<delete.size();i++){
-                final int o = i;
-                final String tempt = deleteBox.getChildren().get(i).getId();
+        }
+        contentBox.getChildren().addAll(folderList);
+        contentBox.getChildren().addAll(urlList);
+        editBox.getChildren().addAll(edit);
+        deleteBox.getChildren().addAll(delete);
+//            String queryFolder,queryUrl;
+//            now=user;
+//            
+//            System.out.println(inSearch.getText());
+//             if(now.getFolder().isEmpty()){
+//                queryFolder = "SELECT * FROM Folder where parent_folder is NULL and email = '"+now.getEmail()+"';";
+//                queryUrl = "select * from url where email = '"+now.getEmail()+"' and id_folder is NULL";
+//                backBox.getChildren().clear();
+//            }else if(Search==true){
+//                queryFolder = "select * from folder where nama_folder like '%"+now.getFolder().get(now.getFolder().size()-1).getNama()+"%' and email='"+now.getEmail()+"'";
+//                queryUrl = "Select * from url where email='"+now.getEmail()+"' and nama_url like '%"+now.getBookmark().get(now.getBookmark().size()-1).getNama()+"%' or link_url like '%"+now.getBookmark().get(now.getBookmark().size()-1).getLink()+"%'";
+//            }else {
+//                queryFolder = "select * from folder where parent_folder = "+now.getFolder().get(now.getFolder().size()-1).getId_parent()+" and email='"+now.getEmail()+"'";
+//                queryUrl = "select * from url where email = '"+now.getEmail()+"' and id_folder = "+now.getFolder().get(now.getFolder().size()-1).getId()+"";
+//            }
+//            for(int i=0;i<now.getFolder().size();i++){
+//                System.out.println(now.getFolder().get(i));
+//            }
+//            displayFolder(queryFolder);
+//            displayUrl(queryUrl);
+//            contentBox.getChildren().clear();
+//            contentBox.getChildren().addAll(folderList);
+//            contentBox.getChildren().addAll(urlList);
+//            
+//            editBox.getChildren().clear();
+//            editBox.getChildren().addAll(edit);
+//            
+//            deleteBox.getChildren().clear();
+//            deleteBox.getChildren().addAll(delete);
+//            
+//            for(int i=0;i<delete.size();i++){
+//                final int o = i;
+//                final String tempt = deleteBox.getChildren().get(i).getId();
 //                deleteBox.getChildren().get(i).setOnMouseClicked(new EventHandler<MouseEvent>() {
 //                    //EventHandler buat Delete
 //                    public void handle(MouseEvent me) {
@@ -328,83 +525,83 @@ public class HomeController implements Initializable {
 //                        }
 //                    }
 //                });
-                editBox.getChildren().get(i).setOnMouseClicked(new EventHandler<MouseEvent>(){
-                    @Override
-                    public void handle(MouseEvent me){
-                        try {
-                            FXMLLoader loader = new FXMLLoader();
-                            loader.setLocation(getClass().getResource("/fxml/NewFolder.fxml"));
-                            Parent tambahFolderPage = loader.load();
-                            NewFolderController controller = loader.getController();
-                            controller.data(now);
-                            String sql = "select * from folder where id_folder = '"+editBox.getChildren().get(o).getId()+"'";
-                            ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
-                            if(rs.next()){
-                                controller.editFolder(now,rs.getString("nama_folder"),rs.getInt("id_folder"));
-                            }
-                            Scene tambahFolder = new Scene(tambahFolderPage);
-                            Stage app_stage = (Stage)((Node) me.getSource()).getScene().getWindow();
-                            app_stage.setScene(tambahFolder);
-                            app_stage.show();
-                        } catch (IOException | SQLException | ClassNotFoundException ex) {
-                            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                });
-            }
+//                editBox.getChildren().get(i).setOnMouseClicked(new EventHandler<MouseEvent>(){
+//                    @Override
+//                    public void handle(MouseEvent me){
+//                        try {
+//                            FXMLLoader loader = new FXMLLoader();
+//                            loader.setLocation(getClass().getResource("/fxml/NewFolder.fxml"));
+//                            Parent tambahFolderPage = loader.load();
+//                            NewFolderController controller = loader.getController();
+//                            controller.data(now);
+//                            String sql = "select * from folder where id_folder = '"+editBox.getChildren().get(o).getId()+"'";
+//                            ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
+//                            if(rs.next()){
+//                                controller.editFolder(now,rs.getString("nama_folder"),rs.getInt("id_folder"));
+//                            }
+//                            Scene tambahFolder = new Scene(tambahFolderPage);
+//                            Stage app_stage = (Stage)((Node) me.getSource()).getScene().getWindow();
+//                            app_stage.setScene(tambahFolder);
+//                            app_stage.show();
+//                        } catch (IOException | SQLException | ClassNotFoundException ex) {
+//                            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+//                        }
+//                    }
+//                });
+//            }
             
-            for(int i=0;i<folderList.size();i++){
-                final String tempt = contentBox.getChildren().get(i).getId();
-                contentBox.getChildren().get(i).setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent me) {
-                        System.out.println(tempt);
-                      
-                        FXMLLoader loader = new FXMLLoader();
-                        loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
-                        Parent backHomePage;
-                        try {
-                            backHomePage = loader.load();
-                            Scene backHome = new Scene(backHomePage);
-                            HomeController controller = loader.getController();
-                            controller.data(now);
-                            System.out.println(Integer.parseInt(tempt));
-                            Folder folder = new Folder(Integer.parseInt(tempt));
-                            now.getFolder().add(folder);
-                            controller.show(now,false);
-                            if(!now.getFolder().isEmpty()){
-                                controller.getBack(now);
-                            }
-                            Stage app_stage = (Stage)((Node) me.getSource()).getScene().getWindow();
-                            app_stage.setScene(backHome);
-                            app_stage.show();
-                        } catch (IOException ex) {
-                            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        
-                        
-                    }
-                });
-            }
-            //untuk edit delete Bookmark
-            for(int i=folderList.size();i<contentBox.getChildren().size();i++){
-                final int o = i;
-                contentBox.getChildren().get(i).setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent me) {
-                        try {
-                               String selectUrl = "select * from url where id_url = "+contentBox.getChildren().get(o).getId()+" and email = '"+now.getEmail()+"'";
-                               Desktop d = Desktop.getDesktop();
-                               ResultSet rs = DBUtil.getInstance().dbExecuteQuery(selectUrl);
-                               if(rs.next()){      
-                                   d.browse(new URI(rs.getString("link_url")));
-                               }
-                        } catch (IOException | URISyntaxException | SQLException | ClassNotFoundException ex) {
-                            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        
-                    }
-                });
+//            for(int i=0;i<folderList.size();i++){
+//                final String tempt = contentBox.getChildren().get(i).getId();
+//                contentBox.getChildren().get(i).setOnMouseClicked(new EventHandler<MouseEvent>() {
+//                    @Override
+//                    public void handle(MouseEvent me) {
+//                        System.out.println(tempt);
+//                      
+//                        FXMLLoader loader = new FXMLLoader();
+//                        loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
+//                        Parent backHomePage;
+//                        try {
+//                            backHomePage = loader.load();
+//                            Scene backHome = new Scene(backHomePage);
+//                            HomeController controller = loader.getController();
+//                            controller.data(now);
+//                            System.out.println(Integer.parseInt(tempt));
+//                            Folder folder = new Folder(Integer.parseInt(tempt));
+//                            now.getFolder().add(folder);
+//                            controller.show(false);
+//                            if(!now.getFolder().isEmpty()){
+//                                controller.getBack(now);
+//                            }
+//                            Stage app_stage = (Stage)((Node) me.getSource()).getScene().getWindow();
+//                            app_stage.setScene(backHome);
+//                            app_stage.show();
+//                        } catch (IOException ex) {
+//                            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+//                        }
+//                        
+//                        
+//                    }
+//                });
+//            }
+//            //untuk edit delete Bookmark
+//            for(int i=folderList.size();i<contentBox.getChildren().size();i++){
+//                final int o = i;
+//                contentBox.getChildren().get(i).setOnMouseClicked(new EventHandler<MouseEvent>() {
+//                    @Override
+//                    public void handle(MouseEvent me) {
+//                        try {
+//                               String selectUrl = "select * from url where id_url = "+contentBox.getChildren().get(o).getId()+" and email = '"+now.getEmail()+"'";
+//                               Desktop d = Desktop.getDesktop();
+//                               ResultSet rs = DBUtil.getInstance().dbExecuteQuery(selectUrl);
+//                               if(rs.next()){      
+//                                   d.browse(new URI(rs.getString("link_url")));
+//                               }
+//                        } catch (IOException | URISyntaxException | SQLException | ClassNotFoundException ex) {
+//                            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+//                        }
+//                        
+//                    }
+//                });
 //                editBox.getChildren().get(i).setOnMouseClicked(new EventHandler<MouseEvent>(){
 //                    @Override
 //                    public void handle(MouseEvent event) {
@@ -462,10 +659,14 @@ public class HomeController implements Initializable {
 //                    }   
 //                }
 //            });
-            }
             //vbox.getChildren().addAll(buttonlist); //tadi buat nmenyamakan panjang button
-        }
-     
+    }
+    
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+       
+    }
+    
     public void getBack(User user){
         now = user;
         Button button = new Button("<");
@@ -484,9 +685,9 @@ public class HomeController implements Initializable {
                     controller.data(now);
                     now.getFolder().remove(now.getFolder().size()-1);
                     if(now.getFolder().size()==0){
-                        controller.show(now,false);
+                        controller.show(false);
                     }else {
-                        controller.show(now,true);
+                        controller.show(true);
                     }
                     if(now.getFolder().size()!=0){
                         controller.getBack(now);
@@ -501,12 +702,10 @@ public class HomeController implements Initializable {
             }
         });
     }
+} 
     
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-       
-        
-    }   
-}
+
+   
+    
+     
    

@@ -13,6 +13,8 @@ import java.net.URL;
 import static java.sql.JDBCType.NULL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -44,6 +46,7 @@ public class NewFolderController implements Initializable {
     private String data;
     private Vector<String> v = new Vector();
     private User now;
+    private int location;
     @FXML
     private Text namaAkun;
     
@@ -61,10 +64,10 @@ public class NewFolderController implements Initializable {
                 try {
                     String stmt = "Select * From Folder where nama_folder = '"+inFolder.getText()+"'";
                     String insertStmt;
-                    if(now.getFolder().size()==0){
+                    if(location==0){
                         insertStmt = "Insert into Folder (nama_folder,email) values('"+inFolder.getText()+"','"+now.getEmail()+"')";
                     }else{
-                        insertStmt = "Insert into Folder (nama_folder,Parent_folder,email) values('"+inFolder.getText()+"','"+now.getFolder().get(now.getFolder().size()-1).getId()+"','"+now.getEmail()+"')";
+                        insertStmt = "Insert into Folder (nama_folder,Parent_folder,email) values('"+inFolder.getText()+"','"+location+"','"+now.getEmail()+"')";
                     }
                     ResultSet rs = DBUtil.getInstance().dbExecuteQuery(stmt);
                     String tempt = null;
@@ -80,6 +83,13 @@ public class NewFolderController implements Initializable {
                     }
                     else if(!inFolder.getText().equals(tempt)){
                         DBUtil.getInstance().dbExecuteUpdate(insertStmt);
+                        String queryFolderBaru = "select * from folder where email='"+now.getEmail()+"'";
+                        ResultSet rsFolder = DBUtil.getInstance().dbExecuteQuery(queryFolderBaru);
+                        List<Folder> folder = new ArrayList<>();
+                        while(rsFolder.next()){
+                            folder.add(new Folder(rsFolder.getInt("id_folder"), rsFolder.getString("nama_folder"), rsFolder.getInt("parent_folder")));
+                        }
+                        now.setFolder(folder);
                         FXMLLoader loader = new FXMLLoader();
                         loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
                         Parent backHomePage;
@@ -88,7 +98,7 @@ public class NewFolderController implements Initializable {
                             Scene backHome = new Scene(backHomePage);
                             HomeController controller = loader.getController();
                             controller.data(now);
-                            controller.show(now,false);
+                            controller.show(false);
                             if(!now.getFolder().isEmpty()){
                                 controller.getBack(now);
                             }
@@ -159,14 +169,15 @@ public class NewFolderController implements Initializable {
         Scene backHome = new Scene(backHomePage);
         HomeController controller = loader.getController();
         controller.data(now);
-        controller.show(now,false);
+        controller.show(false);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(backHome);
         app_stage.show();
     }
-     public void data(User s){
+     public void data(User s, int parent){
         now = s;
         namaAkun.setText(now.getEmail());
+        location = parent;
     }
      @FXML
     public void logOut(MouseEvent event) throws IOException{
@@ -213,7 +224,7 @@ public class NewFolderController implements Initializable {
                     Scene backHome = new Scene(backHomePage);
                     HomeController controller = loader.getController();
                     controller.data(now);
-                    controller.show(now,false);
+                    controller.show(false);
                     if(v.size()!=0){
                             controller.getBack(now);
                     }
@@ -233,5 +244,9 @@ public class NewFolderController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }    
+
+    void data(User now) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

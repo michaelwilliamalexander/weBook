@@ -74,7 +74,7 @@ public class LoginController implements Initializable {
                     HomeController controller = loader.getController();
                     User logged = new User(email,password);
                     controller.data(logged);
-                    controller.show(logged,false);
+                    controller.show(false);
                     Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                     app_stage.close();
                     app_stage.setScene(signIn);
