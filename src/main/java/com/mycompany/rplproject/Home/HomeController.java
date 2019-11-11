@@ -191,7 +191,7 @@ public class HomeController implements Initializable {
         Scene tagList = new Scene(tagListPage);
         TagListController controller = loader.getController();
         controller.data(now);
-        controller.show(null,now.getEmail(),false);
+        controller.show(false);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(tagList);
         app_stage.show();
@@ -228,8 +228,21 @@ public class HomeController implements Initializable {
                 Edit.setOnMouseClicked(new EventHandler<MouseEvent>(){
                     @Override
                     public void handle(MouseEvent event) {
-                        //panggil fungsi edit folder . . .
-                        //belum dikerjain
+                        try {
+                            //panggil fungsi edit folder . . .
+                            FXMLLoader loader = new FXMLLoader();
+                            loader.setLocation(getClass().getResource("/fxml/NewFolder.fxml"));
+                            Parent tambahFolderPage = loader.load();
+                            NewFolderController controller = loader.getController();
+                            controller.data(now, folderTree.get(folderTree.size()-1));
+                            controller.editFolder(folder.getText(), now.getFolder().get(o).getId());
+                            Scene tambahFolder = new Scene(tambahFolderPage);
+                            Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                            app_stage.setScene(tambahFolder);
+                            app_stage.show();
+                        } catch (IOException ex) {
+                            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                 });
                 //buat button delete folder
@@ -240,15 +253,22 @@ public class HomeController implements Initializable {
                     @Override
                     public void handle(MouseEvent event) {
                         try {
-                            String deleteFolder = "delete from folder where id_folder = "+Delete.getId();
-                            DBUtil.getInstance().dbExecuteUpdate(deleteFolder);
-                            for(int j=0; j<now.getFolder().size();j++){
-                                if(Integer.parseInt(Delete.getId()) == now.getFolder().get(j).getId()){
-                                    now.getFolder().remove(j);
-                                    break;
+                            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                            alert.setTitle("Delete Folder");
+                            alert.setHeaderText("Apakah anda ingin menghapus folder ini?");
+                            Optional<ButtonType> option = alert.showAndWait();
+                            if(option.get() == ButtonType.OK){
+                                String deleteFolder = "delete from folder where id_folder = "+Delete.getId();
+                                DBUtil.getInstance().dbExecuteUpdate(deleteFolder);
+                                for(int j=0; j<now.getFolder().size();j++){
+                                    if(Integer.parseInt(Delete.getId()) == now.getFolder().get(j).getId()){
+                                        now.getFolder().remove(j);
+                                        break;
+                                    }
                                 }
+                                show(false);
                             }
-                            show(false);
+
                         } catch (SQLException | ClassNotFoundException ex) {
                             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -290,15 +310,23 @@ public class HomeController implements Initializable {
                     @Override
                     public void handle(MouseEvent event) {
                         try {
-                            String deleteFolder = "delete from Url where id_url = "+Delete.getId();
-                            DBUtil.getInstance().dbExecuteUpdate(deleteFolder);
-                            for(int j=0; j<now.getBookmark().size();j++){
-                                if(Integer.parseInt(Delete.getId()) == now.getBookmark().get(j).getId()){
-                                    now.getBookmark().remove(j);
-                                    break;
+                            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                            alert.setTitle("Delete Bookmark");
+                            alert.setHeaderText("Apakah Anda ingin menghapus Bookmark ini?");
+                            //alert.setContentText("Apakah anda ingin menghapus folder ini?");
+                            Optional<ButtonType> option = alert.showAndWait();
+                            if(option.get() == ButtonType.OK){
+                                String deleteFolder = "delete from Url where id_url = "+Delete.getId();
+                                DBUtil.getInstance().dbExecuteUpdate(deleteFolder);
+                                for(int j=0; j<now.getBookmark().size();j++){
+                                    if(Integer.parseInt(Delete.getId()) == now.getBookmark().get(j).getId()){
+                                        now.getBookmark().remove(j);
+                                        break;
+                                    }
                                 }
+                                show(false);
                             }
-                            show(false);
+                            
                         } catch (SQLException | ClassNotFoundException ex) {
                             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
                         }

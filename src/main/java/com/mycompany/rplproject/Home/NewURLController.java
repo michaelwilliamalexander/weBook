@@ -134,7 +134,7 @@ public class NewURLController implements Initializable {
         Scene tagList = new Scene(tagListPage);
         TagListController controller = loader.getController();
         controller.data(now);
-        controller.show(null, data,false);
+        controller.show(false);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(tagList);
         app_stage.show();
@@ -227,62 +227,60 @@ public class NewURLController implements Initializable {
         insertUrlButton.setText("edit");
         namaUrl.setText(nama);
         linkUrl.setText(link);
-        //            String sql = "select * from tag where id_tag = "+tag;
-//            ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
-//            if(rs.next()){
-//                namaTag.setValue(new Tag(rs.getInt("id_tag"), rs.getString("nama_tag")));
-//                setComboBoxValue(); 
-//            }
-//ketika button diklik akan melakukan update
-insertUrlButton.setOnMouseClicked(new EventHandler<MouseEvent>(){
-    @Override
-    public void handle(MouseEvent event) {
-        try {
-            Tag t = (Tag) namaTag.getSelectionModel().getSelectedItem();
-            String sql = "update url set nama_url='"+namaUrl.getText()+"', link_url='"+linkUrl.getText()+"' where id_url = "+id;
-            DBUtil.getInstance().dbExecuteUpdate(sql);
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
-            Parent backHomePage = loader.load();
-            Scene backHome = new Scene(backHomePage);
-            HomeController controller = loader.getController();
-            controller.data(now);
-            controller.show(false);
-            if(!v.isEmpty()){
-                controller.getBack(now);
+        insertUrlButton.setOnMouseClicked(new EventHandler<MouseEvent>(){
+            @Override
+            public void handle(MouseEvent event) {
+                try {
+                    Tag t = (Tag) namaTag.getSelectionModel().getSelectedItem();
+                    String sql = "update url set nama_url='"+namaUrl.getText()+"', link_url='"+linkUrl.getText()+"' where id_url = "+id;
+                    DBUtil.getInstance().dbExecuteUpdate(sql);
+                    String queryUrl = "select * from url where email='"+now.getEmail()+"'";
+                    ResultSet rsUrl = DBUtil.getInstance().dbExecuteQuery(queryUrl);
+                    List<Bookmark> bookmark = new ArrayList<>();
+                    while(rsUrl.next()){
+                        bookmark.add(new Bookmark(rsUrl.getInt("id_url"), rsUrl.getString("nama_url"), rsUrl.getString("link_url"), rsUrl.getInt("id_folder")));
+                    }
+                    FXMLLoader loader = new FXMLLoader();
+                    loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
+                    Parent backHomePage = loader.load();
+                    Scene backHome = new Scene(backHomePage);
+                    HomeController controller = loader.getController();
+                    controller.data(now);
+                    controller.show(false);
+                    if(!v.isEmpty()){
+                        controller.getBack(now);
+                    }
+                    Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                    app_stage.setScene(backHome);
+                    app_stage.show();
+
+                } catch (SQLException | ClassNotFoundException | IOException ex) {
+                    Logger.getLogger(NewURLController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-            Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-            app_stage.setScene(backHome);
-            app_stage.show();
-            
-        } catch (SQLException | ClassNotFoundException | IOException ex) {
-            Logger.getLogger(NewURLController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-});
-isBack.setOnMouseClicked(new EventHandler<MouseEvent>(){
-    @Override
-    public void handle(MouseEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
-            Parent backHomePage = loader.load();
-            Scene backHome = new Scene(backHomePage);
-            HomeController controller = loader.getController();
-            controller.data(now);
-            controller.show(false);
-            if(!v.isEmpty()){
-                controller.getBack(now);
+        });
+        isBack.setOnMouseClicked(new EventHandler<MouseEvent>(){
+            @Override
+            public void handle(MouseEvent event) {
+                try {
+                    FXMLLoader loader = new FXMLLoader();
+                    loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
+                    Parent backHomePage = loader.load();
+                    Scene backHome = new Scene(backHomePage);
+                    HomeController controller = loader.getController();
+                    controller.data(now);
+                    controller.show(false);
+                    if(!v.isEmpty()){
+                        controller.getBack(now);
+                    }
+                    Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                    app_stage.setScene(backHome);
+                    app_stage.show();
+                } catch (IOException ex) {
+                    Logger.getLogger(NewURLController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-            Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-            app_stage.setScene(backHome);
-            app_stage.show();
-        } catch (IOException ex) {
-            Logger.getLogger(NewURLController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-});
-        
+        });
     }
 
     @Override

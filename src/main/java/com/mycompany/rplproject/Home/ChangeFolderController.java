@@ -30,7 +30,6 @@ public class ChangeFolderController implements Initializable {
     public void data(User u){
         now = u;
         namaAkun.setText(now.getEmail());
-        
         user = new TreeItem<>(now.getEmail());
         folder = now.getFolder();
         user.setExpanded(true);

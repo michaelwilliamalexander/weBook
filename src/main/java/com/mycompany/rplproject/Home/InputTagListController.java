@@ -5,12 +5,15 @@
  */
 package com.mycompany.rplproject.Home;
 
+import com.mycompany.rplproject.Tag;
 import com.mycompany.rplproject.User;
 import com.mycompany.rplproject.db.DBUtil;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -113,7 +116,7 @@ public class InputTagListController implements Initializable {
         Scene tagList = new Scene(tagListPage);
         TagListController controller = loader.getController();
         controller.data(now);
-        controller.show(null,data,false);
+        controller.show(false);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(tagList);
         app_stage.show();
@@ -156,7 +159,7 @@ public class InputTagListController implements Initializable {
             Scene tagList = new Scene(tagListPage);
             TagListController controller = loader.getController();
             controller.data(now);
-            controller.show(null,data,false);
+            controller.show(false);
             Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
             app_stage.setScene(tagList);
             app_stage.show();
@@ -164,7 +167,7 @@ public class InputTagListController implements Initializable {
         }
     }
     
-    public void editTag(final String idTag, final String email) throws SQLException, ClassNotFoundException{
+    public void editTag(final int idTag) throws SQLException, ClassNotFoundException{
         String sqmt = "Select * from Tag where id_tag = '"+idTag+"'";
         ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sqmt);
         String tamp = null;
@@ -177,16 +180,23 @@ public class InputTagListController implements Initializable {
         btnTag.setOnMouseClicked(new EventHandler<MouseEvent>(){
             @Override
             public void handle(MouseEvent event) {
-               String sql = "Update Tag set nama_tag = '"+inTag.getText()+"' where id_tag = '"+idTag+"' and email = '"+email+"' " ;
+               String sql = "Update Tag set nama_tag = '"+inTag.getText()+"' where id_tag = '"+idTag+"' and email = '"+now.getEmail()+"' " ;
                 try {
                     DBUtil.getInstance().dbExecuteUpdate(sql);
                     FXMLLoader loader = new FXMLLoader();
                     loader.setLocation(getClass().getResource("/fxml/TagList.fxml"));
+                    String queryTag = "select * from tag where email='"+now.getEmail()+"' or id_tag=0";
+                    ResultSet rsTag = DBUtil.getInstance().dbExecuteQuery(queryTag);
+                    List<Tag> tag = new ArrayList<>();
+                    while(rsTag.next()){
+                        tag.add(new Tag(rsTag.getInt("id_tag"), rsTag.getString("nama_tag")));
+                    }
+                    now.setTag(tag);
                     Parent tagListPage = loader.load();
                     Scene tagList = new Scene(tagListPage);
                     TagListController controller = loader.getController();
                     controller.data(now);
-                    controller.show(null,data,false);
+                    controller.show(false);
                     Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                     app_stage.setScene(tagList);
                     app_stage.show();

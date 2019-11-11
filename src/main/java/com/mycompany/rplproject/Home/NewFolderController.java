@@ -132,7 +132,7 @@ public class NewFolderController implements Initializable {
         Scene tagList = new Scene(tagListPage);
         TagListController controller = loader.getController();
         controller.data(now);
-        controller.show(null,data,false);
+        controller.show(false);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(tagList);
         app_stage.show();
@@ -205,13 +205,19 @@ public class NewFolderController implements Initializable {
         String sql = "update folder set nama_folder = '"+newName+"' where id_folder = "+id;
         try{
             DBUtil.getInstance().dbExecuteUpdate(sql);
+            String queryFolder = "select * from folder where email ='"+now.getEmail()+"'";
+            ResultSet rsFolder = DBUtil.getInstance().dbExecuteQuery(queryFolder);
+            List<Folder> folder = new ArrayList<>();
+            while(rsFolder.next()){
+                folder.add(new Folder(rsFolder.getInt("id_folder"), rsFolder.getString("nama_folder"), rsFolder.getInt("parent_folder")));
+            }
+            now.setFolder(folder);
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(NewFolderController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public void editFolder(User user,final String nama, final int id){
-        now = user;
+    public void editFolder(final String nama, final int id){
         inFolder.setText(nama);
         folderBtn.setText("Edit");
         folderBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -227,7 +233,7 @@ public class NewFolderController implements Initializable {
                     controller.data(now);
                     controller.show(false);
                     if(v.size()!=0){
-                            controller.getBack(now);
+                        controller.getBack(now);
                     }
                     Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                     app_stage.setScene(backHome);
