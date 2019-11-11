@@ -43,6 +43,9 @@ public class Folder {
     public int getId_parent() {
         return id_parent;
     }
-    
+//    @Override
+//    public String toString(){
+//        return getNama();
+//    }
     
 }

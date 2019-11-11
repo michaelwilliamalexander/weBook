@@ -56,8 +56,9 @@ public class NewFolderController implements Initializable {
     @FXML
     private TextField inFolder;
     
-    public void tambahFolder (User user){
+    public void tambahFolder (int locate, User user){
         now = user;
+        this.location = locate;
         folderBtn.setOnMouseClicked(new EventHandler<MouseEvent>(){
             @Override
             public void handle(MouseEvent event) {
