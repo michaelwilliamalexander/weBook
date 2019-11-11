@@ -164,8 +164,7 @@ public class TagListController implements Initializable {
         try {
             ResultSet rs= DBUtil.getInstance().dbExecuteQuery(sql);
             System.out.println(sql);
-             while(rs.next()){
-                 
+            while(rs.next()){
                 final Button button = new Button(rs.getString("nama_url"));
                 button.setMinWidth(350);
                 button.setId(String.valueOf(rs.getInt("id_url")));
@@ -182,7 +181,7 @@ public class TagListController implements Initializable {
                     @Override
                     public void handle(MouseEvent event) {
                         try {
-                            String selectUrl = "select * from url where id_url = "+button.getId()+" and email = '"+data+"'";
+                            String selectUrl = "select * from url where id_url = "+button.getId()+" and email = '"+now.getEmail()+"'";
                             Desktop d = Desktop.getDesktop();
                             ResultSet rs = DBUtil.getInstance().dbExecuteQuery(selectUrl);
                             if(rs.next()){
@@ -203,7 +202,7 @@ public class TagListController implements Initializable {
         deleteBox.getChildren().addAll(delete);
     }    
     
-    public void show(final String idtag, String s,boolean Search){
+    public void show(final String idtag, String s, boolean Search){
         
         contentBox.getChildren().clear();
         editBox.getChildren().clear();
@@ -232,7 +231,7 @@ public class TagListController implements Initializable {
                         Optional<ButtonType> option = alert.showAndWait();
                         if(option.get() == ButtonType.OK){
                              try {
-                               String selectFolder = "delete from Tag where id_tag = "+tempt+" and email = '"+data+"'";
+                               String selectFolder = "delete from Tag where id_tag = "+tempt+" and email = '"+now.getEmail()+"'";
                                DBUtil.getInstance().dbExecuteUpdate(selectFolder);
                                
                             } catch (SQLException | ClassNotFoundException ex) {
@@ -267,7 +266,7 @@ public class TagListController implements Initializable {
                             String sql = "select * from url where id_url = '"+editBox.getChildren().get(o).getId()+"'";
                             ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
                             if(rs.next()){
-                                controller.editBookmark(v,rs.getString("nama_url"),rs.getString("link_url"),rs.getInt("id_url"),rs.getInt("id_tag"));     
+                                controller.editBookmark(0 , rs.getString("nama_url"),rs.getString("link_url"),rs.getInt("id_url"));     
                                 controller.data(now);
                                 controller.setComboBoxValue();
                                 Scene tambahURL = new Scene(tambahURLPage);

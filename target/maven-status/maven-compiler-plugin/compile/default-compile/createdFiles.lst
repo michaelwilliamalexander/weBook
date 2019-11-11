@@ -12,7 +12,6 @@ com\mycompany\rplproject\Home\NewFolderController$1.class
 com\mycompany\rplproject\Home\NewFolderController.class
 com\mycompany\rplproject\Home\InputTagListController.class
 com\mycompany\rplproject\Home\NewURLController$4.class
-com\mycompany\rplproject\Home\HomeController$8.class
 com\mycompany\rplproject\Home\NewURLController.class
 com\mycompany\rplproject\Home\NewURLController$1.class
 com\mycompany\rplproject\Home\TagListController$5.class
@@ -22,7 +21,6 @@ com\mycompany\rplproject\Home\HomeController$5.class
 com\mycompany\rplproject\Home\HomeController$2.class
 com\mycompany\rplproject\LoginNSignUp\LoginController.class
 com\mycompany\rplproject\Home\InsertNewPasswordController.class
-com\mycompany\rplproject\Home\HomeController$9.class
 com\mycompany\rplproject\Home\TagListController$6.class
 com\mycompany\rplproject\Home\ChangeFolderController.class
 com\mycompany\rplproject\Home\GantiPasswordController.class
