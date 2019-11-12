@@ -86,7 +86,7 @@ public class SignUpFXMLController implements Initializable {
             rePasswordInput.clear();
             newEmailInput.clear();
         }
-        else if(!(Pattern.matches("^[a-zA-Z0-9]+[@]{1}+[a-zA-Z0-9]+[.]{1}+[a-zA-Z0-9]+[.]{1}+[a-zA-Z0-9]+[.]{1}+[a-zA-Z0-9]+$",newEmailInput.getText()))){
+        else if(!(Pattern.matches("^[a-zA-Z0-9]+[@]{1}+[ti][1]+[.]{1}+[ukdw][1]+[.]{1}+[ac][1]+[.]{1}+[id][1]+$",newEmailInput.getText()))){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Error");
             alert.setContentText("Format Email Salah");

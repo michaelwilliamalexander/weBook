@@ -185,7 +185,7 @@ public class NewURLController implements Initializable {
                         HomeController controller = loader.getController();
                         controller.data(now);
                         controller.show(false);
-                        if(v.size()!=0){
+                        if(!now.getBookmark().isEmpty()){
                             controller.getBack(now);
                         }
                         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
