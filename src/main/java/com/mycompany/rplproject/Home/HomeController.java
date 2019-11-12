@@ -385,24 +385,27 @@ public class HomeController implements Initializable {
         urlList.clear();
         delete.clear();
         edit.clear();
-        
-        //tambah folder
-        if(folderTree.get(folderTree.size()-1)==0){
-            //tampilkan folder di home
-            addFolder();
-        }else{
-            //menampilkan folder didalam folder
-            addFolder();
+        if(Search==false){
+            //tambah folder
+            if(folderTree.get(folderTree.size()-1)==0){
+                //tampilkan folder di home
+                addFolder();
+            }else{
+                //menampilkan folder didalam folder
+                addFolder();
+            }
+
+            //menambah bookmark
+            if(folderTree.get(folderTree.size()-1)==0){
+                //tambah bookmark di home
+                addUrl();
+            }else{
+                //menampilkan bookmark didalam folder
+                addUrl();     
+            }
         }
-        
-        //menambah bookmark
-        if(folderTree.get(folderTree.size()-1)==0){
-            //tambah bookmark di home
-            addUrl();
-        }else{
-            //menampilkan bookmark didalam folder
-            addUrl();     
-        }
+        Search();
+       
         contentBox.getChildren().addAll(folderList);
         contentBox.getChildren().addAll(urlList);
         editBox.getChildren().addAll(edit);
@@ -413,6 +416,82 @@ public class HomeController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
        
     }
+    
+     public void Search(){
+        tambahFolder.setDisable(false);
+        tambahURL.setDisable(false);
+        btnSearch.setOnMouseClicked(new EventHandler<MouseEvent>(){
+            @Override
+            public void handle(MouseEvent event) {
+                try {
+                    urlList.clear();
+                    contentBox.getChildren().clear();
+                    editBox.getChildren().clear();
+                    deleteBox.getChildren().clear();
+                    String tampt = inSearch.getText();
+                    String sqlURL = "Select * from URL where nama_url like '%"+tampt+"%' or link_url like '%"+tampt+"%' and email = '"+now.getEmail()+"'";
+                    ResultSet rsc = DBUtil.getInstance().dbExecuteQuery(sqlURL);
+                    while(rsc.next()){
+                        folderTree.add(rsc.getInt("id_url"));
+                    }
+                    for(int i=0;i<now.getBookmark().size();i++){
+                        System.out.println("Masuk");
+                        final int o = i;
+                            if(now.getBookmark().get(i).getId()==folderTree.get(folderTree.size()-1)){
+                                final Button url;
+                                if(now.getBookmark().get(i).getNama().equals(null)){
+                                    url = new Button(now.getBookmark().get(i).getLink());
+                                }else{
+                                    url = new Button(now.getBookmark().get(i).getNama());
+                                }
+                                url.setMinWidth(400);
+                                url.setBackground(Background.EMPTY);
+                                url.setOnMouseClicked(new EventHandler<MouseEvent>(){
+                                        @Override
+                                        public void handle(MouseEvent event) {
+                                            try {
+                                                Desktop d = Desktop.getDesktop();
+                                                d.browse(new URI(now.getBookmark().get(o).getLink()));
+                                            } catch (URISyntaxException | IOException ex) {
+                                                Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+                                            }
+                                        }
+                                    });
+                            urlList.add(url);
+                        }
+                    }
+                        folderList.clear();
+                         String sqlFolder = "Select * from Folder where nama_folder like '%"+tampt+"%' and email = '"+now.getEmail()+"'";
+                         ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sqlFolder);
+                         while(rs.next()){
+                             folderTree.add(rs.getInt("id_folder"));
+                         }
+                         for(int i=0;i<now.getFolder().size();i++){
+                            System.out.println("Masuk");
+                            if(now.getFolder().get(i).getId()==folderTree.get(folderTree.size()-1)){
+                                final Button folder = new Button(now.getFolder().get(i).getNama());
+                                folder.setId(String.valueOf(now.getFolder().get(i).getId()));
+                                folder.setMinWidth(400);
+                                folder.setOnMouseClicked(new EventHandler<MouseEvent>(){
+                                    @Override
+                                    public void handle(MouseEvent event) {
+                                        folderTree.add(Integer.parseInt(folder.getId()));
+                                        show(false);
+                                    }
+                                });
+                                folderList.add(folder);
+                            }
+
+                         }
+                        contentBox.getChildren().addAll(folderList);
+                        contentBox.getChildren().addAll(urlList);
+                } catch (SQLException | ClassNotFoundException ex) {
+                    Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+    }
+        });
+    }
+    
     
     public void getBack(User u){
         now = u;

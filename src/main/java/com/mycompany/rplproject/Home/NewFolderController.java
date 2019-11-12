@@ -232,9 +232,6 @@ public class NewFolderController implements Initializable {
                     HomeController controller = loader.getController();
                     controller.data(now);
                     controller.show(false);
-                    if(v.size()!=0){
-                        controller.getBack(now);
-                    }
                     Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                     app_stage.setScene(backHome);
                     app_stage.show();
