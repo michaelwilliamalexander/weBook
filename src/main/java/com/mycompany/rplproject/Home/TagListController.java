@@ -69,6 +69,9 @@ public class TagListController implements Initializable {
     @FXML
     private Button btnSearchTag;
     
+    @FXML
+    private Button tambahTag;
+    
    @FXML
     void dragged(MouseEvent event){
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -145,7 +148,7 @@ public class TagListController implements Initializable {
             tag.clear();
             delete.clear();
             edit.clear();
-            String sql = "select u.* from url u inner join urltag mg on u.id_url=mg.id_url inner join tag g on g.id_tag=mg.id_tag where g.id_tag ="+id_tag+" group by u.id_url;";
+            String sql = "select u.* from url u inner join urltag mg on u.id_url=mg.id_url inner join tag g on g.id_tag=mg.id_tag where g.id_tag ="+id_tag+" and email ='"+now.getEmail()+"' group by u.id_url;";
             ResultSet rs= DBUtil.getInstance().dbExecuteQuery(sql);
             System.out.println(sql);
             while(rs.next()){
@@ -286,13 +289,16 @@ public class TagListController implements Initializable {
         contentBox.getChildren().clear();
         editBox.getChildren().clear();
         deleteBox.getChildren().clear();
-        if(location < 0){
+       if(Search==false){
+            if(location < 0){
             //menambah tag kedalam layout
-            addTag();
-        }else{
-            //menampilkan isi tag
-            this.displayURL(location);
-        }
+                addTag();
+            }else{
+                //menampilkan isi tag
+                this.displayURL(location);
+            }
+       }
+       SearchTag();
           
     }
         
@@ -335,6 +341,47 @@ public class TagListController implements Initializable {
         app_stage.show();
     }
     
+    public void SearchTag(){
+        tambahTag.setDisable(false);
+        btnSearchTag.setOnMouseClicked(new EventHandler<MouseEvent>(){
+            @Override
+            public void handle(MouseEvent event) {
+                try {
+                    tag.clear();
+                    contentBox.getChildren().clear();
+                    editBox.getChildren().clear();
+                    deleteBox.getChildren().clear();
+                    String temp= inSearchTag.getText();
+                    String sql = "Select * from Tag where nama_tag like '%"+temp+"%' and email = '"+now.getEmail()+"'";
+                    ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
+                    List<Integer> tamp =  new ArrayList<>();
+                    while(rs.next()){
+                        tamp.add(rs.getInt("id_tag"));
+                    }
+                    for(int i=0;i<now.getTag().size();i++){
+                        if(now.getTag().get(i).getIdTag()==tamp.get(tamp.size()-1)){
+                             final Button Tag = new Button(now.getTag().get(i).getNamaTag());
+                            Tag.setId(String.valueOf(now.getTag().get(i).getIdTag()));
+                            Tag.setMinWidth(400);
+                            Tag.setOnMouseClicked(new EventHandler<MouseEvent>(){
+                                @Override
+                                public void handle(MouseEvent event) {
+                                    location = Integer.parseInt(Tag.getId());
+                                    show(false);
+                                }
+                            });
+                            tag.add(Tag);
+                        }
+                        
+                    }
+                    contentBox.getChildren().addAll(tag);
+                } catch (SQLException | ClassNotFoundException ex) {
+                    Logger.getLogger(TagListController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+        });
+    }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO

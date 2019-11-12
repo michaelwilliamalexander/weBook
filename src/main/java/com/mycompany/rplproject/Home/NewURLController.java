@@ -142,7 +142,7 @@ public class NewURLController implements Initializable {
     
     //fungsi menampilkan list folder dan tag yang ada ke combo box
     public void setComboBoxValue() throws SQLException{
-        String queryTag = "select * from tag where email = '"+data+"' or id_tag=0";
+        String queryTag = "select * from tag where email = '"+now.getEmail()+"' or id_tag=0";
         ObservableList listTag = FXCollections.observableArrayList(); //to show tag data into tag  
         try{
             ResultSet rsTag = DBUtil.getInstance().dbExecuteQuery(queryTag);

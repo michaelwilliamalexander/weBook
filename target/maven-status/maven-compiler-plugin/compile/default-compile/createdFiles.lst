@@ -8,8 +8,10 @@ com\mycompany\rplproject\FXMLController.class
 com\mycompany\rplproject\Home\HomeController$1.class
 com\mycompany\rplproject\Folder.class
 com\mycompany\rplproject\Home\NewURLController$3.class
+com\mycompany\rplproject\Home\TagListController$7.class
 com\mycompany\rplproject\Home\InputTagListController$1.class
 com\mycompany\rplproject\Home\NewFolderController$1.class
+com\mycompany\rplproject\Home\TagListController$7$1.class
 com\mycompany\rplproject\Home\NewFolderController.class
 com\mycompany\rplproject\Home\InputTagListController.class
 com\mycompany\rplproject\Home\NewURLController$4.class
@@ -26,7 +28,6 @@ com\mycompany\rplproject\Home\InsertNewPasswordController.class
 com\mycompany\rplproject\Home\TagListController$6.class
 com\mycompany\rplproject\Home\ChangeFolderController.class
 com\mycompany\rplproject\Home\GantiPasswordController.class
-com\mycompany\rplproject\Home\HomeController$7$3.class
 com\mycompany\rplproject\User.class
 com\mycompany\rplproject\Home\TagListController$2.class
 com\mycompany\rplproject\Home\HomeController$6.class
@@ -40,4 +41,3 @@ com\mycompany\rplproject\db\DBUtil.class
 com\mycompany\rplproject\Home\NewURLController$2.class
 com\mycompany\rplproject\Home\HomeController$7.class
 com\mycompany\rplproject\Home\TagListController$3.class
-com\mycompany\rplproject\Home\HomeController$7$4.class

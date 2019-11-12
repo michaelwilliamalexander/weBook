@@ -141,7 +141,9 @@ public class InputTagListController implements Initializable {
     void tambahTag(MouseEvent event) throws SQLException, ClassNotFoundException, IOException {
         String sql = "Select * from tag where nama_tag = '"+inTag.getText().toString()+"'";
         String dataBaru = "Insert into Tag(nama_tag,email) values('"+inTag.getText().toString()+"','"+now.getEmail()+"')";
+        String temp = "Select * from Tag where email = '"+now.getEmail()+"' and nama_tag = '"+inTag.getText()+"'";
         String tempt = null; 
+        int id = 0;
         ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
         while(rs.next()){
             tempt = rs.getString("nama_tag");
@@ -153,12 +155,14 @@ public class InputTagListController implements Initializable {
         }
         else{
             DBUtil.getInstance().dbExecuteUpdate(dataBaru);
+            
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/fxml/TagList.fxml"));
             Parent tagListPage = loader.load();
             Scene tagList = new Scene(tagListPage);
             TagListController controller = loader.getController();
             controller.data(now);
+            
             controller.show(false);
             Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
             app_stage.setScene(tagList);

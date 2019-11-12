@@ -5,6 +5,9 @@
  */
 package com.mycompany.rplproject;
 
+import com.mycompany.rplproject.db.DBUtil;
+import java.sql.ResultSet;
+
 /**
  *
  * @author Ananda
@@ -17,6 +20,8 @@ public class Tag {
         idTag = id;
         namaTag = nama;
     }
+    
+  
     @Override
     public String toString() {
         return this.getNamaTag();
