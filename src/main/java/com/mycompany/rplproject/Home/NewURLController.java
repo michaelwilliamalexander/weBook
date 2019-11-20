@@ -209,7 +209,7 @@ public class NewURLController implements Initializable {
                         HomeController controller = loader.getController();
                         controller.data(now);
                         controller.show(false);
-                        if(!v.isEmpty()){
+                        if(!now.getFolder().isEmpty()){
                             controller.getBack(now);
                         }
                         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
@@ -227,6 +227,11 @@ public class NewURLController implements Initializable {
         insertUrlButton.setText("edit");
         namaUrl.setText(nama);
         linkUrl.setText(link);
+        for(int i=0;i<now.getTag().size();i++){
+            if(now.getTag().get(i).getIdTag()== id){
+                namaTag.setItems((ObservableList) namaTag.getSelectionModel().getSelectedItem());
+            }
+        }
         insertUrlButton.setOnMouseClicked(new EventHandler<MouseEvent>(){
             @Override
             public void handle(MouseEvent event) {
@@ -234,6 +239,7 @@ public class NewURLController implements Initializable {
                     Tag t = (Tag) namaTag.getSelectionModel().getSelectedItem();
                     String sql = "update url set nama_url='"+namaUrl.getText()+"', link_url='"+linkUrl.getText()+"' where id_url = "+id;
                     DBUtil.getInstance().dbExecuteUpdate(sql);
+                    
                     String queryUrl = "select * from url where email='"+now.getEmail()+"'";
                     ResultSet rsUrl = DBUtil.getInstance().dbExecuteQuery(queryUrl);
                     List<Bookmark> bookmark = new ArrayList<>();
@@ -247,7 +253,7 @@ public class NewURLController implements Initializable {
                     HomeController controller = loader.getController();
                     controller.data(now);
                     controller.show(false);
-                    if(!v.isEmpty()){
+                    if(!now.getBookmark().isEmpty()){
                         controller.getBack(now);
                     }
                     Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();

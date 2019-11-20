@@ -139,7 +139,7 @@ public class InputTagListController implements Initializable {
     
        @FXML
     void tambahTag(MouseEvent event) throws SQLException, ClassNotFoundException, IOException {
-        String sql = "Select * from tag where nama_tag = '"+inTag.getText().toString()+"'";
+        String sql = "Select * from tag where nama_tag = '"+inTag.getText().toString()+"' and email = '"+now.getEmail()+"'";
         String dataBaru = "Insert into Tag(nama_tag,email) values('"+inTag.getText().toString()+"','"+now.getEmail()+"')";
         String temp = "Select * from Tag where email = '"+now.getEmail()+"' and nama_tag = '"+inTag.getText()+"'";
         String tempt = null; 

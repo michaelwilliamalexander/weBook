@@ -3,17 +3,12 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
@@ -36,58 +31,64 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>
       </HBox>
-      <StackPane layoutX="156.0" layoutY="72.0" prefHeight="239.0" prefWidth="527.0" style="-fx-background-color: #dfe4ea;" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="375.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="30.0">
+      <VBox alignment="CENTER" layoutX="344.0" layoutY="34.0" prefHeight="238.0" prefWidth="318.0" style="-fx-background-color: #cccccc;">
          <children>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Login" textAlignment="CENTER">
+               <VBox.margin>
+                  <Insets left="30.0" />
+               </VBox.margin></Text>
+            <HBox alignment="CENTER" prefHeight="41.0" prefWidth="314.0">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Login" AnchorPane.leftAnchor="155.0" AnchorPane.topAnchor="20.0" />
+                  <ImageView fitHeight="27.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../gambar/user.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </ImageView>
+                  <TextField fx:id="emailInput" prefHeight="27.0" prefWidth="189.0" style="-fx-border-width: 1; -fx-border-color: #737373;">
+                     <HBox.margin>
+                        <Insets left="9.0" />
+                     </HBox.margin>
+                  </TextField>
                </children>
-               <opaqueInsets>
-                  <Insets top="20.0" />
-               </opaqueInsets>
-            </AnchorPane>
-            <GridPane maxHeight="150.0" maxWidth="250.0">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="185.0" minWidth="10.0" prefWidth="63.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="321.0" minWidth="10.0" prefWidth="187.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints maxHeight="79.0" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="103.0" minHeight="10.0" prefHeight="51.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="176.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
-              </rowConstraints>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="44.0" prefWidth="318.0">
                <children>
-                   
-                  <Label text="Email" />
-                  <Label text="Password" GridPane.rowIndex="1" />
-                  <PasswordField fx:id="passwordInput" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                     <GridPane.margin>
-                        <Insets left="10.0" />
-                     </GridPane.margin></PasswordField>
-                  <TextField fx:id="emailInput" prefHeight="25.0" prefWidth="177.0" GridPane.columnIndex="1">
-                     <GridPane.margin>
-                        <Insets left="10.0" />
-                     </GridPane.margin></TextField>
-                  <VBox fx:id="" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                     <children>
-                        <Button fx:id="loginBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#SignIn" prefHeight="31.0" prefWidth="80.0" text="LOG IN">
-                           <VBox.margin>
-                              <Insets top="10.0" />
-                           </VBox.margin></Button>
-                        <Button fx:id="signUp" mnemonicParsing="false" onAction="#SignUp" style="-fx-background-color: #dfe4ea;" text="Sign Up" textFill="#ed0707">
-                           <VBox.margin>
-                              <Insets top="15.0" />
-                           </VBox.margin>
-                        </Button>
-                     </children>
-                  </VBox>
+                  <ImageView fitHeight="27.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../gambar/password.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets right="-7.0" />
+                     </HBox.margin>
+                  </ImageView>
+                  <PasswordField fx:id="passwordInput" prefHeight="27.0" prefWidth="190.0" style="-fx-border-color: #737373; -fx-border-width: 1;">
+                     <HBox.margin>
+                        <Insets left="15.0" />
+                     </HBox.margin>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets></PasswordField>
                </children>
-               <StackPane.margin>
-                  <Insets />
-               </StackPane.margin>
-            </GridPane>
+            </HBox>
+            <VBox fx:id="" alignment="CENTER" prefHeight="85.0" prefWidth="318.0">
+               <children>
+                  <Button fx:id="loginBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#SignIn" prefHeight="33.0" prefWidth="89.0" text="LOG IN">
+                     <VBox.margin>
+                        <Insets left="30.0" top="10.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button fx:id="signUp" mnemonicParsing="false" onAction="#SignUp" prefHeight="34.0" prefWidth="91.0" style="-fx-background-color: #cccccc; -fx-text-fill: #cc0000;" text="Sign Up" textFill="#ed0707">
+                     <VBox.margin>
+                        <Insets left="30.0" top="15.0" />
+                     </VBox.margin>
+                  </Button>
+               </children>
+            </VBox>
          </children>
-      </StackPane>
+      </VBox>
       <ImageView fitHeight="289.0" fitWidth="250.0" layoutX="30.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Free_Sample_By_Wix.jpg" />

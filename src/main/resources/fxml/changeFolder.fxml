@@ -6,6 +6,8 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TreeView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -13,7 +15,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" onMouseDragged="#dragged" onMousePressed="#move" prefHeight="400.0" prefWidth="700.0" styleClass="Styles.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.rplproject.Home.ChangeFolderController">
+<AnchorPane id="AnchorPane" onMouseDragged="#dragged" onMousePressed="#move" prefHeight="400.0" prefWidth="700.0" styleClass="Styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.rplproject.Home.ChangeFolderController">
    <children>
       <VBox alignment="BOTTOM_CENTER" prefHeight="59.0" prefWidth="158.0" style="-fx-background-color: #57606f;">
          <children>
@@ -53,24 +55,86 @@
          <children>
             <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="400.0" style="-fx-background-color: #e6e6e6;">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Home">
+                  <HBox prefHeight="29.0" prefWidth="153.0">
+                     <children>
+                        <ImageView fitHeight="21.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                           <image>
+                              <Image url="@../gambar/home.png" />
+                           </image>
+                        </ImageView>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Home">
+                           <HBox.margin>
+                              <Insets left="20.0" />
+                           </HBox.margin>
+                        </Text>
+                     </children>
                      <VBox.margin>
-                        <Insets bottom="10.0" />
+                        <Insets bottom="5.0" />
                      </VBox.margin>
-                  </Text>
-                  <Text fx:id="tagName" onMouseClicked="#tagList" strokeType="OUTSIDE" strokeWidth="0.0" text="Tag List">
+                  </HBox>
+                  <HBox prefHeight="29.0" prefWidth="153.0">
+                     <children>
+                        <ImageView fitHeight="21.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                           <image>
+                              <Image url="@../gambar/tag.png" />
+                           </image>
+                        </ImageView>
+                        <Text fx:id="tagName" onMouseClicked="#tagList" strokeType="OUTSIDE" strokeWidth="0.0" text="Tag List">
+                           <HBox.margin>
+                              <Insets left="20.0" />
+                           </HBox.margin>
+                        </Text>
+                     </children>
                      <VBox.margin>
-                        <Insets bottom="10.0" top="10.0" />
+                        <Insets bottom="5.0" top="5.0" />
                      </VBox.margin>
-                  </Text>
-                  <Text fx:id="settings" onMouseClicked="#setting" strokeType="OUTSIDE" strokeWidth="0.0" text="Settings">
+                  </HBox>
+                  <HBox prefHeight="29.0" prefWidth="153.0">
+                     <children>
+                        <ImageView fitHeight="21.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../gambar/setting.png" />
+                           </image>
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </ImageView>
+                        <Text fx:id="settings" onMouseClicked="#setting" strokeType="OUTSIDE" strokeWidth="0.0" text="Settings">
+                           <HBox.margin>
+                              <Insets left="20.0" />
+                           </HBox.margin>
+                        </Text>
+                     </children>
                      <VBox.margin>
-                        <Insets bottom="10.0" top="10.0" />
-                     </VBox.margin></Text>
-                  <Text fx:id="logOut" onMouseClicked="#logOut" strokeType="OUTSIDE" strokeWidth="0.0" text="Logout">
+                        <Insets bottom="5.0" top="5.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox prefHeight="29.0" prefWidth="153.0">
+                     <children>
+                        <ImageView fitHeight="21.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                           <image>
+                              <Image url="@../gambar/logout.png" />
+                           </image>
+                        </ImageView>
+                        <Text fx:id="logOut" onMouseClicked="#logOut" strokeType="OUTSIDE" strokeWidth="0.0" text="Logout">
+                           <HBox.margin>
+                              <Insets left="20.0" />
+                           </HBox.margin>
+                        </Text>
+                     </children>
                      <VBox.margin>
-                        <Insets top="10.0" />
-                     </VBox.margin></Text>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                  </HBox>
                </children>
                <HBox.margin>
                   <Insets />
