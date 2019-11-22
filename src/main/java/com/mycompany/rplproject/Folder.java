@@ -5,43 +5,42 @@
  */
 package com.mycompany.rplproject;
 
-/**
- *
- * @author Alvin
- */
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+
 public class Folder {
-    private int id;
-    private String nama;
-    private int id_parent;
+    private SimpleIntegerProperty id;
+    private SimpleStringProperty nama;
+    private SimpleIntegerProperty id_parent;
     
     public Folder(int id){
-        this.id = id;
+        this.id = new SimpleIntegerProperty(id);
     }
     
     public Folder(int id, String nama, int id_parent){
-        this.id = id;
-        this.nama = nama;
-        this.id_parent = id_parent;
+        this.id = new SimpleIntegerProperty(id);
+        this.nama = new SimpleStringProperty(nama);
+        this.id_parent = new SimpleIntegerProperty(id_parent);
     }
     /**
      * @return the id
      */
     public int getId() {
-        return id;
+        return id.get();
     }
 
     /**
      * @return the nama
      */
     public String getNama() {
-        return nama;
+        return nama.get();
     }
 
     /**
      * @return the id_parent
      */
     public int getId_parent() {
-        return id_parent;
+        return id_parent.get();
     }
 //    @Override
 //    public String toString(){

@@ -5,7 +5,10 @@
  */
 package com.mycompany.rplproject;
 
+import com.mycompany.rplproject.db.BookmarkDAO;
 import com.mycompany.rplproject.db.DBUtil;
+import com.mycompany.rplproject.db.FolderDAO;
+import com.mycompany.rplproject.db.TagDAO;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -26,22 +29,9 @@ public class User {
         try {
             this.email = email;
             this.password = password;
-            String queryFolder = "select * from folder where email ='"+email+"'";
-            String queryTag = "select * from tag where email='"+email+"' or id_tag=0";
-            String queryUrl = "select * from url where email='"+email+"'";
-            
-            ResultSet rsFolder = DBUtil.getInstance().dbExecuteQuery(queryFolder);
-            while(rsFolder.next()){
-                folder.add(new Folder(rsFolder.getInt("id_folder"), rsFolder.getString("nama_folder"), rsFolder.getInt("parent_folder")));
-            }
-            ResultSet rsTag = DBUtil.getInstance().dbExecuteQuery(queryTag);
-            while(rsTag.next()){
-                tag.add(new Tag(rsTag.getInt("id_tag"), rsTag.getString("nama_tag")));
-            }
-            ResultSet rsUrl = DBUtil.getInstance().dbExecuteQuery(queryUrl);
-            while(rsUrl.next()){
-                bookmark.add(new Bookmark(rsUrl.getInt("id_url"), rsUrl.getString("nama_url"), rsUrl.getString("link_url"), rsUrl.getInt("id_folder")));
-            }
+            this.folder = FolderDAO.showFolderList(email);
+            this.tag = TagDAO.showTagList(email);
+            this.bookmark = BookmarkDAO.showBookmarkList(email);
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
         }

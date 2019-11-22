@@ -5,7 +5,6 @@
  */
 package com.mycompany.rplproject.Home;
 
-import com.mycompany.rplproject.Folder;
 import com.mycompany.rplproject.User;
 import com.mycompany.rplproject.db.DBUtil;
 import java.awt.Desktop;
@@ -36,9 +35,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -208,6 +204,7 @@ public class HomeController implements Initializable {
     private void addFolder(){
         for(int i=0;i<now.getFolder().size();i++){
             final int o = i;
+            System.out.println(now.getFolder().get(i).getNama());
             if(now.getFolder().get(i).getId_parent() == folderTree.get(folderTree.size()-1)){
                 //tampilkan folder di home
                 System.out.println("masuk yang sini");

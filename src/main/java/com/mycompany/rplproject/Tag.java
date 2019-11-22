@@ -1,24 +1,22 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.mycompany.rplproject;
 
 import com.mycompany.rplproject.db.DBUtil;
 import java.sql.ResultSet;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 
 /**
  *
  * @author Ananda
  */
 public class Tag {
-    private int idTag;
-    private String namaTag;
+    
+    private SimpleIntegerProperty idTag;
+    private SimpleStringProperty namaTag;
     
     public Tag(int id, String nama){
-        idTag = id;
-        namaTag = nama;
+        this.idTag = new SimpleIntegerProperty(id);
+        this.namaTag =  new SimpleStringProperty(nama);
     }
     
   
@@ -28,20 +26,20 @@ public class Tag {
     }
 
     public int getIdTag() {
-        return idTag;
+        return idTag.get();
     }
 
     public void setIdTag(int idTag) {
-        this.idTag = idTag;
+        this.idTag = new SimpleIntegerProperty(idTag);
     }
 
     public String getNamaTag() {
-        return namaTag;
+        return namaTag.get();
     }
 
    
     public void setNamaTag(String namaTag) {
-        this.namaTag = namaTag;
+        this.namaTag = new SimpleStringProperty(namaTag);
     }
     
     
