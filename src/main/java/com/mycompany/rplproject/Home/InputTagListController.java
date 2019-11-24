@@ -42,7 +42,7 @@ import javafx.stage.Stage;
 public class InputTagListController implements Initializable {
     private double x,y;
     private String data;
-    private Vector<String> v = new Vector();
+    List<Integer> folderTree = new ArrayList<>();
     private User now;
     @FXML
     private Text namaAkun;
@@ -93,7 +93,8 @@ public class InputTagListController implements Initializable {
         Scene backHome = new Scene(backHomePage);
         HomeController controller = loader.getController();
         controller.data(now);
-        controller.show(false);
+        folderTree.add(0);
+        controller.show(false,folderTree);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(backHome);
         app_stage.show();

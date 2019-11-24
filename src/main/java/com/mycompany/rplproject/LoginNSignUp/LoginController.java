@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Vector;
 import javafx.event.ActionEvent;
@@ -37,7 +39,7 @@ import javafx.scene.input.MouseEvent;
  */
 public class LoginController implements Initializable {
     private String email=null,password=null;
-    private Vector<String> v = new Vector();
+     List<Integer> folderTree = new ArrayList<>();
     private User user = new User();
     
     @FXML
@@ -74,7 +76,8 @@ public class LoginController implements Initializable {
                     HomeController controller = loader.getController();
                     User logged = new User(email,password);
                     controller.data(logged);
-                    controller.show(false);
+                    folderTree.add(0);
+                    controller.show(false,folderTree);
                     Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                     app_stage.close();
                     app_stage.setScene(signIn);

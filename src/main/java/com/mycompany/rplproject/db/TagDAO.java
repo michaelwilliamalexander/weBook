@@ -19,32 +19,6 @@ import javafx.collections.FXCollections;
  */
 public class TagDAO {
     
-    public static Tag showAllTag(String email) throws SQLException, ClassNotFoundException{
-        String query = " Select * from Tag where email = '"+email+"' or id_Tag =0";
-        try {
-            ResultSet rs = DBUtil.getInstance().dbExecuteQuery(query);
-            Tag tag = TagDAO.getAllTag(rs);
-            return tag;
-        } catch (SQLException ex) {
-            Logger.getLogger(TagDAO.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
-        }
-    }
-    
-    public static Tag getAllTag(ResultSet rs){
-        Tag tag = null;
-        try {
-            while(rs.next()){
-                tag = new Tag(rs.getInt("id_tag"), rs.getString("nama_tag"));
-                System.out.println(tag.getNamaTag());
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(TagDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return tag;
-        
-    }
-    
      public static List<Tag> showTagList(String email) throws SQLException, ClassNotFoundException {
         String selectStmt = "select * from tag where email ='"+email+"' or id_Tag =0";
         try {

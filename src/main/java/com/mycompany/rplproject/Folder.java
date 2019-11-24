@@ -46,5 +46,26 @@ public class Folder {
 //    public String toString(){
 //        return getNama();
 //    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id) {
+        this.id = new SimpleIntegerProperty(id);
+    }
+
+    /**
+     * @param nama the nama to set
+     */
+    public void setNama(String nama) {
+        this.nama = new SimpleStringProperty(nama);
+    }
+
+    /**
+     * @param id_parent the id_parent to set
+     */
+    public void setId_parent(int id_parent) {
+        this.id_parent = new SimpleIntegerProperty(id_parent);
+    }
     
 }

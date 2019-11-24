@@ -9,6 +9,7 @@ import com.mycompany.rplproject.Bookmark;
 import com.mycompany.rplproject.Folder;
 import com.mycompany.rplproject.Tag;
 import com.mycompany.rplproject.User;
+import com.mycompany.rplproject.db.BookmarkDAO;
 import com.mycompany.rplproject.db.DBUtil;
 import java.io.IOException;
 import java.net.URL;
@@ -45,7 +46,7 @@ public class NewURLController implements Initializable {
 
     private double x,y;
     private String data;
-    private Vector<String> v = new Vector();
+    List<Integer> folderTree = new ArrayList<>();
     private User now;
     @FXML
     private Text namaAkun;
@@ -97,11 +98,14 @@ public class NewURLController implements Initializable {
         Scene backHome = new Scene(backHomePage);
         HomeController controller = loader.getController();
         controller.data(now);
-        controller.show(false);
+        folderTree.removeAll(folderTree);
+        folderTree.add(0);
+        controller.show(false,folderTree);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(backHome);
         app_stage.show();
     }
+    
     public void data(User s){
         now = s;
         namaAkun.setText(now.getEmail());
@@ -114,6 +118,7 @@ public class NewURLController implements Initializable {
         app_stage.setScene(signOut);
         app_stage.show();
     }
+    
     public void backSetting(MouseEvent event) throws IOException{
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/fxml/Setting.fxml"));
@@ -156,41 +161,33 @@ public class NewURLController implements Initializable {
         }
     }
     
-    public void tambahURL(final int location, String s){
+    public void tambahURL(List<Integer> parent, String s){
+        folderTree = parent;
+        final int location = parent.get(parent.size()-1);
         //insert url, tapi blm bisa sama tag
         insertUrlButton.setOnMouseClicked(new EventHandler<MouseEvent>(){
             @Override
             public void handle(MouseEvent event) {
                  Tag t = (Tag) namaTag.getSelectionModel().getSelectedItem();
                 String SqlQuery;
-                if(location==0){
-                    SqlQuery = "insert into URL (nama_url, link_url, email) values ('"+namaUrl.getText()+"','"+linkUrl.getText()+"','"+now.getEmail()+"')";
-                }else{
-                    SqlQuery = "insert into URL (nama_url, link_url, id_folder, email) values ('"+namaUrl.getText()+"','"+linkUrl.getText()+"','"+location+"','"+now.getEmail()+"')";
-                }
                 try{
-                    DBUtil.getInstance().dbExecuteUpdate(SqlQuery);
-                    System.out.println("input berhasil heheheheee");
-                        FXMLLoader loader = new FXMLLoader();
-                        String queryUrl = "select * from url where email='"+now.getEmail()+"'";
-                        ResultSet rsUrl = DBUtil.getInstance().dbExecuteQuery(queryUrl);
-                        List<Bookmark> url = new ArrayList<>();
-                        while(rsUrl.next()){
-                            url.add(new Bookmark(rsUrl.getInt("id_url"), rsUrl.getString("nama_url"), rsUrl.getString("link_url"), rsUrl.getInt("id_folder")));
-                        }
-                        now.setBookmark(url);
-                        loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
-                        Parent backHomePage = loader.load();
-                        Scene backHome = new Scene(backHomePage);
-                        HomeController controller = loader.getController();
-                        controller.data(now);
-                        controller.show(false);
-                        if(!now.getBookmark().isEmpty()){
-                            controller.getBack(now);
-                        }
-                        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-                        app_stage.setScene(backHome);
-                        app_stage.show();
+                    if(location==0){
+                        BookmarkDAO.tambahUrl(namaUrl.getText(),linkUrl.getText(), now);
+                    }else{
+                        BookmarkDAO.tambahUrl_InsideFolder(namaUrl.getText(),linkUrl.getText(), location, now);
+                    }
+                    FXMLLoader loader = new FXMLLoader();
+                    now.setBookmark(BookmarkDAO.showBookmarkList(now.getEmail()));
+                    loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
+                    Parent backHomePage = loader.load();
+                    Scene backHome = new Scene(backHomePage);
+                    HomeController controller = loader.getController();
+                    controller.data(now);
+                    controller.show(false,folderTree);
+                        
+                    Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                    app_stage.setScene(backHome);
+                    app_stage.show();
 
                 }catch (SQLException | ClassNotFoundException | IOException ex) {
                     Logger.getLogger(NewURLController.class.getName()).log(Level.SEVERE, null, ex);
@@ -208,10 +205,7 @@ public class NewURLController implements Initializable {
                         Scene backHome = new Scene(backHomePage);
                         HomeController controller = loader.getController();
                         controller.data(now);
-                        controller.show(false);
-                        if(!now.getFolder().isEmpty()){
-                            controller.getBack(now);
-                        }
+                        controller.show(false,folderTree);
                         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                         app_stage.setScene(backHome);
                         app_stage.show();
@@ -223,7 +217,8 @@ public class NewURLController implements Initializable {
        
     }
     
-    public void editBookmark(int location ,String nama, String link, final int id){
+    public void editBookmark(int location ,String nama, String link, final int id,  List<Integer> parent){
+        folderTree = parent;
         insertUrlButton.setText("edit");
         namaUrl.setText(nama);
         linkUrl.setText(link);
@@ -237,25 +232,15 @@ public class NewURLController implements Initializable {
             public void handle(MouseEvent event) {
                 try {
                     Tag t = (Tag) namaTag.getSelectionModel().getSelectedItem();
-                    String sql = "update url set nama_url='"+namaUrl.getText()+"', link_url='"+linkUrl.getText()+"' where id_url = "+id;
-                    DBUtil.getInstance().dbExecuteUpdate(sql);
-                    
-                    String queryUrl = "select * from url where email='"+now.getEmail()+"'";
-                    ResultSet rsUrl = DBUtil.getInstance().dbExecuteQuery(queryUrl);
-                    List<Bookmark> bookmark = new ArrayList<>();
-                    while(rsUrl.next()){
-                        bookmark.add(new Bookmark(rsUrl.getInt("id_url"), rsUrl.getString("nama_url"), rsUrl.getString("link_url"), rsUrl.getInt("id_folder")));
-                    }
+                    BookmarkDAO.updateBookmark(id, namaUrl.getText(),linkUrl.getText(),now);
+                    BookmarkDAO.showBookmarkList(now.getEmail());
                     FXMLLoader loader = new FXMLLoader();
                     loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
                     Parent backHomePage = loader.load();
                     Scene backHome = new Scene(backHomePage);
                     HomeController controller = loader.getController();
                     controller.data(now);
-                    controller.show(false);
-                    if(!now.getBookmark().isEmpty()){
-                        controller.getBack(now);
-                    }
+                    controller.show(false,folderTree);
                     Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                     app_stage.setScene(backHome);
                     app_stage.show();
@@ -275,10 +260,7 @@ public class NewURLController implements Initializable {
                     Scene backHome = new Scene(backHomePage);
                     HomeController controller = loader.getController();
                     controller.data(now);
-                    controller.show(false);
-                    if(!v.isEmpty()){
-                        controller.getBack(now);
-                    }
+                    controller.show(false,folderTree);
                     Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                     app_stage.setScene(backHome);
                     app_stage.show();

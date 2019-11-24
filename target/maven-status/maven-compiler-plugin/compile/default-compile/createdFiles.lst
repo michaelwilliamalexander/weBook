@@ -3,6 +3,7 @@ com\mycompany\rplproject\Home\HomeController$7$2.class
 com\mycompany\rplproject\Home\TagListController$1.class
 com\mycompany\rplproject\Home\NewFolderController$2.class
 com\mycompany\rplproject\Home\HomeController$4.class
+com\mycompany\rplproject\db\UserDAO.class
 com\mycompany\rplproject\Home\TagListController$4.class
 com\mycompany\rplproject\db\BookmarkDAO.class
 com\mycompany\rplproject\FXMLController.class

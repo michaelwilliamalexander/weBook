@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Vector;
 import javafx.fxml.FXML;
@@ -33,7 +35,7 @@ import javax.swing.JOptionPane;
  * @author Michael William
  */
 public class GantiPasswordController implements Initializable {
-    private Vector<String> v = new Vector();
+     List<Integer> folderTree = new ArrayList<>();
     private double x,y;
     private String data;
     private String email = null, password = null;
@@ -93,7 +95,8 @@ public class GantiPasswordController implements Initializable {
         Scene backHome = new Scene(backHomePage);
         HomeController controller = loader.getController();
         controller.data(now);
-        controller.show(false);
+        folderTree.add(0);
+        controller.show(false,folderTree);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(backHome);
         app_stage.show();

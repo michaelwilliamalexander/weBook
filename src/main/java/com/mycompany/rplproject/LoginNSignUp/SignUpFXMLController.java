@@ -7,6 +7,7 @@ package com.mycompany.rplproject.LoginNSignUp;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import com.mycompany.rplproject.db.DBUtil;
+import com.mycompany.rplproject.db.UserDAO;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
@@ -86,7 +87,7 @@ public class SignUpFXMLController implements Initializable {
             rePasswordInput.clear();
             newEmailInput.clear();
         }
-        else if(!(Pattern.matches("^[a-zA-Z0-9]+[@]{1}+[ti][1]+[.]{1}+[ukdw][1]+[.]{1}+[ac][1]+[.]{1}+[id][1]+$",newEmailInput.getText()))){
+        else if(!(Pattern.matches("^[a-zA-Z0-9]+[@]{1}+[t]{1}+[i]{1}+[.]{1}+[u]{1}+[k]{1}+[d]{1}+[w]{1}+[.]{1}+[a]{1}+[c]{1}+[.]{1}+[i]{1}+[d]{1}+$",newEmailInput.getText()))){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Error");
             alert.setContentText("Format Email Salah");
@@ -141,7 +142,7 @@ public class SignUpFXMLController implements Initializable {
             //jika sesuai
             if(newPasswordInput.getText().equals(rePasswordInput.getText())){
                 //kalo bisa masukin kelas DBUtil 
-                DBUtil.getInstance().dbExecuteUpdate(insertStmt);
+                UserDAO.newUser(newEmailInput.getText(),newPasswordInput.getText());
                 //alert daftar berhasil
                 //alert silahkan melakukan login
                 Parent signUpPage = FXMLLoader.load(getClass().getResource("/fxml/Login.fxml"));

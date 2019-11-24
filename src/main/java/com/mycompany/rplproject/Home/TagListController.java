@@ -39,7 +39,7 @@ import javafx.stage.Stage;
 public class TagListController implements Initializable {
     private double x,y;
     private String data;
-    private Vector<String> v = new Vector();
+     List<Integer> folderTree = new ArrayList<>();
     private List<Button> tag = new ArrayList<>();
     private List<Button> edit = new ArrayList<>();
     private List<Button> delete = new ArrayList<>();
@@ -106,7 +106,9 @@ public class TagListController implements Initializable {
         Scene backHome = new Scene(backHomePage);
         HomeController controller = loader.getController();
         controller.data(now);
-        controller.show(false);
+        folderTree.removeAll(folderTree);
+        folderTree.add(0);
+        controller.show(false,folderTree);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(backHome);
         app_stage.show();

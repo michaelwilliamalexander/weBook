@@ -10,10 +10,13 @@ import com.mycompany.rplproject.Home.SettingController;
 import com.mycompany.rplproject.Home.HomeController;
 import com.mycompany.rplproject.User;
 import com.mycompany.rplproject.db.DBUtil;
+import com.mycompany.rplproject.db.UserDAO;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Vector;
 import javafx.fxml.FXML;
@@ -39,7 +42,7 @@ public class InsertNewPasswordController implements Initializable {
     private double x,y;
     private String data;
     private String email = null, password = null;
-    private Vector<String> v = new Vector();
+    List<Integer> folderTree = new ArrayList<>();
     private User now;
     @FXML
     private PasswordField inPas;
@@ -99,7 +102,8 @@ public class InsertNewPasswordController implements Initializable {
         Scene backHome = new Scene(backHomePage);
         HomeController controller = loader.getController();
         controller.data(now);
-        controller.show(false);
+        folderTree.add(0);
+        controller.show(false,folderTree);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(backHome);
         app_stage.show();
@@ -129,10 +133,8 @@ public class InsertNewPasswordController implements Initializable {
     }
     //Confirm Ganti password
     public void checkPass(MouseEvent event) throws ClassNotFoundException, IOException, SQLException{
-        String stmt;
         String pass = inPas.getText();
         String passConf = inPasConf.getText();
-        stmt = "Update Account set password = '"+pass+"' where email = '"+data+"'";
         if(!inPas.getText().equalsIgnoreCase(inPasConf.getText())){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Error");
@@ -158,20 +160,16 @@ public class InsertNewPasswordController implements Initializable {
             inPas.clear();
         }
         else if(passConf.equals(pass)){
-            try {
-                DBUtil.getInstance().dbExecuteUpdate(stmt);
-                FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(getClass().getResource("/fxml/Setting.fxml"));
-                Parent passwordConfirmedPage = loader.load();
-                Scene passwordConfirmed = new Scene(passwordConfirmedPage);
-                SettingController controller = loader.getController();
-                controller.data(now);
-                Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-                app_stage.setScene(passwordConfirmed);
-                app_stage.show();     
-            } catch (SQLException e) {
-                throw e;
-            }
+            UserDAO.updatePassword(pass, now);
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/fxml/Setting.fxml"));
+            Parent passwordConfirmedPage = loader.load();
+            Scene passwordConfirmed = new Scene(passwordConfirmedPage);
+            SettingController controller = loader.getController();
+            controller.data(now);
+            Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+            app_stage.setScene(passwordConfirmed);
+            app_stage.show();
         }else{
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Error");

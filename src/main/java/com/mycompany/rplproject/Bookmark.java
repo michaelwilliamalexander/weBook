@@ -20,7 +20,6 @@ public class Bookmark {
     public Bookmark(int id, String nama, String link, int id_folder){
         this.nama = nama;
         this.id = id;
-       
         this.link = link;
         this.id_folder = id_folder;
                 

@@ -6,7 +6,9 @@
 package com.mycompany.rplproject.Home;
 
 import com.mycompany.rplproject.User;
+import com.mycompany.rplproject.db.BookmarkDAO;
 import com.mycompany.rplproject.db.DBUtil;
+import com.mycompany.rplproject.db.FolderDAO;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
@@ -143,7 +145,7 @@ public class HomeController implements Initializable {
         NewFolderController controller = loader.getController();
         controller.data(now, folderTree.get(folderTree.size()-1));
         System.out.println(folderTree.get(folderTree.size()-1));
-        controller.tambahFolder(folderTree.get(folderTree.size()-1), now);
+        controller.tambahFolder(folderTree, now);
         Scene tambahFolder = new Scene(tambahFolderPage);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(tambahFolder);
@@ -171,7 +173,7 @@ public class HomeController implements Initializable {
         Parent tambahURLPage = loader.load();
         NewURLController controller = loader.getController();
         controller.data(now);
-        controller.tambahURL(folderTree.get(folderTree.size()-1), now.getEmail());
+        controller.tambahURL(folderTree, now.getEmail());
         controller.setComboBoxValue();
         Scene tambahURL = new Scene(tambahURLPage);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
@@ -198,7 +200,7 @@ public class HomeController implements Initializable {
         now = s;
         namaAkun.setText(now.getEmail());
         folderTree.add(0);
-        show(false);
+        show(false,folderTree);
     }
     
     private void addFolder(){
@@ -215,7 +217,7 @@ public class HomeController implements Initializable {
                     @Override
                     public void handle(MouseEvent event) {
                         folderTree.add(Integer.parseInt(folder.getId()));
-                        show(false);
+                        show(false,folderTree);
                     }
                 });
                 //buat button edit folder
@@ -232,7 +234,7 @@ public class HomeController implements Initializable {
                             Parent tambahFolderPage = loader.load();
                             NewFolderController controller = loader.getController();
                             controller.data(now, folderTree.get(folderTree.size()-1));
-                            controller.editFolder(folder.getText(), now.getFolder().get(o).getId());
+                            controller.editFolder(folder.getText(), now.getFolder().get(o).getId(),folderTree);
                             Scene tambahFolder = new Scene(tambahFolderPage);
                             Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                             app_stage.setScene(tambahFolder);
@@ -249,25 +251,19 @@ public class HomeController implements Initializable {
                 Delete.setOnMouseClicked(new EventHandler<MouseEvent>(){
                     @Override
                     public void handle(MouseEvent event) {
-                        try {
-                            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                            alert.setTitle("Delete Folder");
-                            alert.setHeaderText("Apakah anda ingin menghapus folder ini?");
-                            Optional<ButtonType> option = alert.showAndWait();
-                            if(option.get() == ButtonType.OK){
-                                String deleteFolder = "delete from folder where id_folder = "+Delete.getId();
-                                DBUtil.getInstance().dbExecuteUpdate(deleteFolder);
-                                for(int j=0; j<now.getFolder().size();j++){
-                                    if(Integer.parseInt(Delete.getId()) == now.getFolder().get(j).getId()){
-                                        now.getFolder().remove(j);
-                                        break;
-                                    }
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                        alert.setTitle("Delete Folder");
+                        alert.setHeaderText("Apakah anda ingin menghapus folder ini?");
+                        Optional<ButtonType> option = alert.showAndWait();
+                        if(option.get() == ButtonType.OK){
+                            FolderDAO.deleteFolder(Integer.parseInt(Delete.getId()));
+                            for(int j=0; j<now.getFolder().size();j++){
+                                if(Integer.parseInt(Delete.getId()) == now.getFolder().get(j).getId()){
+                                    now.getFolder().remove(j);
+                                    break;
                                 }
-                                show(false);
                             }
-
-                        } catch (SQLException | ClassNotFoundException ex) {
-                            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+                            show(false,folderTree);
                         }
                     }
                 });
@@ -277,6 +273,7 @@ public class HomeController implements Initializable {
             }       
         }
     }  
+    
     private void addUrl(){
         for(int i=0;i<now.getBookmark().size();i++){
             final int o = i;
@@ -306,27 +303,21 @@ public class HomeController implements Initializable {
                 Delete.setOnMouseClicked(new EventHandler<MouseEvent>(){
                     @Override
                     public void handle(MouseEvent event) {
-                        try {
                             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                             alert.setTitle("Delete Bookmark");
                             alert.setHeaderText("Apakah Anda ingin menghapus Bookmark ini?");
                             //alert.setContentText("Apakah anda ingin menghapus folder ini?");
                             Optional<ButtonType> option = alert.showAndWait();
                             if(option.get() == ButtonType.OK){
-                                String deleteFolder = "delete from Url where id_url = "+Delete.getId();
-                                DBUtil.getInstance().dbExecuteUpdate(deleteFolder);
+                                BookmarkDAO.deleteBookmark(Integer.parseInt(Delete.getId()));
                                 for(int j=0; j<now.getBookmark().size();j++){
                                     if(Integer.parseInt(Delete.getId()) == now.getBookmark().get(j).getId()){
                                         now.getBookmark().remove(j);
                                         break;
                                     }
                                 }
-                                show(false);
+                                show(false,folderTree);
                             }
-                            
-                        } catch (SQLException | ClassNotFoundException ex) {
-                            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
-                        }
                     }
                 });
                 final Button Edit = new Button("edit");
@@ -342,11 +333,10 @@ public class HomeController implements Initializable {
                             NewURLController controller = loader.getController();
                             controller.data(now);
                             if(now.getBookmark().get(o).getNama()==null){
-                                controller.editBookmark(folderTree.get(folderTree.size()-1) , "" , url.getText(), now.getBookmark().get(o).getId() );
+                                controller.editBookmark(folderTree.get(folderTree.size()-1) , "" , url.getText(), now.getBookmark().get(o).getId(),folderTree);
                             }else{
-                                controller.editBookmark(folderTree.get(folderTree.size()-1) , url.getText() , now.getBookmark().get(o).getLink() , now.getBookmark().get(o).getId() );
+                                controller.editBookmark(folderTree.get(folderTree.size()-1) , url.getText() , now.getBookmark().get(o).getLink() , now.getBookmark().get(o).getId(),folderTree );
                             }
-                            
                             controller.setComboBoxValue();
                             Scene tambahURL = new Scene(tambahURLPage);
                             Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
@@ -365,11 +355,12 @@ public class HomeController implements Initializable {
      }
     
     //Menampilkan Data di Home
-    public void show(boolean Search){
+    public void show(boolean Search, List<Integer> childOf){
+        folderTree = childOf;
         System.out.println("masuk ke show");
         //menampilkan tombol back
         if(folderTree.size()>1){
-           getBack(now);
+           getBack(now,folderTree);
         }else{
             backBox.getChildren().clear();
         }
@@ -426,11 +417,7 @@ public class HomeController implements Initializable {
                     editBox.getChildren().clear();
                     deleteBox.getChildren().clear();
                     String tampt = inSearch.getText();
-                    String sqlURL = "Select * from URL where nama_url like '%"+tampt+"%' or link_url like '%"+tampt+"%' and email = '"+now.getEmail()+"'";
-                    ResultSet rsc = DBUtil.getInstance().dbExecuteQuery(sqlURL);
-                    while(rsc.next()){
-                        folderTree.add(rsc.getInt("id_url"));
-                    }
+                    folderTree.addAll(BookmarkDAO.searchBookmark(tampt, now));
                     for(int i=0;i<now.getBookmark().size();i++){
                         System.out.println("Masuk");
                         final int o = i;
@@ -458,11 +445,7 @@ public class HomeController implements Initializable {
                         }
                     }
                         folderList.clear();
-                         String sqlFolder = "Select * from Folder where nama_folder like '%"+tampt+"%' and email = '"+now.getEmail()+"'";
-                         ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sqlFolder);
-                         while(rs.next()){
-                             folderTree.add(rs.getInt("id_folder"));
-                         }
+                        folderTree.addAll(FolderDAO.searchFolder(tampt,now.getEmail()));
                          for(int i=0;i<now.getFolder().size();i++){
                             System.out.println("Masuk");
                             if(now.getFolder().get(i).getId()==folderTree.get(folderTree.size()-1)){
@@ -473,7 +456,7 @@ public class HomeController implements Initializable {
                                     @Override
                                     public void handle(MouseEvent event) {
                                         folderTree.add(Integer.parseInt(folder.getId()));
-                                        show(false);
+                                        show(false,folderTree);
                                     }
                                 });
                                 folderList.add(folder);
@@ -490,8 +473,9 @@ public class HomeController implements Initializable {
     }
     
     
-    public void getBack(User u){
+    public void getBack(User u, List<Integer> data){
         now = u;
+        folderTree = data;
         Button button = new Button("<");
         backBox.getChildren().clear();
         backBox.getChildren().add(button);
@@ -500,7 +484,7 @@ public class HomeController implements Initializable {
             public void handle(MouseEvent event) {
                 System.out.println("Hai");
                 folderTree.remove(folderTree.size()-1);
-                show(false);
+                show(false,folderTree);
             }
         });
     }
