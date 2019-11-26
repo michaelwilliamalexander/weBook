@@ -145,6 +145,7 @@ public class InputTagListController implements Initializable {
         }
         else{
             TagDAO.tambahTag(inTag.getText(), now);
+            now.setTag(TagDAO.showTagList(now.getEmail()));
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/fxml/TagList.fxml"));
             Parent tagListPage = loader.load();

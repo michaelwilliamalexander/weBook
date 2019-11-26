@@ -7,6 +7,7 @@ package com.mycompany.rplproject.Home;
 
 import com.mycompany.rplproject.User;
 import com.mycompany.rplproject.db.DBUtil;
+import com.mycompany.rplproject.db.TagDAO;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
@@ -16,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -27,7 +29,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -129,6 +133,20 @@ public class TagListController implements Initializable {
         app_stage.show();
     }
     
+    @FXML
+    void tagList(MouseEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/fxml/TagList.fxml"));
+        Parent tagListPage = loader.load();
+        Scene tagList = new Scene(tagListPage);
+        TagListController controller = loader.getController();
+        controller.data(now);
+        controller.show(false);
+        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        app_stage.setScene(tagList);
+        app_stage.show();
+    }
+    
      @FXML
     public void logOut(MouseEvent event) throws IOException{
         Parent signOutPage = FXMLLoader.load(getClass().getResource("/fxml/Login.fxml"));
@@ -218,6 +236,7 @@ public class TagListController implements Initializable {
     
     public void addTag(){
         for(int i=0;i<now.getTag().size();i++){
+            final int o = i;
             final Button Tag = new Button(now.getTag().get(i).getNamaTag());
             Tag.setId(String.valueOf(now.getTag().get(i).getIdTag()));
             Tag.setMinWidth(400);
@@ -258,17 +277,18 @@ public class TagListController implements Initializable {
             Delete.setOnMouseClicked(new EventHandler<MouseEvent>(){
                 @Override
                 public void handle(MouseEvent event) {
-                    try {
-                        String deleteTag = "delete from tag where id_tag = "+Delete.getId();
-                        DBUtil.getInstance().dbExecuteUpdate(deleteTag);
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Delete Folder");
+                    alert.setHeaderText("Apakah anda ingin menghapus tag ini?");
+                    Optional<ButtonType> option = alert.showAndWait();
+                    if(option.get() == ButtonType.OK){
+                        TagDAO.deleteTag(now.getTag().get(o).getIdTag());
                         for(int j=0;j<now.getTag().size();j++){
                             if(now.getTag().get(j).getIdTag() == Integer.parseInt(Delete.getId())){
                                 now.getTag().remove(j);
-                                break;
+                                show(false);
                             }
                         }
-                    } catch (SQLException | ClassNotFoundException ex) {
-                        Logger.getLogger(TagListController.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             });
@@ -351,25 +371,23 @@ public class TagListController implements Initializable {
                     editBox.getChildren().clear();
                     deleteBox.getChildren().clear();
                     String temp= inSearchTag.getText();
-                    String sql = "Select * from Tag where nama_tag like '%"+temp+"%' and email = '"+now.getEmail()+"'";
-                    ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
                     List<Integer> tamp =  new ArrayList<>();
-                    while(rs.next()){
-                        tamp.add(rs.getInt("id_tag"));
-                    }
+                    tamp.addAll(TagDAO.searchData(temp, now));
                     for(int i=0;i<now.getTag().size();i++){
-                        if(now.getTag().get(i).getIdTag()==tamp.get(tamp.size()-1)){
-                             final Button Tag = new Button(now.getTag().get(i).getNamaTag());
-                            Tag.setId(String.valueOf(now.getTag().get(i).getIdTag()));
-                            Tag.setMinWidth(400);
-                            Tag.setOnMouseClicked(new EventHandler<MouseEvent>(){
-                                @Override
-                                public void handle(MouseEvent event) {
-                                    location = Integer.parseInt(Tag.getId());
-                                    show(false);
-                                }
-                            });
-                            tag.add(Tag);
+                        for(int j=0;j<tamp.size();j++){
+                            if(now.getTag().get(i).getIdTag()==tamp.get(j)){
+                                final Button Tag = new Button(now.getTag().get(i).getNamaTag());
+                                Tag.setId(String.valueOf(now.getTag().get(i).getIdTag()));
+                                Tag.setMinWidth(400);
+                                Tag.setOnMouseClicked(new EventHandler<MouseEvent>(){
+                                   @Override
+                                   public void handle(MouseEvent event) {
+                                       location = Integer.parseInt(Tag.getId());
+                                       show(false);
+                                   }
+                                });
+                                tag.add(Tag);
+                           }
                         }
                         
                     }

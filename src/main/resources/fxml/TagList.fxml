@@ -64,7 +64,7 @@
                         <Insets bottom="5.0" />
                      </VBox.margin>
                   </HBox>
-                  <HBox alignment="CENTER_LEFT" prefHeight="29.0" prefWidth="153.0">
+                  <HBox alignment="CENTER_LEFT" onMouseClicked="#tagList" prefHeight="29.0" prefWidth="153.0">
                      <children>
                         <ImageView fitHeight="21.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                            <HBox.margin>

@@ -20,7 +20,7 @@ import javafx.collections.FXCollections;
  */
 public class TagDAO {
     
-     public static List<Tag> showTagList(String email) throws SQLException, ClassNotFoundException {
+    public static List<Tag> showTagList(String email) throws SQLException, ClassNotFoundException {
         String selectStmt = "select * from tag where email ='"+email+"' or id_Tag =0";
         try {
             ResultSet rs = DBUtil.getInstance().dbExecuteQuery(selectStmt);
@@ -41,9 +41,9 @@ public class TagDAO {
         return list;
     }
     
-    public static void deleteTag(int id, String email){
+    public static void deleteTag(int id){
         try {
-            String query = "delete from tag where id_tag = '"+id+"' && email = '"+email+"'";
+            String query = "delete from tag where id_tag = '"+id+"'";
             DBUtil.getInstance().dbExecuteUpdate(query);
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(TagDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -87,5 +87,20 @@ public class TagDAO {
         String sql = "Insert into Tag(nama_tag,email) values('"+namaTag+"','"+user.getEmail()+"')";
         DBUtil.getInstance().dbExecuteUpdate(sql);
         
+    }
+    
+    public static List<Integer> searchData(String search, User user) throws SQLException, ClassNotFoundException{
+        String sql = "Select * from Tag where nama_tag like '%"+search+"%' and email = '"+user.getEmail()+"'";
+        ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
+        List<Integer> data = search(rs);
+        return data;
+    }
+    
+    private static List<Integer> search(ResultSet rs) throws SQLException{
+        List<Integer> data =  FXCollections.observableArrayList();
+        while(rs.next()){
+            data.add(rs.getInt("id_tag"));
+        }
+        return data;
     }
 }
