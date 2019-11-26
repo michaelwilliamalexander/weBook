@@ -34,11 +34,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-/**
- * FXML Controller class
- *
- * @author Michael William
- */
 public class InputTagListController implements Initializable {
     private double x,y;
     private String data;

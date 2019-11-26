@@ -54,7 +54,7 @@
          <children>
             <VBox alignment="TOP_CENTER" prefHeight="342.0" prefWidth="784.0" style="-fx-background-color: #e6e6e6;">
                <children>
-                  <HBox alignment="CENTER_LEFT" prefHeight="29.0" prefWidth="153.0">
+                  <HBox alignment="CENTER_LEFT" onMouseClicked="#backHome" prefHeight="29.0" prefWidth="153.0">
                      <children>
                         <ImageView fitHeight="21.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                            <image>

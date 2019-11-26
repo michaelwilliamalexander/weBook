@@ -7,14 +7,12 @@ package com.mycompany.rplproject.Home;
 
 import com.mycompany.rplproject.User;
 import com.mycompany.rplproject.db.BookmarkDAO;
-import com.mycompany.rplproject.db.DBUtil;
 import com.mycompany.rplproject.db.FolderDAO;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -178,6 +176,19 @@ public class HomeController implements Initializable {
         Scene tambahURL = new Scene(tambahURLPage);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(tambahURL);
+        app_stage.show();
+    }
+    
+    public void backHome(MouseEvent event) throws IOException{
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
+        Parent backHomePage = loader.load();
+        Scene backHome = new Scene(backHomePage);
+        HomeController controller = loader.getController();
+        controller.data(now);
+        controller.show(false,folderTree);
+        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        app_stage.setScene(backHome);
         app_stage.show();
     }
     
@@ -406,6 +417,7 @@ public class HomeController implements Initializable {
     }
     
      public void Search(){
+        final List<Integer> searchData = new ArrayList();
         tambahFolder.setDisable(false);
         tambahURL.setDisable(false);
         btnSearch.setOnMouseClicked(new EventHandler<MouseEvent>(){
@@ -417,11 +429,13 @@ public class HomeController implements Initializable {
                     editBox.getChildren().clear();
                     deleteBox.getChildren().clear();
                     String tampt = inSearch.getText();
-                    folderTree.addAll(BookmarkDAO.searchBookmark(tampt, now));
+                    searchData.removeAll(searchData);
+                    searchData.addAll(BookmarkDAO.searchBookmark(tampt, now));
                     for(int i=0;i<now.getBookmark().size();i++){
                         System.out.println("Masuk");
                         final int o = i;
-                            if(now.getBookmark().get(i).getId()==folderTree.get(folderTree.size()-1)){
+                        for(int j=0;j<searchData.size();j++){
+                            if(now.getBookmark().get(i).getId() == searchData.get(j)){
                                 final Button url;
                                 if(now.getBookmark().get(i).getNama().equals(null)){
                                     url = new Button(now.getBookmark().get(i).getLink());
@@ -430,6 +444,7 @@ public class HomeController implements Initializable {
                                 }
                                 url.setMinWidth(400);
                                 url.setBackground(Background.EMPTY);
+                                urlList.add(url);
                                 url.setOnMouseClicked(new EventHandler<MouseEvent>(){
                                         @Override
                                         public void handle(MouseEvent event) {
@@ -441,27 +456,29 @@ public class HomeController implements Initializable {
                                             }
                                         }
                                     });
-                            urlList.add(url);
+                        }
+                            
                         }
                     }
                         folderList.clear();
-                        folderTree.addAll(FolderDAO.searchFolder(tampt,now.getEmail()));
+                        searchData.addAll(FolderDAO.searchFolder(tampt,now.getEmail()));
                          for(int i=0;i<now.getFolder().size();i++){
                             System.out.println("Masuk");
-                            if(now.getFolder().get(i).getId()==folderTree.get(folderTree.size()-1)){
-                                final Button folder = new Button(now.getFolder().get(i).getNama());
-                                folder.setId(String.valueOf(now.getFolder().get(i).getId()));
-                                folder.setMinWidth(400);
-                                folder.setOnMouseClicked(new EventHandler<MouseEvent>(){
-                                    @Override
-                                    public void handle(MouseEvent event) {
-                                        folderTree.add(Integer.parseInt(folder.getId()));
-                                        show(false,folderTree);
-                                    }
-                                });
-                                folderList.add(folder);
+                                for(int j=0;j<searchData.size();j++){
+                                    if(now.getFolder().get(i).getId()== searchData.get(j)){
+                                    final Button folder = new Button(now.getFolder().get(i).getNama());
+                                    folder.setId(String.valueOf(now.getFolder().get(i).getId()));
+                                    folder.setMinWidth(400);
+                                    folderList.add(folder);
+                                    folder.setOnMouseClicked(new EventHandler<MouseEvent>(){
+                                        @Override
+                                        public void handle(MouseEvent event) {
+                                            folderTree.add(Integer.parseInt(folder.getId()));
+                                            show(false,folderTree);
+                                        }
+                                    });
+                                }
                             }
-
                          }
                         contentBox.getChildren().addAll(folderList);
                         contentBox.getChildren().addAll(urlList);
@@ -488,6 +505,7 @@ public class HomeController implements Initializable {
             }
         });
     }
+    
 } 
     
 
