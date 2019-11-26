@@ -8,6 +8,7 @@ package com.mycompany.rplproject.Home;
 import com.mycompany.rplproject.Tag;
 import com.mycompany.rplproject.User;
 import com.mycompany.rplproject.db.DBUtil;
+import com.mycompany.rplproject.db.TagDAO;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
@@ -135,30 +136,21 @@ public class InputTagListController implements Initializable {
     
        @FXML
     void tambahTag(MouseEvent event) throws SQLException, ClassNotFoundException, IOException {
-        String sql = "Select * from tag where nama_tag = '"+inTag.getText().toString()+"' and email = '"+now.getEmail()+"'";
-        String dataBaru = "Insert into Tag(nama_tag,email) values('"+inTag.getText().toString()+"','"+now.getEmail()+"')";
-        String temp = "Select * from Tag where email = '"+now.getEmail()+"' and nama_tag = '"+inTag.getText()+"'";
-        String tempt = null; 
+        String tempt = TagDAO.getStringData(inTag.getText(),now.getEmail()); 
         int id = 0;
-        ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
-        while(rs.next()){
-            tempt = rs.getString("nama_tag");
-        }
         if(inTag.getText().toString().equals(tempt)){
-            Alert alert = new Alert(AlertType.ERROR);
+           Alert alert = new Alert(AlertType.ERROR);
            alert.setContentText("Nama Tag telah dibuat");
            alert.showAndWait();
         }
         else{
-            DBUtil.getInstance().dbExecuteUpdate(dataBaru);
-            
+            TagDAO.tambahTag(inTag.getText(), now);
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/fxml/TagList.fxml"));
             Parent tagListPage = loader.load();
             Scene tagList = new Scene(tagListPage);
             TagListController controller = loader.getController();
             controller.data(now);
-            
             controller.show(false);
             Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
             app_stage.setScene(tagList);
@@ -168,30 +160,20 @@ public class InputTagListController implements Initializable {
     }
     
     public void editTag(final int idTag) throws SQLException, ClassNotFoundException{
-        String sqmt = "Select * from Tag where id_tag = '"+idTag+"'";
-        ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sqmt);
-        String tamp = null;
+        String tamp = TagDAO.getStringData(idTag);
         String name = null;
-        while(rs.next()){
-            tamp = rs.getString("nama_tag");
-        }
         inTag.setText(tamp);
         btnTag.setText("Edit");
         btnTag.setOnMouseClicked(new EventHandler<MouseEvent>(){
             @Override
             public void handle(MouseEvent event) {
-               String sql = "Update Tag set nama_tag = '"+inTag.getText()+"' where id_tag = '"+idTag+"' and email = '"+now.getEmail()+"' " ;
+//               String sql = "Update Tag set nama_tag = '"+inTag.getText()+"' where id_tag = '"+idTag+"' and email = '"+now.getEmail()+"' " ;
                 try {
-                    DBUtil.getInstance().dbExecuteUpdate(sql);
+//                    DBUtil.getInstance().dbExecuteUpdate(sql);
+                    TagDAO.updateTag(idTag,inTag.getText());
                     FXMLLoader loader = new FXMLLoader();
                     loader.setLocation(getClass().getResource("/fxml/TagList.fxml"));
-                    String queryTag = "select * from tag where email='"+now.getEmail()+"' or id_tag=0";
-                    ResultSet rsTag = DBUtil.getInstance().dbExecuteQuery(queryTag);
-                    List<Tag> tag = new ArrayList<>();
-                    while(rsTag.next()){
-                        tag.add(new Tag(rsTag.getInt("id_tag"), rsTag.getString("nama_tag")));
-                    }
-                    now.setTag(tag);
+                    now.setTag(TagDAO.showTagList(now.getEmail()));
                     Parent tagListPage = loader.load();
                     Scene tagList = new Scene(tagListPage);
                     TagListController controller = loader.getController();
@@ -200,11 +182,7 @@ public class InputTagListController implements Initializable {
                     Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                     app_stage.setScene(tagList);
                     app_stage.show();
-                }  catch (IOException ex) {
-                    Logger.getLogger(InputTagListController.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (SQLException ex) {
-                    Logger.getLogger(InputTagListController.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ClassNotFoundException ex) {
+                }  catch (IOException | SQLException | ClassNotFoundException ex) {
                     Logger.getLogger(InputTagListController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }

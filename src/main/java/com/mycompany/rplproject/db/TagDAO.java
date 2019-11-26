@@ -6,6 +6,7 @@
 package com.mycompany.rplproject.db;
 
 import com.mycompany.rplproject.Tag;
+import com.mycompany.rplproject.User;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -49,12 +50,42 @@ public class TagDAO {
         }
     }
     
-    public static void updateTag(int id,String email, String dataUpdate){
+    public static void updateTag(int id,String dataUpdate){
         try {
-            String query =" Update from Tag set nama_tag = '"+dataUpdate+"' where id_tag = '"+id+"' && email = '"+email+"'";
+            String query =" Update Tag set nama_tag = '"+dataUpdate+"' where id_tag = '"+id+"'";
             DBUtil.getInstance().dbExecuteUpdate(query);
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(TagDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public static String getStringData(int idTag) throws ClassNotFoundException, SQLException{
+        String getData = null;
+        String sql ="Select * from Tag where id_tag = '"+idTag+"'";
+        ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
+        getData = getData(rs);
+        return getData;
+    }
+    
+    public static String getStringData(String namaTag,String email) throws SQLException, ClassNotFoundException{
+        String tempt = null;
+        String sql = "Select * from tag where nama_tag = '"+namaTag+"' and email = '"+email+"'";
+        ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
+        tempt = getData(rs);
+        return tempt;
+    }
+    
+    private static String getData(ResultSet rs) throws SQLException{
+        String tempt= null;
+        while(rs.next()){
+            tempt = rs.getString("nama_tag");
+        }
+         return tempt;
+    }
+    
+    public static void tambahTag(String namaTag, User user) throws SQLException, ClassNotFoundException{
+        String sql = "Insert into Tag(nama_tag,email) values('"+namaTag+"','"+user.getEmail()+"')";
+        DBUtil.getInstance().dbExecuteUpdate(sql);
+        
     }
 }
