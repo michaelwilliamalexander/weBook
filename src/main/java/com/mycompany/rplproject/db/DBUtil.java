@@ -1,5 +1,6 @@
 package com.mycompany.rplproject.db;
 
+import com.mycompany.rplproject.Home.SettingController;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -117,4 +118,5 @@ public class DBUtil {
             dbDisconnect();
         }
     }
+    
 }

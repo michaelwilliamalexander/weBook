@@ -8,6 +8,7 @@ package com.mycompany.rplproject.Home;
 import com.mycompany.rplproject.Home.HomeController;
 import com.mycompany.rplproject.Home.GantiPasswordController;
 import com.mycompany.rplproject.User;
+import com.mycompany.rplproject.db.UserDAO;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -113,7 +114,12 @@ public class SettingController implements Initializable {
         app_stage.setScene(tagList);
         app_stage.show();
     }
-    
+    public void backup(){
+        UserDAO.dbBackUp(now);
+    }
+    public void Restore(){
+        UserDAO.dbRestore(now);
+    }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
