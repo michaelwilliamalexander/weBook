@@ -89,6 +89,7 @@ public class UserDAO {
     private static void insertBackupDataintoBackupDB(User user){
         try {
             String newDB = "jdbc:sqlite:"+user.getBackupPath()+"/"+user.getEmail()+".db";
+            System.out.println(newDB);
             Connection forBackup = DriverManager.getConnection(newDB);
             int i;
             //insert data account ke table tag
@@ -220,7 +221,7 @@ public class UserDAO {
     public static User dbRestore(User user){
         String newDB = "jdbc:sqlite:"+user.getBackupPath()+"/"+user.getEmail()+".db";
         //String newDB = "jdbc:sqlite:"+path+"/"+user.getEmail()+".db";
-        File dbCheck = new File("C:/users/natha/documents/"+user.getEmail()+".db");
+        File dbCheck = new File(user.getBackupPath()+"/"+user.getEmail()+".db");
         if(dbCheck.exists()){
             try {
                 Connection forBackup = DriverManager.getConnection(newDB);
