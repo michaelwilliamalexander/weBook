@@ -9,6 +9,7 @@ import com.mycompany.rplproject.Home.HomeController;
 import com.mycompany.rplproject.Home.GantiPasswordController;
 import com.mycompany.rplproject.User;
 import com.mycompany.rplproject.db.UserDAO;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -21,21 +22,26 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 
 public class SettingController implements Initializable {
     private double x,y;
     private String data;
-     List<Integer> folderTree = new ArrayList<>();
-     
+    List<Integer> folderTree = new ArrayList<>();
     private User now;
+    
     @FXML
     private Text namaAkun;
     
-   @FXML
+    @FXML
+    private Text chosenPath;
+    
+    @FXML
     void dragged(MouseEvent event){
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         stage.setX(event.getScreenX() - x);
@@ -63,6 +69,7 @@ public class SettingController implements Initializable {
      public void data(User s){
         now = s;
         namaAkun.setText(now.getEmail());
+        chosenPath.setText(now.getBackupPath());
     }
     
     public void backHome(MouseEvent event) throws IOException{
@@ -118,11 +125,24 @@ public class SettingController implements Initializable {
         UserDAO.dbBackUp(now);
     }
     public void Restore(){
-        UserDAO.dbRestore(now);
+        now = UserDAO.dbRestore(now);
+    }
+    public void changePath(){
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setInitialDirectory(new File(now.getBackupPath()));
+        
+        Stage primaryStage = new Stage();
+        File selectedDirectory = directoryChooser.showDialog(primaryStage);
+        String path = selectedDirectory.getAbsolutePath();
+        
+        UserDAO.updatePath(now.getEmail(), path);
+        now.setBackupPath(UserDAO.showBackupPath(now.getEmail()));
+        chosenPath.setText(now.getBackupPath());
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        
     }    
     
 }

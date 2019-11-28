@@ -91,15 +91,13 @@ public class LoginController implements Initializable {
                 alert.showAndWait();
                 emailInput.clear();
                 passwordInput.clear();
-                
             }
         } catch (SQLException e) {
             System.out.println("Sedang mencari mahasiswa dengan nim " + emailInput.getText() + ", error terjadi: " + e);
             throw e;
         }
-        
-        
     }
+     
     @FXML
     public void SignUp(ActionEvent event) throws IOException{
         Parent signUpPage = FXMLLoader.load(getClass().getResource("/fxml/SignUpFXML.fxml"));

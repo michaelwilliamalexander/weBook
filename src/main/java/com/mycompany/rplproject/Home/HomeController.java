@@ -401,7 +401,6 @@ public class HomeController implements Initializable {
             }
         }
         Search();
-       
         contentBox.getChildren().addAll(folderList);
         contentBox.getChildren().addAll(urlList);
         editBox.getChildren().addAll(edit);

@@ -9,6 +9,7 @@ import com.mycompany.rplproject.db.BookmarkDAO;
 import com.mycompany.rplproject.db.DBUtil;
 import com.mycompany.rplproject.db.FolderDAO;
 import com.mycompany.rplproject.db.TagDAO;
+import com.mycompany.rplproject.db.UserDAO;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class User {
     private List<Folder> folder = new ArrayList<>();
     private List<Tag> tag = new ArrayList<>();
     private List<Bookmark> bookmark = new ArrayList<>();
+    private String backupPath;
     
     public User(){}
     
@@ -32,6 +34,7 @@ public class User {
             this.folder = FolderDAO.showFolderList(email);
             this.tag = TagDAO.showTagList(email);
             this.bookmark = BookmarkDAO.showBookmarkList(email);
+            this.backupPath = UserDAO.showBackupPath(email);
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -69,33 +72,29 @@ public class User {
         this.folder = folder;
     }
 
-    /**
-     * @return the tag
-     */
+    
     public List<Tag> getTag() {
         return tag;
     }
 
-    /**
-     * @param tag the tag to set
-     */
     public void setTag(List<Tag> tag) {
         this.tag = tag;
     }
 
-    /**
-     * @return the bookmark
-     */
+    
     public List<Bookmark> getBookmark() {
         return bookmark;
     }
 
-    /**
-     * @param bookmark the bookmark to set
-     */
+    
     public void setBookmark(List<Bookmark> bookmark) {
         this.bookmark = bookmark;
     }
     
-    
+    public void setBackupPath(String backupPath){
+        this.backupPath = backupPath;
+    }
+    public String getBackupPath(){
+        return this.backupPath;
+    }
 }

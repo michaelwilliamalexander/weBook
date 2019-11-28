@@ -119,4 +119,20 @@ public class DBUtil {
         }
     }
     
+    public void dbExecute(String del) throws SQLException, ClassNotFoundException {
+        Statement stmt = null;
+        try{
+            dbConnect();
+            stmt = conn.createStatement();
+            stmt.execute(del);
+        } catch(SQLException e){
+            throw e;
+        } finally {
+            if(stmt !=null){
+                stmt.close();
+            }
+            dbDisconnect();
+        } 
+    }
+    
 }
