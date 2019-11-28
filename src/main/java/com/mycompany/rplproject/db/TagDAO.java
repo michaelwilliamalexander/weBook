@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -20,11 +21,11 @@ import javafx.collections.FXCollections;
  */
 public class TagDAO {
     
-    public static List<Tag> showTagList(String email) throws SQLException, ClassNotFoundException {
+    public static ObservableList showTagList(String email) throws SQLException, ClassNotFoundException {
         String selectStmt = "select * from tag where email ='"+email+"' or id_Tag =0";
         try {
             ResultSet rs = DBUtil.getInstance().dbExecuteQuery(selectStmt);
-            List<Tag> mhsList = getTagList(rs);
+            ObservableList mhsList = getTagList(rs);
             return mhsList;
         } catch (SQLException e) {
             System.out.println("SQL select operation has been failed: " + e); //Return exception
@@ -32,8 +33,8 @@ public class TagDAO {
         }
     }
 
-    private static List<Tag> getTagList(ResultSet rs) throws SQLException, ClassNotFoundException {
-        List<Tag> list = FXCollections.observableArrayList();
+    private static ObservableList getTagList(ResultSet rs) throws SQLException, ClassNotFoundException {
+        ObservableList list = FXCollections.observableArrayList();
         while (rs.next()) {
            Tag tag = new Tag(rs.getInt("id_tag"), rs.getString("nama_tag")); 
             list.add(tag);
@@ -103,4 +104,19 @@ public class TagDAO {
         }
         return data;
     }
+    
+    public static int idTag(String nama, User user) throws SQLException, ClassNotFoundException{
+         String sql = "Select * from tag where nama_tag = '"+nama+"' and email = '"+user.getEmail()+"'";
+         ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
+         int data = getId(rs);
+         return data;
+     }
+     
+     private static int getId(ResultSet rs) throws SQLException{
+         int data = 0; 
+         while(rs.next()){
+             data = rs.getInt("id_tags");
+         }
+        return data;
+     }
 }

@@ -5,8 +5,12 @@
  */
 package com.mycompany.rplproject.Home;
 
+import com.mycompany.rplproject.Bookmark;
+import com.mycompany.rplproject.Tag;
 import com.mycompany.rplproject.User;
+import com.mycompany.rplproject.db.BookmarkDAO;
 import com.mycompany.rplproject.db.DBUtil;
+import com.mycompany.rplproject.db.MultiTagDAO;
 import com.mycompany.rplproject.db.TagDAO;
 import java.awt.Desktop;
 import java.io.IOException;
@@ -43,7 +47,7 @@ import javafx.stage.Stage;
 public class TagListController implements Initializable {
     private double x,y;
     private String data;
-     List<Integer> folderTree = new ArrayList<>();
+    private List<Integer> folderTree = new ArrayList<>();
     private List<Button> tag = new ArrayList<>();
     private List<Button> edit = new ArrayList<>();
     private List<Button> delete = new ArrayList<>();
@@ -158,69 +162,71 @@ public class TagListController implements Initializable {
 
         
     public void displayURL(int id_tag){
+        List<Bookmark> datas = new ArrayList<>();
         try {
+            datas.removeAll(datas);
+            datas.addAll(MultiTagDAO.multiTagData(now,id_tag));
+            System.out.println("Ini size data di dalam List: "+datas.size());
+            getBack(id_tag,now.getEmail());
             contentBox.getChildren().clear();
             editBox.getChildren().clear();
             deleteBox.getChildren().clear();
             tag.clear();
             delete.clear();
             edit.clear();
-            String sql = "select u.* from url u inner join urltag mg on u.id_url=mg.id_url inner join tag g on g.id_tag=mg.id_tag where g.id_tag ="+id_tag+" and email ='"+now.getEmail()+"' group by u.id_url;";
-            ResultSet rs= DBUtil.getInstance().dbExecuteQuery(sql);
-            System.out.println(sql);
-            while(rs.next()){
+            for(int i =0;i<datas.size();i++){
+                System.out.println("Data idnya : "+datas.get(i).getNama());
                 final Button urlTag;
-                if(rs.getString("nama_url")==null){
-                    urlTag = new Button(rs.getString("link_url"));
+                final int tempt = datas.get(i).getId();
+                if(datas.get(i).getNama()==null){
+                    urlTag = new Button(datas.get(i).getLink());
                 }else{
-                    urlTag = new Button(rs.getString("nama_url"));
+                    urlTag = new Button(datas.get(i).getNama());
                 }
                 urlTag.setMinWidth(400);
-                urlTag.setId(String.valueOf(rs.getInt("id_url")));
+                urlTag.setId(String.valueOf(datas.get(i).getId()));
                 urlTag.setBackground(Background.EMPTY);
-                
+                urlTag.setOnMouseClicked(new EventHandler<MouseEvent>(){
+                    @Override
+                    public void handle(MouseEvent event) {
+                        BookmarkDAO.clickToGo(now,tempt);
+                    }
+                });
                 
                 Button editButton = new Button("Edit");
                 editButton.setBackground(Background.EMPTY);
-                editButton.setId(String.valueOf(rs.getInt("id_url")));
+                editButton.setId(String.valueOf(datas.get(i).getId()));
+                editButton.setOnMouseClicked(new EventHandler<MouseEvent>(){
+                    @Override
+                    public void handle(MouseEvent event) {
+                        
+                    }
                 
+                });
                 
                 final Button deleteButton = new Button("X");
-                deleteButton.setId(String.valueOf(rs.getInt("id_url")));
+                deleteButton.setId(String.valueOf(datas.get(i).getId()));
                 deleteButton.setBackground(Background.EMPTY);
                 deleteButton.setOnMouseClicked(new EventHandler<MouseEvent>(){
                     @Override
                     public void handle(MouseEvent event) {
-                        try {
-                            String deleteUrl = "delete * from url where id_url = "+deleteButton.getId();
-                            DBUtil.getInstance().dbExecuteUpdate(deleteUrl);
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                        alert.setTitle("Delete Bookmark");
+                        alert.setHeaderText("Apakah Anda ingin menghapus Bookmark ini?");
+                         //alert.setContentText("Apakah anda ingin menghapus folder ini?");
+                        Optional<ButtonType> option = alert.showAndWait();
+                        if(option.get() == ButtonType.OK){
+                            BookmarkDAO.deleteBookmark(tempt);
+                            MultiTagDAO.deleteMultiTag(tempt);
                             for(int j=0;j<now.getBookmark().size();j++){
                                 if(now.getBookmark().get(j).getId() == Integer.parseInt(deleteButton.getId())){
                                     now.getBookmark().remove(j);
+                                    show(false);
                                 }
                             }
-                        } catch (SQLException | ClassNotFoundException ex) {
-                            Logger.getLogger(TagListController.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                 });
-                
-                urlTag.setOnMouseClicked(new EventHandler<MouseEvent>(){
-                    @Override
-                    public void handle(MouseEvent event) {
-                        try {
-                            String selectUrl = "select * from url where id_url = "+urlTag.getId()+" and email = '"+now.getEmail()+"'";
-                            Desktop d = Desktop.getDesktop();
-                            ResultSet rs = DBUtil.getInstance().dbExecuteQuery(selectUrl);
-                            if(rs.next()){
-                                d.browse(new URI(rs.getString("link_url")));
-                            }
-                        } catch (SQLException | ClassNotFoundException | URISyntaxException | IOException ex) {
-                            Logger.getLogger(TagListController.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-             
-             });
             tag.add(urlTag);
             edit.add(editButton);
             delete.add(deleteButton);
@@ -321,9 +327,8 @@ public class TagListController implements Initializable {
           
     }
         
-    public void getBack(final String idTag,String email){
+    public void getBack(final int idTag,String email){
         Button back = new Button("<");
-        final String tempt = idTag;
         back.setId("back");
         backBox.getChildren().clear();
         backBox.getChildren().add(back);

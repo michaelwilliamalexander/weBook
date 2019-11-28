@@ -5,19 +5,14 @@
  */
 package com.mycompany.rplproject.Home;
 
-import com.mycompany.rplproject.Folder;
 import com.mycompany.rplproject.User;
-import com.mycompany.rplproject.db.DBUtil;
 import com.mycompany.rplproject.db.FolderDAO;
 import java.io.IOException;
 import java.net.URL;
-import static java.sql.JDBCType.NULL;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.EventHandler;
@@ -29,12 +24,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javax.swing.JOptionPane;
 
 /**
  * FXML Controller class
@@ -210,15 +203,6 @@ public class NewFolderController implements Initializable {
         app_stage.show();
     }
     
-    public void editData(String newName, int id){
-        try{
-            FolderDAO.updateFolder(id,newName, now);
-            FolderDAO.showFolderList(now.getEmail());
-            
-        } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(NewFolderController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
     
     public void editFolder(final String nama, final int id,  List<Integer> parent){
         folderTree = parent;
@@ -227,20 +211,28 @@ public class NewFolderController implements Initializable {
         folderBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                try {
-                    editData(inFolder.getText(),id);
-                    FXMLLoader loader = new FXMLLoader();
-                    loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
-                    Parent backHomePage = loader.load();
-                    Scene backHome = new Scene(backHomePage);
-                    HomeController controller = loader.getController();
-                    controller.data(now);
-                    controller.show(false,folderTree);
-                    Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-                    app_stage.setScene(backHome);
-                    app_stage.show();
-                } catch (IOException ex) {
-                    Logger.getLogger(NewFolderController.class.getName()).log(Level.SEVERE, null, ex);
+                if(inFolder.getText().isEmpty()){
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setTitle("Error");
+                        alert.setContentText("Field Kosong");
+                        alert.showAndWait();
+                }else{
+                    try {
+                        FolderDAO.updateFolder(id,inFolder.getText(), now);
+                        now.setFolder(FolderDAO.showFolderList(now.getEmail()));
+                        FXMLLoader loader = new FXMLLoader();
+                        loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
+                        Parent backHomePage = loader.load();
+                        Scene backHome = new Scene(backHomePage);
+                        HomeController controller = loader.getController();
+                        controller.data(now);
+                        controller.show(false,folderTree);
+                        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                        app_stage.setScene(backHome);
+                        app_stage.show();
+                    } catch (IOException | SQLException | ClassNotFoundException ex) {
+                        Logger.getLogger(NewFolderController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         });

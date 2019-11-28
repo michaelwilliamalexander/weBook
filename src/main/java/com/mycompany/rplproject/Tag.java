@@ -2,6 +2,8 @@ package com.mycompany.rplproject;
 
 import com.mycompany.rplproject.db.DBUtil;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -10,7 +12,6 @@ import javafx.beans.property.SimpleStringProperty;
  * @author Ananda
  */
 public class Tag {
-    
     private SimpleIntegerProperty idTag;
     private SimpleStringProperty namaTag;
     
@@ -41,6 +42,5 @@ public class Tag {
     public void setNamaTag(String namaTag) {
         this.namaTag = new SimpleStringProperty(namaTag);
     }
-    
     
 }

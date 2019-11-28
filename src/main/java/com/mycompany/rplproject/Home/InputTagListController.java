@@ -5,18 +5,14 @@
  */
 package com.mycompany.rplproject.Home;
 
-import com.mycompany.rplproject.Tag;
 import com.mycompany.rplproject.User;
-import com.mycompany.rplproject.db.DBUtil;
 import com.mycompany.rplproject.db.TagDAO;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.EventHandler;
@@ -138,7 +134,11 @@ public class InputTagListController implements Initializable {
     void tambahTag(MouseEvent event) throws SQLException, ClassNotFoundException, IOException {
         String tempt = TagDAO.getStringData(inTag.getText(),now.getEmail()); 
         int id = 0;
-        if(inTag.getText().toString().equals(tempt)){
+        if(inTag.getText().isEmpty()){
+             Alert alert = new Alert(AlertType.ERROR);
+             alert.setContentText("Nama Tag harus terisi");
+            alert.showAndWait();
+        }else if(inTag.getText().toString().equals(tempt)){
            Alert alert = new Alert(AlertType.ERROR);
            alert.setContentText("Nama Tag telah dibuat");
            alert.showAndWait();
@@ -166,25 +166,30 @@ public class InputTagListController implements Initializable {
         inTag.setText(tamp);
         btnTag.setText("Edit");
         btnTag.setOnMouseClicked(new EventHandler<MouseEvent>(){
+            String namaTag = inTag.getText();
             @Override
             public void handle(MouseEvent event) {
-//               String sql = "Update Tag set nama_tag = '"+inTag.getText()+"' where id_tag = '"+idTag+"' and email = '"+now.getEmail()+"' " ;
-                try {
-//                    DBUtil.getInstance().dbExecuteUpdate(sql);
-                    TagDAO.updateTag(idTag,inTag.getText());
-                    FXMLLoader loader = new FXMLLoader();
-                    loader.setLocation(getClass().getResource("/fxml/TagList.fxml"));
-                    now.setTag(TagDAO.showTagList(now.getEmail()));
-                    Parent tagListPage = loader.load();
-                    Scene tagList = new Scene(tagListPage);
-                    TagListController controller = loader.getController();
-                    controller.data(now);
-                    controller.show(false);
-                    Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-                    app_stage.setScene(tagList);
-                    app_stage.show();
-                }  catch (IOException | SQLException | ClassNotFoundException ex) {
-                    Logger.getLogger(InputTagListController.class.getName()).log(Level.SEVERE, null, ex);
+                if(namaTag.isEmpty()){
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setContentText("Nama Tag harus terisi");
+                    alert.showAndWait();
+                }else{
+                    try {
+                        TagDAO.updateTag(idTag,inTag.getText());
+                        FXMLLoader loader = new FXMLLoader();
+                        loader.setLocation(getClass().getResource("/fxml/TagList.fxml"));
+                        now.setTag(TagDAO.showTagList(now.getEmail()));
+                        Parent tagListPage = loader.load();
+                        Scene tagList = new Scene(tagListPage);
+                        TagListController controller = loader.getController();
+                        controller.data(now);
+                        controller.show(false);
+                        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                        app_stage.setScene(tagList);
+                        app_stage.show();
+                    }  catch (IOException | SQLException | ClassNotFoundException ex) {
+                        Logger.getLogger(InputTagListController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
             

@@ -5,20 +5,18 @@
  */
 package com.mycompany.rplproject.Home;
 
-import com.mycompany.rplproject.Bookmark;
-import com.mycompany.rplproject.Folder;
 import com.mycompany.rplproject.Tag;
 import com.mycompany.rplproject.User;
 import com.mycompany.rplproject.db.BookmarkDAO;
-import com.mycompany.rplproject.db.DBUtil;
+import com.mycompany.rplproject.db.MultiTagDAO;
+import com.mycompany.rplproject.db.TagDAO;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -30,10 +28,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -48,6 +50,11 @@ public class NewURLController implements Initializable {
     private String data;
     List<Integer> folderTree = new ArrayList<>();
     private User now;
+    private ComboBox newTag;
+    
+     @FXML
+    private VBox contentTag;
+    
     @FXML
     private Text namaAkun;
     
@@ -65,6 +72,9 @@ public class NewURLController implements Initializable {
     
     @FXML
     private Button isBack;
+    
+    @FXML
+    private Button plusTag;
     
     @FXML
     void dragged(MouseEvent event){
@@ -147,18 +157,51 @@ public class NewURLController implements Initializable {
     
     //fungsi menampilkan list folder dan tag yang ada ke combo box
     public void setComboBoxValue() throws SQLException{
-        String queryTag = "select * from tag where email = '"+now.getEmail()+"' or id_tag=0";
-        ObservableList listTag = FXCollections.observableArrayList(); //to show tag data into tag  
-        try{
-            ResultSet rsTag = DBUtil.getInstance().dbExecuteQuery(queryTag);
-            while(rsTag.next()){
-                 listTag.add(new Tag(rsTag.getInt("id_tag"),rsTag.getString("nama_tag")));
-            }
-            //namaTag.setValue(Default);
-            namaTag.setItems(listTag);    
-        } catch (SQLException | ClassNotFoundException ex) {
+        try {
+            namaTag.setItems(TagDAO.showTagList(now.getEmail()));
+        } catch (ClassNotFoundException ex) {
             Logger.getLogger(NewURLController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void setChildComboBox(final List<Tag> tagList,int counter) throws SQLException, ClassNotFoundException{
+        final int count = counter;
+            plusTag.setOnMouseClicked(new EventHandler<MouseEvent>(){
+                List<Tag> listTag = new ArrayList<>();
+                ObservableList newCombo = FXCollections.observableArrayList();
+                    @Override   
+                    public void handle(MouseEvent event) {
+                        listTag.clear();
+                        listTag.addAll(tagList);
+                        newTag= new ComboBox();
+                        if(count<2){
+                            for(int i=0;i<now.getTag().size();i++){
+                                 if(count==0){
+                                     if(namaTag.getSelectionModel().isSelected(i)==true){
+                                        System.out.println("Ini datanya : "+listTag.get(i));
+                                        listTag.remove(listTag.get(i));
+                                        newCombo.setAll(listTag);
+                                     }
+                                 }else{
+                                    newCombo.setAll(listTag);
+                                 }
+                           }
+                            newTag.setItems(newCombo);
+                            System.out.println("masuk");
+                            newTag.setMinWidth(namaTag.getWidth());
+                            contentTag.getChildren().addAll(newTag);
+                            int data = count+1;
+                            System.out.println("Ini sizenya : "+ data);
+                            try {
+                                setChildComboBox(listTag,data);
+                            } catch (SQLException | ClassNotFoundException ex) {
+                                Logger.getLogger(NewURLController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }else{
+                            plusTag.setDisable(true); 
+                        }
+                    }
+                });
     }
     
     public void tambahURL(List<Integer> parent, String s){
@@ -168,29 +211,49 @@ public class NewURLController implements Initializable {
         insertUrlButton.setOnMouseClicked(new EventHandler<MouseEvent>(){
             @Override
             public void handle(MouseEvent event) {
-                 Tag t = (Tag) namaTag.getSelectionModel().getSelectedItem();
-                String SqlQuery;
-                try{
-                    if(location==0){
-                        BookmarkDAO.tambahUrl(namaUrl.getText(),linkUrl.getText(), now);
-                    }else{
-                        BookmarkDAO.tambahUrl_InsideFolder(namaUrl.getText(),linkUrl.getText(), location, now);
-                    }
-                    FXMLLoader loader = new FXMLLoader();
-                    now.setBookmark(BookmarkDAO.showBookmarkList(now.getEmail()));
-                    loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
-                    Parent backHomePage = loader.load();
-                    Scene backHome = new Scene(backHomePage);
-                    HomeController controller = loader.getController();
-                    controller.data(now);
-                    controller.show(false,folderTree);
-                        
-                    Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-                    app_stage.setScene(backHome);
-                    app_stage.show();
+                if(!namaUrl.getText().isEmpty()||!linkUrl.getText().isEmpty()){
+                    Tag t = (Tag) namaTag.getSelectionModel().getSelectedItem();
+                    String SqlQuery;
+                    try{
+                        if(location==0){
+                            BookmarkDAO.tambahUrl(namaUrl.getText(),linkUrl.getText(), now);
+                            int idUrl = 0;
+                            if(namaUrl.getText().isEmpty()){
+                                idUrl = BookmarkDAO.idUrl_withLinkURL(linkUrl.getText(), now);
+                            }else{
+                                idUrl = BookmarkDAO.idUrl_withNamaURL(namaUrl.getText(), now);
+                            }
+                            for(int i=0;i<now.getTag().size();i++){
+                                 if(namaTag.getSelectionModel().isSelected(i)==true || newTag.getSelectionModel().isSelected(i)==true ){
+                                     int idTag = now.getTag().get(i).getIdTag();
+                                     MultiTagDAO.putData(idUrl, idTag, now);
+                                     System.out.println("Berhasil");
+                                 }
+                             }
+                        }else{
+                            BookmarkDAO.tambahUrl_InsideFolder(namaUrl.getText(),linkUrl.getText(), location, now);
+                        }
+                        FXMLLoader loader = new FXMLLoader();
+                        now.setBookmark(BookmarkDAO.showBookmarkList(now.getEmail()));
+                        loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
+                        Parent backHomePage = loader.load();
+                        Scene backHome = new Scene(backHomePage);
+                        HomeController controller = loader.getController();
+                        controller.data(now);
+                        controller.show(false,folderTree);
 
-                }catch (SQLException | ClassNotFoundException | IOException ex) {
-                    Logger.getLogger(NewURLController.class.getName()).log(Level.SEVERE, null, ex);
+                        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                        app_stage.setScene(backHome);
+                        app_stage.show();
+
+                    }catch (SQLException | ClassNotFoundException | IOException ex) {
+                        Logger.getLogger(NewURLController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }else{
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Add Url");
+                    alert.setHeaderText("Pastikan nama url atau link url berisi !");
+                    alert.showAndWait();
                 }
             }
             
@@ -222,32 +285,41 @@ public class NewURLController implements Initializable {
         insertUrlButton.setText("edit");
         namaUrl.setText(nama);
         linkUrl.setText(link);
+        SingleSelectionModel<Integer> count = namaTag.getSelectionModel();
         for(int i=0;i<now.getTag().size();i++){
             if(now.getTag().get(i).getIdTag()== id){
-                namaTag.setItems((ObservableList) namaTag.getSelectionModel().getSelectedItem());
+                
             }
         }
         insertUrlButton.setOnMouseClicked(new EventHandler<MouseEvent>(){
             @Override
             public void handle(MouseEvent event) {
-                try {
-                    Tag t = (Tag) namaTag.getSelectionModel().getSelectedItem();
-                    BookmarkDAO.updateBookmark(id, namaUrl.getText(),linkUrl.getText(),now);
-                    BookmarkDAO.showBookmarkList(now.getEmail());
-                    FXMLLoader loader = new FXMLLoader();
-                    loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
-                    Parent backHomePage = loader.load();
-                    Scene backHome = new Scene(backHomePage);
-                    HomeController controller = loader.getController();
-                    controller.data(now);
-                    controller.show(false,folderTree);
-                    Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-                    app_stage.setScene(backHome);
-                    app_stage.show();
+                if(!namaUrl.getText().isEmpty()||!linkUrl.getText().isEmpty()){
+                    try {
+                        Tag t = (Tag) namaTag.getSelectionModel().getSelectedItem();
+                        BookmarkDAO.updateBookmark(id, namaUrl.getText(),linkUrl.getText(),now);
+                        now.setBookmark(BookmarkDAO.showBookmarkList(now.getEmail()));
+                        FXMLLoader loader = new FXMLLoader();
+                        loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
+                        Parent backHomePage = loader.load();
+                        Scene backHome = new Scene(backHomePage);
+                        HomeController controller = loader.getController();
+                        controller.data(now);
+                        controller.show(false,folderTree);
+                        Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                        app_stage.setScene(backHome);
+                        app_stage.show();
 
-                } catch (SQLException | ClassNotFoundException | IOException ex) {
-                    Logger.getLogger(NewURLController.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SQLException | ClassNotFoundException | IOException ex) {
+                        Logger.getLogger(NewURLController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }else{
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Add Url");
+                    alert.setHeaderText("Pastikan nama url atau link url berisi !");
+                    alert.showAndWait();
                 }
+                
             }
         });
         isBack.setOnMouseClicked(new EventHandler<MouseEvent>(){
@@ -277,5 +349,6 @@ public class NewURLController implements Initializable {
         
         
     }    
+    
     
 }

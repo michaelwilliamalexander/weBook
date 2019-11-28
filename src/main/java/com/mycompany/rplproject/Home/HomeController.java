@@ -8,10 +8,8 @@ package com.mycompany.rplproject.Home;
 import com.mycompany.rplproject.User;
 import com.mycompany.rplproject.db.BookmarkDAO;
 import com.mycompany.rplproject.db.FolderDAO;
-import java.awt.Desktop;
+import com.mycompany.rplproject.db.MultiTagDAO;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -48,11 +46,13 @@ public class HomeController implements Initializable {
     private ObservableList<Button> folders = FXCollections.observableArrayList();
     private ObservableList<String> list = FXCollections.observableArrayList("Tag","Folder");
     
-    List<Integer> folderTree = new ArrayList<>();
+    private List<Integer> folderTree = new ArrayList<>();
     
     private double x,y;
     List<Button> folderList = new ArrayList<>(); //our Collection to hold newly created Buttons
     List<Button> urlList = new ArrayList<>();
+    List<Button> urlTag = new ArrayList<>();
+    List<Text> tag = new ArrayList<>();
     List<Button> edit = new ArrayList<>();
     List<Button> delete = new ArrayList<>();
     private User now = new User();
@@ -165,7 +165,7 @@ public class HomeController implements Initializable {
     }
     
     @FXML
-    void tambahURL(MouseEvent event) throws IOException, SQLException {
+    void tambahURL(MouseEvent event) throws IOException, SQLException, ClassNotFoundException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/fxml/NewURL.fxml"));
         Parent tambahURLPage = loader.load();
@@ -173,6 +173,7 @@ public class HomeController implements Initializable {
         controller.data(now);
         controller.tambahURL(folderTree, now.getEmail());
         controller.setComboBoxValue();
+        controller.setChildComboBox(now.getTag(), 0);
         Scene tambahURL = new Scene(tambahURLPage);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(tambahURL);
@@ -290,7 +291,7 @@ public class HomeController implements Initializable {
             final int o = i;
             if(now.getBookmark().get(i).getId_folder()==folderTree.get(folderTree.size()-1)){
                 final Button url;
-                if(now.getBookmark().get(i).getNama().equals(null)){
+                if(now.getBookmark().get(i).getNama() == null){
                     url = new Button(now.getBookmark().get(i).getLink());
                 }else{
                     url = new Button(now.getBookmark().get(i).getNama());
@@ -300,12 +301,7 @@ public class HomeController implements Initializable {
                 url.setOnMouseClicked(new EventHandler<MouseEvent>(){
                     @Override
                     public void handle(MouseEvent event) {
-                        try {
-                            Desktop d = Desktop.getDesktop();
-                            d.browse(new URI(now.getBookmark().get(o).getLink()));
-                        } catch (URISyntaxException | IOException ex) {
-                            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                        BookmarkDAO.clickToGo(now,now.getBookmark().get(o).getId());
                     }
                 });
                 final Button Delete = new Button("X");
@@ -324,6 +320,7 @@ public class HomeController implements Initializable {
                                 for(int j=0; j<now.getBookmark().size();j++){
                                     if(Integer.parseInt(Delete.getId()) == now.getBookmark().get(j).getId()){
                                         now.getBookmark().remove(j);
+                                        MultiTagDAO.deleteMultiTag(now.getBookmark().get(j).getId());
                                         break;
                                     }
                                 }
@@ -448,12 +445,7 @@ public class HomeController implements Initializable {
                                 url.setOnMouseClicked(new EventHandler<MouseEvent>(){
                                         @Override
                                         public void handle(MouseEvent event) {
-                                            try {
-                                                Desktop d = Desktop.getDesktop();
-                                                d.browse(new URI(now.getBookmark().get(o).getLink()));
-                                            } catch (URISyntaxException | IOException ex) {
-                                                Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
-                                            }
+                                            BookmarkDAO.clickToGo(now,now.getBookmark().get(o).getId());
                                         }
                                     });
                         }
