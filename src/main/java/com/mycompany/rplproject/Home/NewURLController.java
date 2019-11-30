@@ -177,7 +177,7 @@ public class NewURLController implements Initializable {
             ComboBox combo = new ComboBox();
             @Override
             public void handle(MouseEvent event) {
-                if(list.size()>=0 && count<1){
+                if(list.size()>0 && count<1){
                     contentTag.getChildren().clear();
                     list.clear();
                     list.addAll(tagLists);
@@ -369,10 +369,7 @@ public class NewURLController implements Initializable {
                        this.namaTag.setValue(isi.get(i).getNamaTag());
                        taglist.remove(isi.get(i).getNamaTag());
                    }
-                   else{
-                       contentTag.getChildren().clear();
-                       
-                   }
+                  
                }
            }
         }
