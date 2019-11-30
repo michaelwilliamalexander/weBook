@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.ComboBox;
 
 /**
  *
@@ -111,7 +112,7 @@ public class TagDAO {
          int data = getId(rs);
          return data;
      }
-     
+    
      private static int getId(ResultSet rs) throws SQLException{
          int data = 0; 
          while(rs.next()){

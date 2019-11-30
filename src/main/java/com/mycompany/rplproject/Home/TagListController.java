@@ -6,24 +6,17 @@
 package com.mycompany.rplproject.Home;
 
 import com.mycompany.rplproject.Bookmark;
-import com.mycompany.rplproject.Tag;
 import com.mycompany.rplproject.User;
 import com.mycompany.rplproject.db.BookmarkDAO;
-import com.mycompany.rplproject.db.DBUtil;
 import com.mycompany.rplproject.db.MultiTagDAO;
 import com.mycompany.rplproject.db.TagDAO;
-import java.awt.Desktop;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.EventHandler;
@@ -178,6 +171,7 @@ public class TagListController implements Initializable {
                 System.out.println("Data idnya : "+datas.get(i).getNama());
                 final Button urlTag;
                 final int tempt = datas.get(i).getId();
+                final int o = i;
                 if(datas.get(i).getNama()==null){
                     urlTag = new Button(datas.get(i).getLink());
                 }else{
@@ -199,7 +193,29 @@ public class TagListController implements Initializable {
                 editButton.setOnMouseClicked(new EventHandler<MouseEvent>(){
                     @Override
                     public void handle(MouseEvent event) {
-                        
+                        try {
+                            FXMLLoader loader = new FXMLLoader();
+                            loader.setLocation(getClass().getResource("/fxml/NewURL.fxml"));
+                            Parent tambahURLPage = loader.load();
+                            NewURLController controller = loader.getController();
+                            controller.data(now);
+                            if(now.getBookmark().get(o).getNama()==null){
+                                controller.editBookmark(folderTree.get(folderTree.size()-1) , "" , now.getBookmark().get(o).getNama(), now.getBookmark().get(o).getId(),folderTree);
+                            }else{
+                                try {
+                                    controller.editBookmark(folderTree.get(folderTree.size()-1) , now.getBookmark().get(o).getNama() , now.getBookmark().get(o).getLink() , now.getBookmark().get(o).getId(),folderTree );
+                                } catch (SQLException | ClassNotFoundException ex) {
+                                    Logger.getLogger(TagListController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                            controller.setComboBoxValue();
+                            Scene tambahURL = new Scene(tambahURLPage);
+                            Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                            app_stage.setScene(tambahURL);
+                            app_stage.show();
+                        } catch (SQLException | ClassNotFoundException | IOException ex) {
+                            Logger.getLogger(TagListController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                 
                 });

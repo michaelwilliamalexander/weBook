@@ -38,7 +38,7 @@ public class BookmarkDAO {
         }
     }
     
-     public static List<Bookmark> getBookmarkList(ResultSet rs){
+     private static List<Bookmark> getBookmarkList(ResultSet rs){
         List<Bookmark> bookmark = FXCollections.observableArrayList();
         try {
             while(rs.next()){

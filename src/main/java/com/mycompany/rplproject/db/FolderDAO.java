@@ -20,7 +20,7 @@ public class FolderDAO {
     public static String seeData(String namaFolder, int idParent){
         String tempt = null;
         try {
-            String stmt = "Select * From Folder where nama_folder = '"+namaFolder+"' && Parent_Folder = '"+idParent+"'";
+            String stmt = "Select * From Folder where nama_folder = '"+namaFolder+"' and Parent_Folder = '"+idParent+"'";
             ResultSet rs = DBUtil.getInstance().dbExecuteQuery(stmt);
             tempt = FolderDAO.getData(rs);
         } catch (SQLException | ClassNotFoundException ex) {

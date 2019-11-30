@@ -6,6 +6,7 @@
 package com.mycompany.rplproject.db;
 
 import com.mycompany.rplproject.Bookmark;
+import com.mycompany.rplproject.UrlTag;
 import com.mycompany.rplproject.User;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,6 +40,22 @@ public class MultiTagDAO {
         return bookmark;
     }
     
+    public static List<UrlTag> urlTag(User user) throws SQLException, ClassNotFoundException{
+        String sql = "Select*from urlTag where email = '"+user.getEmail()+"'";
+        ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
+        List<UrlTag> data = Tag(rs);
+        return data;
+    }
+    
+    private static List<UrlTag> Tag(ResultSet rs) throws SQLException{
+        List<UrlTag>tag = FXCollections.observableArrayList();
+        while(rs.next()){
+            UrlTag url = new UrlTag(rs.getInt("id_urlTag"),rs.getInt("id_url"),rs.getInt("id_tag"),rs.getString("email"));
+            tag.add(url);
+        }
+        return tag;
+    }
+    
     public static void deleteMultiTag(int id){
          try {
             String query = "delete from urlTag where id_url = '"+id+"'";
@@ -52,6 +69,8 @@ public class MultiTagDAO {
         String sql = "Insert into urlTag(id_url,id_tag,email) values('"+idUrl+"','"+idTag+"','"+user.getEmail()+"')";
         DBUtil.getInstance().dbExecuteUpdate(sql);  
     }
+    
+    
     
     
 }

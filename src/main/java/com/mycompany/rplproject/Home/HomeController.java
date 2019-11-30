@@ -8,7 +8,6 @@ package com.mycompany.rplproject.Home;
 import com.mycompany.rplproject.User;
 import com.mycompany.rplproject.db.BookmarkDAO;
 import com.mycompany.rplproject.db.FolderDAO;
-import com.mycompany.rplproject.db.MultiTagDAO;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -173,7 +172,7 @@ public class HomeController implements Initializable {
         controller.data(now);
         controller.tambahURL(folderTree, now.getEmail());
         controller.setComboBoxValue();
-        controller.setChildComboBox(now.getTag(), 0);
+        controller.setChildComboBox(now.getTag(),0);
         Scene tambahURL = new Scene(tambahURLPage);
         Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(tambahURL);
@@ -320,7 +319,6 @@ public class HomeController implements Initializable {
                                 for(int j=0; j<now.getBookmark().size();j++){
                                     if(Integer.parseInt(Delete.getId()) == now.getBookmark().get(j).getId()){
                                         now.getBookmark().remove(j);
-                                        MultiTagDAO.deleteMultiTag(now.getBookmark().get(j).getId());
                                         break;
                                     }
                                 }
@@ -346,11 +344,12 @@ public class HomeController implements Initializable {
                                 controller.editBookmark(folderTree.get(folderTree.size()-1) , url.getText() , now.getBookmark().get(o).getLink() , now.getBookmark().get(o).getId(),folderTree );
                             }
                             controller.setComboBoxValue();
+                            controller.setChildComboBox(now.getTag(),0);
                             Scene tambahURL = new Scene(tambahURLPage);
                             Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                             app_stage.setScene(tambahURL);
                             app_stage.show();
-                        } catch (IOException | SQLException ex) {
+                        } catch (IOException | SQLException | ClassNotFoundException ex) {
                             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }

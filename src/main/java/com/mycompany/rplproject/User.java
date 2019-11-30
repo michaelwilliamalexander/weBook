@@ -18,11 +18,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class User {
+
     private String email;
     private String password;
     private List<Folder> folder = new ArrayList<>();
     private List<Tag> tag = new ArrayList<>();
     private List<Bookmark> bookmark = new ArrayList<>();
+    private List<UrlTag> urlTag = new ArrayList<>();
     private String backupPath;
     
     public User(){}
@@ -94,7 +96,16 @@ public class User {
     public void setBackupPath(String backupPath){
         this.backupPath = backupPath;
     }
+    
     public String getBackupPath(){
         return this.backupPath;
+    }
+    
+    public List<UrlTag> getUrlTag() {
+        return urlTag;
+    }
+
+    public void setUrlTag(List<UrlTag> urlTag) {
+        this.urlTag = urlTag;
     }
 }
