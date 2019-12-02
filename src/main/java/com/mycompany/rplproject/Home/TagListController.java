@@ -155,7 +155,7 @@ public class TagListController implements Initializable {
 
         
     public void displayURL(int id_tag){
-        List<Bookmark> datas = new ArrayList<>();
+        final List<Bookmark> datas = new ArrayList<>();
         try {
             datas.removeAll(datas);
             datas.addAll(MultiTagDAO.multiTagData(now,id_tag));
@@ -200,21 +200,19 @@ public class TagListController implements Initializable {
                             NewURLController controller = loader.getController();
                             controller.data(now);
                             if(now.getBookmark().get(o).getNama()==null){
-                                controller.editBookmark(folderTree.get(folderTree.size()-1) , "" , now.getBookmark().get(o).getNama(), now.getBookmark().get(o).getId(),folderTree);
+                                controller.editBookmark(0, "" , datas.get(o).getLink(), now.getBookmark().get(o).getId(),folderTree);
                             }else{
-                                try {
-                                    controller.editBookmark(folderTree.get(folderTree.size()-1) , now.getBookmark().get(o).getNama() , now.getBookmark().get(o).getLink() , now.getBookmark().get(o).getId(),folderTree );
-                                } catch (SQLException | ClassNotFoundException ex) {
-                                    Logger.getLogger(TagListController.class.getName()).log(Level.SEVERE, null, ex);
-                                }
+                                controller.editBookmark(0, datas.get(o).getNama(), datas.get(o).getNama() , now.getBookmark().get(o).getId(),folderTree );
                             }
+                            controller.isBack.setVisible(false);
                             controller.setComboBoxValue();
+                            controller.setChildComboBox(now.getTag(),0);
                             Scene tambahURL = new Scene(tambahURLPage);
                             Stage app_stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                             app_stage.setScene(tambahURL);
                             app_stage.show();
-                        } catch (SQLException | ClassNotFoundException | IOException ex) {
-                            Logger.getLogger(TagListController.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (IOException | SQLException | ClassNotFoundException ex) {
+                            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                 
@@ -233,7 +231,7 @@ public class TagListController implements Initializable {
                         Optional<ButtonType> option = alert.showAndWait();
                         if(option.get() == ButtonType.OK){
                             BookmarkDAO.deleteBookmark(tempt);
-                            MultiTagDAO.deleteMultiTag(tempt);
+                            MultiTagDAO.deleteMultiTag(datas.get(o).getId());
                             for(int j=0;j<now.getBookmark().size();j++){
                                 if(now.getBookmark().get(j).getId() == Integer.parseInt(deleteButton.getId())){
                                     now.getBookmark().remove(j);

@@ -8,6 +8,7 @@ package com.mycompany.rplproject.Home;
 import com.mycompany.rplproject.User;
 import com.mycompany.rplproject.db.BookmarkDAO;
 import com.mycompany.rplproject.db.FolderDAO;
+import com.mycompany.rplproject.db.MultiTagDAO;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -316,6 +317,7 @@ public class HomeController implements Initializable {
                             Optional<ButtonType> option = alert.showAndWait();
                             if(option.get() == ButtonType.OK){
                                 BookmarkDAO.deleteBookmark(Integer.parseInt(Delete.getId()));
+                                MultiTagDAO.deleteMultiTag(now.getBookmark().get(o).getId());
                                 for(int j=0; j<now.getBookmark().size();j++){
                                     if(Integer.parseInt(Delete.getId()) == now.getBookmark().get(j).getId()){
                                         now.getBookmark().remove(j);

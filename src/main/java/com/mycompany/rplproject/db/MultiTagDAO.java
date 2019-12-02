@@ -8,6 +8,7 @@ package com.mycompany.rplproject.db;
 import com.mycompany.rplproject.Bookmark;
 import com.mycompany.rplproject.UrlTag;
 import com.mycompany.rplproject.User;
+import com.mycompany.rplproject.Tag;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -41,7 +42,7 @@ public class MultiTagDAO {
     }
     
     public static List<UrlTag> urlTag(User user) throws SQLException, ClassNotFoundException{
-        String sql = "Select*from urlTag where email = '"+user.getEmail()+"'";
+        String sql = "Select * from urlTag where email = '"+user.getEmail()+"'";
         ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
         List<UrlTag> data = Tag(rs);
         return data;
@@ -70,7 +71,48 @@ public class MultiTagDAO {
         DBUtil.getInstance().dbExecuteUpdate(sql);  
     }
     
+    public static List<Integer> getTag_withNamaLink(String nama, User user) throws SQLException, ClassNotFoundException{
+        String sql = "select u.* from tag u inner join UrlTag mg on mg.id_tag = u.id_tag inner join url d on d.id_url = mg.id_url where d.nama_url = '"+nama+"' and d.email = '"+user.getEmail()+"'";
+        ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
+        List<Integer> data = tagData(rs);
+        return data;
+    }
     
+    public static List<Integer> getTag_withUrlLink(String nama, User user) throws SQLException, ClassNotFoundException{
+        String sql = "select u.* from tag u inner join UrlTag mg on mg.id_tag = u.id_tag inner join url d on d.id_url = mg.id_url where d.link_url = '"+nama+"' and d.email = '"+user.getEmail()+"'";
+        ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
+        List<Integer> data = tagData(rs);
+        return data;
+    }
+    
+    private static List<Integer> tagData(ResultSet rs) throws SQLException{
+        List<Integer> data = FXCollections.observableArrayList();
+        while(rs.next()){ 
+            data.add(rs.getInt("id_tag"));
+        }
+        return data;
+    }
+    
+    public static List<UrlTag> updateData(int dataTag,int urlTag) throws SQLException, ClassNotFoundException{
+        String sql = "Update UrlTag set id_tag = '"+dataTag+"' where id_urlTag = '"+urlTag+"'";
+        DBUtil.getInstance().dbExecuteUpdate(sql);
+        return null;
+    }
+    
+    public static Bookmark TagData(User user, int data) throws ClassNotFoundException, SQLException{
+        String sql = "select u.* from url u inner join urltag mg on u.id_url=mg.id_url inner join tag g on g.id_tag=mg.id_tag where g.id_tag ="+data+" and g.email ='"+user.getEmail()+"' group by u.id_url;";
+        ResultSet rs= DBUtil.getInstance().dbExecuteQuery(sql);
+        Bookmark bookmark = resultTag(rs);
+        return bookmark;
+    }
+    
+    private static Bookmark resultTag(ResultSet rs) throws SQLException{
+        Bookmark bookmark = null;
+        while(rs.next()){
+            bookmark = new Bookmark(rs.getInt("id_url"), rs.getString("nama_url"), rs.getString("link_url"), rs.getInt("id_folder")); 
+        }
+        return bookmark;
+    }
     
     
 }

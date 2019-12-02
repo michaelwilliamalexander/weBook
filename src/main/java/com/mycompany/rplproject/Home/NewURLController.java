@@ -76,7 +76,7 @@ public class NewURLController implements Initializable {
     private Button insertUrlButton;
     
     @FXML
-    private Button isBack;
+     Button isBack;
     
     @FXML
     private Button plusTag;
@@ -177,10 +177,10 @@ public class NewURLController implements Initializable {
             ComboBox combo = new ComboBox();
             @Override
             public void handle(MouseEvent event) {
-                if(list.size()>0 && count<1){
+                list.clear();
+                list.addAll(tagLists);
+                if(list.size()>=0 && count<1){
                     contentTag.getChildren().clear();
-                    list.clear();
-                    list.addAll(tagLists);
                     try {
                         for(int i=0;i<list.size();i++){
                             if(count==0){
@@ -191,7 +191,6 @@ public class NewURLController implements Initializable {
                                     namaTag.setDisable(true);
                                 }
                             }else{
-                                
                                 System.out.println("Size tag baru: "+newTag.size());
                                 for(int j=0;j<newTag.size();j++){
                                     if(newTag.get(j).getSelectionModel().isSelected(i)==true){
@@ -245,22 +244,25 @@ public class NewURLController implements Initializable {
                                  if(namaTag.getSelectionModel().isSelected(i)==true){
                                     int idTag = now.getTag().get(i).getIdTag();
                                     MultiTagDAO.putData(idUrl, idTag, now);
-                                    now.setUrlTag(MultiTagDAO.urlTag(now));
+                                    now.getTag().remove(now.getTag().get(i));
                                     System.out.println("Berhasil");
-                                 }else{
-                                     System.out.println("Ini jumlah tag barunya"+newTag.size());
-                                     for(int j=0;j<newTag.size();j++){
-                                         System.out.println(newTag.size());
-                                         if(!newTag.get(j).getSelectionModel().isEmpty()){
-                                            int idTag = now.getTag().get(i).getIdTag();
-                                            System.out.println("Ini data tag yangkeambil: "+newTag.get(j).getValue());
-                                            MultiTagDAO.putData(idUrl, idTag, now);
-                                            System.out.println("Berhasil");
-                                         }
-                                     }newTag.clear();
-                                     now.setUrlTag(MultiTagDAO.urlTag(now));
                                  }
+                             }for(int i=0;i<now.getTag().size();i++){
+                               System.out.println("Ini jumlah tag barunya"+newTag.size());
+                                for(int j=0;j<newTag.size();j++){
+                                    System.out.println(newTag.size());
+                                    if(newTag.get(j).getSelectionModel().isSelected(i)==true){
+                                        int idTag = now.getTag().get(i).getIdTag();
+                                        System.out.println("Ini data tag yang ke ambil: "+newTag.get(j).getValue());
+                                        MultiTagDAO.putData(idUrl, idTag, now);
+                                        now.getTag().remove(now.getTag().get(i));
+                                        System.out.println("Berhasil");
+                                    }
+                                } 
                              }
+                            newTag.clear();
+                            now.setUrlTag(MultiTagDAO.urlTag(now));
+                            now.setTag(TagDAO.getAllData(now));
                         }else{
                             BookmarkDAO.tambahUrl_InsideFolder(namaUrl.getText(),linkUrl.getText(), location, now);
                             int idUrl = 0;
@@ -273,11 +275,28 @@ public class NewURLController implements Initializable {
                                  if(namaTag.getSelectionModel().isSelected(i)==true){
                                     int idTag = now.getTag().get(i).getIdTag();
                                     MultiTagDAO.putData(idUrl, idTag, now);
+                                    now.getTag().remove(now.getTag().get(i));
                                     System.out.println("Berhasil");
                                  }
+                             }for(int i=0;i<now.getTag().size();i++){
+                               System.out.println("Ini jumlah tag barunya"+newTag.size());
+                                for(int j=0;j<newTag.size();j++){
+                                    System.out.println(newTag.size());
+                                    if(newTag.get(j).getSelectionModel().isSelected(i)==true){
+                                        int idTag = now.getTag().get(i).getIdTag();
+                                        System.out.println("Ini data tag yang ke ambil: "+newTag.get(j).getValue());
+                                        MultiTagDAO.putData(idUrl, idTag, now);
+                                        now.getTag().remove(now.getTag().get(i));
+                                        System.out.println("Berhasil");
+                                    }
+                                } 
                              }
+                             newTag.clear();
+                             now.setUrlTag(MultiTagDAO.urlTag(now));
+                             now.setTag(TagDAO.getAllData(now));
                         }
                         now.setUrlTag(MultiTagDAO.urlTag(now));
+                        System.out.println("Darta Url Tag : "+now.getUrlTag().size());
                         FXMLLoader loader = new FXMLLoader();
                         now.setBookmark(BookmarkDAO.showBookmarkList(now.getEmail()));
                         loader.setLocation(getClass().getResource("/fxml/Home.fxml"));
@@ -322,24 +341,6 @@ public class NewURLController implements Initializable {
                     }
                 }
             });
-//        plusTag.setOnMouseClicked(new EventHandler<MouseEvent>(){
-//            int count = 0;
-//            @Override
-//            public void handle(MouseEvent event) {
-//                if(count==0){
-//                    namaTag.setDisable(true);
-//                    namaTag1.setVisible(true);
-//                    count++;
-//                }else if(count==1){
-//                    namaTag1.setDisable(true);
-//                    namaTag2.setVisible(true);
-//                    count++;
-//                }else{
-//                    plusTag.setDisable(true);
-//                }
-//            }
-//            
-//        });
        
     }
     
@@ -348,41 +349,97 @@ public class NewURLController implements Initializable {
         insertUrlButton.setText("edit");
         namaUrl.setText(nama);
         linkUrl.setText(link);
-        try{
-        ObservableList<Tag> isi=TagDAO.showTagList(now.getEmail());
-        List<Bookmark> data = BookmarkDAO.showBookmarkList(now.getEmail());
-        List<Tag> taglist = TagDAO.showTagList(now.getEmail());
-        List<UrlTag> manyTag = MultiTagDAO.urlTag(now);
-        List<Integer> counter = new ArrayList<>();
-        final int count = counter.size();
-        for(int i=0;i<data.size();i++){
-            for(int j=0;j<manyTag.size();j++){
-                if(data.get(i).getId() == manyTag.get(j).getIdUrl()){
-                    counter.add(manyTag.get(j).getIdTag());
-                }
+        now.setUrlTag(MultiTagDAO.urlTag(now));
+        List<Integer> tampt = new ArrayList<>();
+        final List<Bookmark> count = new ArrayList<>();
+        
+        if(nama.equals("")){
+            tampt = MultiTagDAO.getTag_withUrlLink(link, now);
+        }else{
+            tampt =  MultiTagDAO.getTag_withNamaLink(nama, now);
+        }
+        for(int i=0;i<tampt.size();i++){
+            count.add(MultiTagDAO.TagData(now,tampt.get(i)));
+        }
+        System.out.println(count.size());
+        String data = null;
+        System.out.println(now.getUrlTag().size());
+        System.out.println(tampt.size());
+        System.out.println(now.getTag().size());
+        if(tampt.size()<2){
+                data = TagDAO.getStringData(tampt.get(0));
+                namaTag.setValue(data);
+                setChildComboBox(now.getTag(),0);
+        }else{
+            for(int i=0;i<now.getUrlTag().size();i++){
+                System.out.println("Ini data urlTagnya : "+now.getUrlTag().get(i).getIdTag());
+                    for(int j=0;j<tampt.size();j++){
+                        if(now.getUrlTag().get(i).getIdTag()== tampt.get(j)){
+                            if(j==0){
+                                    data = TagDAO.getStringData(tampt.get(0));
+                                    namaTag.setValue(data);
+                                    for(int k=0;k<now.getTag().size();k++){
+                                       if(now.getTag().get(k).getIdTag() == tampt.get(0)){
+                                           now.getTag().remove(now.getTag().get(k));
+                                       }
+                                    }
+                                    plusTag.setDisable(true);
+                            }else{
+                                contentTag.getChildren().clear();
+                                ObservableList<Tag> listData = FXCollections.observableArrayList();
+                                ComboBox combo = new ComboBox();
+                                listData.addAll(now.getTag());
+                                combo.setItems(listData);
+                                data = TagDAO.getStringData(tampt.get(j));
+                                combo.setValue(data);
+                                newTag.add(combo);
+                                contentTag.getChildren().addAll(newTag);
+                                break;
+                        } 
+                    }
+                }  
             }
         }
-        for(int i=0;i<isi.size();i++){
-           for(int j=0;j<counter.size();j++){
-               if(isi.get(i).getIdTag()== counter.get(i)){
-                   if(counter.size()==1){
-                       this.namaTag.setValue(isi.get(i).getNamaTag());
-                       taglist.remove(isi.get(i).getNamaTag());
-                   }
-                  
-               }
-           }
-        }
-        now.setUrlTag(MultiTagDAO.urlTag(now));
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        
+
         insertUrlButton.setOnMouseClicked(new EventHandler<MouseEvent>(){
             @Override
             public void handle(MouseEvent event) {
+                System.out.println("Datas : "+now.getUrlTag().size());
                 if(!namaUrl.getText().isEmpty()||!linkUrl.getText().isEmpty()){
                     try {
+                        now.setTag(TagDAO.getAllData(now));
+                        for(int j=0;j<now.getUrlTag().size();j++){
+                            for(int k=0;k<count.size();k++){
+                                for(int i=0;i<now.getTag().size();i++){
+                                    if(namaTag.getSelectionModel().isSelected(i)==true){
+                                        int idUrl = count.get(k).getId();
+                                        int idTag = now.getTag().get(i).getIdTag();
+                                        if(now.getUrlTag().get(j).getIdTag()==idTag &&now.getUrlTag().get(j).getIdUrl()==idUrl){
+                                            MultiTagDAO.updateData(now.getTag().get(i).getIdTag(), idUrl);
+                                        }
+                                        now.getTag().remove(now.getTag().get(i));
+                                        System.out.println("Berhasil");
+                                    }
+                                     }for(int i=0;i<now.getTag().size();i++){
+                                       System.out.println("Ini jumlah tag barunya"+newTag.size());
+                                        for(int l=0;l<newTag.size();l++){
+                                            System.out.println(newTag.size());
+                                            if(newTag.get(l).getSelectionModel().isSelected(i)==true){
+                                                int idUrl = count.get(k).getId();
+                                                int idTag = now.getTag().get(i).getIdTag();
+                                                System.out.println("Ini data tag yang ke ambil: "+newTag.get(j).getValue());
+                                                if(now.getUrlTag().get(j).getIdTag()==idTag &&now.getUrlTag().get(j).getIdUrl()==idUrl){
+                                                    MultiTagDAO.updateData(now.getTag().get(i).getIdTag(), idUrl);
+                                                }
+                                                now.getTag().remove(now.getTag().get(i));
+                                                System.out.println("Berhasil");
+                                        }
+                                    } 
+                                }
+                            }
+                        }
+                        newTag.clear();
+                        now.setUrlTag(MultiTagDAO.urlTag(now));
                         BookmarkDAO.updateBookmark(id, namaUrl.getText(),linkUrl.getText(),now);
                         now.setBookmark(BookmarkDAO.showBookmarkList(now.getEmail()));
                         FXMLLoader loader = new FXMLLoader();
@@ -430,8 +487,7 @@ public class NewURLController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-        
+      
         
     }    
     

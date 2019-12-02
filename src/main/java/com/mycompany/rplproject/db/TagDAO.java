@@ -120,4 +120,21 @@ public class TagDAO {
          }
         return data;
      }
+     
+     public static List<Tag> getAllData(User user) throws SQLException, ClassNotFoundException{
+        String sql = "Select * from Tag where email = '"+user.getEmail()+"'";
+        ResultSet rs = DBUtil.getInstance().dbExecuteQuery(sql);
+        List<Tag> data = data(rs);
+        return data;
+    }
+    
+    private static List<Tag> data(ResultSet rs) throws SQLException{
+        List<Tag> data =  FXCollections.observableArrayList();
+        while(rs.next()){
+            Tag tag = new Tag(rs.getInt("id_tag"), rs.getString("nama_tag")); 
+            data.add(tag);
+        }
+        return data;
+    }
+     
 }
