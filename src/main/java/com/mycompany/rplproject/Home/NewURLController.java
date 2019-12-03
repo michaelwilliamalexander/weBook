@@ -366,7 +366,7 @@ public class NewURLController implements Initializable {
         System.out.println(now.getUrlTag().size());
         System.out.println(tampt.size());
         System.out.println(now.getTag().size());
-        if(tampt.size()<2){
+        if(tampt.size()<2 && tampt.size()>0){
                 data = TagDAO.getStringData(tampt.get(0));
                 namaTag.setValue(data);
                 setChildComboBox(now.getTag(),0);
