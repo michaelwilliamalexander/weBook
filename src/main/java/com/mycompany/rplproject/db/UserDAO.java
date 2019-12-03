@@ -114,7 +114,13 @@ public class UserDAO {
             List<Bookmark> bookmark = BookmarkDAO.showBookmarkList(user.getEmail());
             i=0;
             while(i!=bookmark.size()){
-                String insert = "insert into url values('"+bookmark.get(i).getId()+"','"+bookmark.get(i).getNama()+"','"+bookmark.get(i).getLink()+"','"+bookmark.get(i).getId_folder()+"','"+user.getEmail()+"')";
+                String insert;
+                if(bookmark.get(i).getNama() != null){
+                    insert = "insert into url values('"+bookmark.get(i).getId()+"','"+bookmark.get(i).getNama()+"','"+bookmark.get(i).getLink()+"','"+bookmark.get(i).getId_folder()+"','"+user.getEmail()+"')";
+                }else{
+                    insert = "insert into url (id_url,link_url,id_folder,email) values('"+bookmark.get(i).getId()+"','"+bookmark.get(i).getLink()+"','"+bookmark.get(i).getId_folder()+"','"+user.getEmail()+"')";
+                }
+                
                 forBackup.createStatement().executeUpdate(insert);
                 i++;
             }
