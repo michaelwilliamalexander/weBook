@@ -273,6 +273,9 @@ public class HomeController implements Initializable {
                                 if(Integer.parseInt(Delete.getId()) == now.getFolder().get(j).getId()){
                                     now.getFolder().remove(j);
                                     break;
+                                }else if(Integer.parseInt(Delete.getId()) == now.getFolder().get(j).getId_parent()){
+                                    now.getFolder().remove(j);
+                                    break;
                                 }
                             }
                             show(false,folderTree);
@@ -434,7 +437,7 @@ public class HomeController implements Initializable {
                         for(int j=0;j<searchData.size();j++){
                             if(now.getBookmark().get(i).getId() == searchData.get(j)){
                                 final Button url;
-                                if(now.getBookmark().get(i).getNama().equals(null)){
+                                if(now.getBookmark().get(i).getNama() == null){
                                     url = new Button(now.getBookmark().get(i).getLink());
                                 }else{
                                     url = new Button(now.getBookmark().get(i).getNama());

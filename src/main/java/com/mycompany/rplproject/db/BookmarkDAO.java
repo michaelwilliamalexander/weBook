@@ -116,7 +116,7 @@ public class BookmarkDAO {
     public static List<Integer> searchBookmark(String dataSearch, User user) throws ClassNotFoundException, SQLException{
         String tempt = null;
         for(int i=0;i<user.getBookmark().size();i++){
-            if(user.getBookmark().get(i).getNama().equals(null)){
+            if(user.getBookmark().get(i).getNama() == null){
                 tempt = "Select * from URL where link_url like '%"+dataSearch+"%' and email = '"+user.getEmail()+"'";
             }else{
                 tempt = "Select * from URL where nama_url like '%"+dataSearch+"%'and email = '"+user.getEmail()+"'";
