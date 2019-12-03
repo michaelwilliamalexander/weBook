@@ -317,7 +317,7 @@ public class HomeController implements Initializable {
                             Optional<ButtonType> option = alert.showAndWait();
                             if(option.get() == ButtonType.OK){
                                 BookmarkDAO.deleteBookmark(Integer.parseInt(Delete.getId()));
-                                MultiTagDAO.deleteMultiTag(now.getBookmark().get(o).getId());
+                                //MultiTagDAO.deleteMultiTag(now.getBookmark().get(o).getId());
                                 for(int j=0; j<now.getBookmark().size();j++){
                                     if(Integer.parseInt(Delete.getId()) == now.getBookmark().get(j).getId()){
                                         now.getBookmark().remove(j);

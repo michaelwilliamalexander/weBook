@@ -86,6 +86,8 @@ public class FolderDAO {
          try {
             String query = "delete from folder where id_folder = '"+id+"'";
             DBUtil.getInstance().dbExecuteUpdate(query);
+            String deleteInsideFolder = "delete from folder where parent_folder = "+id;
+            DBUtil.getInstance().dbExecuteUpdate(deleteInsideFolder);
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(TagDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
